@@ -1,0 +1,505 @@
+<script type="text/ng-template" id="dialog2.tmpl.html">
+    <md-dialog aria-label="Add New Vendor" style="width: 800px;" ng-cloak>
+        <form name="vendForm">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'add'">Add New Vendor</p>
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'edit'">Edit Vendor</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelvendorData()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                      ng-click="singleVendorTabMode()">Single Vendor</a></li>
+                <li ng-if="singleVendorMode == 'add' && vendorMode=='add'"><a data-target="#tab2" data-toggle="tab" class="btn sharp"
+                                                           ng-click="bulkVendorTabMode()">Bulk Vendor</a></li>
+            </ul>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+							<form name="addVendorForm">
+								<div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Vendor Code</b>
+                                    </div>
+									<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input id="vendorCodeField" name="vendorCodeField" type="text" class="darkgrey-bottom-border" placeholder="Vendor code"
+                                               ng-model="vendorsData.tableVendorClientVendorCode">
+                                    </div>
+								</div>
+								<br>
+								<div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Company Name <span style="color:red">*</span></b>
+                                    </div>
+									<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input capitalize-first ng-pattern-restrict="^[A-Za-z0-9. ]*$" ng-class="{submitted:companyNameEntered}" ng-change="companyNameChanged(vendorsData.tableVendorName)" id="vendorCompanyField" name="vendorCompanyField" type="text" class="darkgrey-bottom-border" placeholder="Vendor company"
+                                               ng-model="vendorsData.tableVendorName">
+                                    </div>
+								</div>
+								<br>
+                                <div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Vendor Type <span style="color:red">*</span></b>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <select ng-model="vendorsTypeData.tableVendorType"
+                                                tabindex="4"
+                                                ng-options="option.tableVendorTypeString for option in vendorsTypes track by option.idtableVendorTypeId"
+                                                class="darkgrey-bottom-border full-width" ng-change="vendorTypeChanged(vendorsData.tableVendorType)">
+                                            <option value="">Select Vendor Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br>
+								<div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Contact Person Name <span style="color:red">*</span></b>
+                                    </div>
+									<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input capitalize-first ng-pattern-restrict="^[A-Za-z ]*$" ng-class="{submitted:personNameEntered}" ng-change="personNameChanged(vendorsData.tableVendorContactPerson)" type="text" id="vendorPersonField" name="vendorPersonField" class="darkgrey-bottom-border" placeholder="Contact person"
+                                               ng-model="vendorsData.tableVendorContactPerson">
+                                    </div>
+								</div>
+								<br>
+								<div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Email Id <span style="color:red">*</span></b>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input  id="vendorEmailField" ng-class="{submitted:emailEntered}" ng-change="emailChanged(vendorsData.tableVendorEmailId)" type="email" name="vendEmail" id="vendEmail" class="emailInput text-lowercase darkgrey-bottom-border" placeholder="Email ID" ng-model="vendorsData.tableVendorEmailId">
+                                    </div>
+								</div>
+								<br>
+								<div layout="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Phone Number<span style="color:red">*</span></b>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input ng-class="{submitted:phoneNumberEntered}" ng-change="phoneNumberChanged(vendorsData.tableVendorPhoneNumber)" id="vendorPhoneField" name="vendorPhoneField" type="text" only-integer class="darkgrey-bottom-border" placeholder="Phone no." ng-model="vendorsData.tableVendorPhoneNumber">
+                                    </div>
+								</div>
+								<br>
+								<div layout="row">
+									<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
+                                        <b class="vendorfieldskey">Lead Time(In Days)</b>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                                        <input
+                                                ng-class="{submitted:leadTimeEntered}"
+                                                ng-change="leadTimeChanged(vendorsData.tableVendorDefaultLeadTimeDays)"
+                                                id="leadTimeField" name="leadTimeField"
+                                                type="text" only-integer
+                                                prevent-typing-greater
+                                                max = "999999999"
+                                                class="darkgrey-bottom-border textRightOnFocus"
+                                                placeholder="Lead time in days" ng-model="vendorsData.tableVendorDefaultLeadTimeDays">
+                                    </div>
+								</div>
+
+                                <div class="row row-margin-top-x-small" ng-if="vendorMode == 'add'">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Add Address</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       ng-click="shipAddrClickedRow()">
+                                                <md-icon ng-show="shipAddrClicked==false"
+                                                         md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon ng-show="shipAddrClicked==true"
+                                                         md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+                                <div ng-if="shipAddrClicked==true && vendorMode == 'add'" >
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!-- Information Area -->
+
+                                                <!--<div class="ng-hide">-->
+                                                    <!--<div class="col-md-6 font">Contact Person Name <span style="color:red">*</span></div>-->
+                                                    <!--<div class="col-md-6">-->
+                                                        <!--<input type="text" ng-class="{submitted: isvendorAddressNameValid}" class="ng-hide" placeholder="First Name" ng-model="vendorsData.tableVendorContactPerson">-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+
+                                                <!--<div class="ng-hide">-->
+                                                    <!--<div class="col-md-6 font">Email Id <span style="color:red">*</span></div>-->
+                                                    <!--<div class="col-md-6">-->
+                                                        <!--<input type="email" ng-class="{submitted: isvendorAddressEmailValid}" name="custEmail" id="custEmail"  class="ng-hide" placeholder="Email ID" ng-model="vendorsData.tableVendorEmailId" ng-blur="validateEmail(myForm.custEmail.$valid);">-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+
+                                                <!--<div class="row padding-top-15">-->
+                                                    <!--<div class="col-md-6 font">Phone Number <span style="color:red">*</span></div>-->
+                                                    <!--<div class="col-md-6">-->
+                                                        <!--<input type="text" ng-class="{submitted: isvendorAddressPhoneValid}" numbers-only class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Phone no." ng-model="vendorAddress.contactPhone">-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">Address Line 1 <span style="color:red">*</span></div>
+                                                    <div class="col-md-7 no-padding">
+                                                        <input type="text" ng-class="{submitted:addressLineEntered}" ng-change="addressLineChanged(vendorAddress.adLine1)" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 1" ng-model="vendorAddress.adLine1"
+                                                               ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">Address Line 2</div>
+                                                    <div class="col-md-7 no-padding">
+                                                        <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 2" ng-model="vendorAddress.adLine2"
+                                                               ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">Address Line 3</div>
+                                                    <div class="col-md-7 no-padding">
+                                                        <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 3" ng-model="vendorAddress.adLine3"
+                                                               ng-blur="callGetLatLong(showResult)">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">Country <span style="color:red">*</span></div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <select ng-model="vendorAddress.countryData"  ng-class="{submitted: countryEntered}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableCountryLongName for option in countriesArray" ng-change="countriesStatesData(vendorAddress.countryData)">
+                                                            <option value="">Select Country</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'Country');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">State <span style="color:red">*</span></div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <select ng-model="vendorAddress.stateData" ng-class="{submitted: stateEntered}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableStateLongName for option in regionsStatesArray" ng-change="regionsStatesDistrictData(vendorAddress.stateData,vendorId)">
+                                                            <option value="">Select State</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'State');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">District <span style="color:red">*</span></div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <select ng-model="vendorAddress.districtData" ng-class="{submitted: districtEntered}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray" ng-change="regionsStatesDistrictsCityData(vendorAddress.stateData,vendorAddress.districtData);">
+                                                            <option value="">Select District</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'District');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                                                </div>
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">City <span style="color:red">*</span></div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <select ng-model="vendorAddress.city" ng-class="{submitted: cityEntered}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray" ng-change="changeCity(vendorAddress.city);">
+                                                            <option value="">Select City</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'City');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                                                </div>
+
+
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">PIN Code <span style="color:red">*</span></div>
+                                                    <div class="col-md-7 no-padding">
+                                                        <input id="pincode" type="text" ng-class="{submitted:pincodeEntered}" ng-change="pincodeChanged(vendorAddress.pincode)" ng-pattern-restrict="^[0-9]*$" class="form-control darkgrey-bottom-border font input-less-padding" ng-blur="callGetLatLong(showResult)" placeholder="Postal code" ng-model="vendorAddress.pincode">
+                                                    </div>
+                                                </div>
+                                                <div class="row padding-top-15">
+                                                    <div class="col-md-5 font">TIN No <span style="color:red">*</span></div>
+                                                    <div class="col-md-7 no-padding">
+                                                        <input type="text" ng-class="{submitted:tinnoEntered}" ng-change="tinnoChanged(vendorAddress.tinNo)" ng-pattern-restrict="^[a-z A-Z 0-9]*$" name="tin" id="tinArray" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="VAT / TIN" ng-model="vendorAddress.tinNo">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 padding-top-15">
+                                                <!-- Map Area -->
+                                                <demo-map ng-if="searchLocation!=null" ng-model="searchLocation" class="demo-map">
+                                                </demo-map>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-x-small">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Configure order return parameters</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       ng-click="returnParamsClickedRow()">
+                                                <md-icon ng-show="returnParamsClicked==false"
+                                                         md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon ng-show="returnParamsClicked==true"
+                                                         md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+                                <div ng-if="returnParamsClicked==true">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12 padding-top-15" style="padding-left: 0px;">
+                                                <span class="add-new-sp-row">
+                                                    <md-checkbox
+                                                            ng-model="vendorsData.tableVendorReturnOnlyExpiredGoods" aria-label="Enable">
+                                                    </md-checkbox> Return only expired
+                                                </span>
+                                                </div>
+                                                <div class="col-md-12 padding-top-15" style="padding-left: 0px;">
+                                                    <div>
+                                                    <span class="col-md-6" style="padding: 0px;">
+                                                       Return window
+                                                    </span>
+                                                    </div>
+                                                    <span class="col-md-6">
+                                                    <input type="text" id="returnwindow" maxlength="3" only-integer
+                                                      ng-model="vendorsData.tableVendorReturnWindowInDays" placeholder="Return window in days"
+                                                           class="form-control darkgrey-bottom-border input-less-padding">
+                                                </span>
+                                                </div>
+                                                <div class="col-md-12 padding-top-15" style="padding-left:0px;">
+                                                    <div class="full-width" style="margin-bottom:20px;">
+                                                        <div class="col-md-6" style="padding: 0px;">
+                                                        <span >
+                                                           Return threshold basis
+                                                        </span>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                            <div class="full-width">
+                                                                <md-radio-group ng-model="genericData.returnType" ng-change="changeReturnType()">
+                                                                    <md-radio-button required ng-repeat="returnType in returnTypes" ng-value="returnType.returnTypeString" class="md-primary" ng-style="{'display':'inline'}">
+                                                                        {{returnType.returnTypeDisplayString}}&nbsp;&nbsp;
+                                                                    </md-radio-button>
+                                                                </md-radio-group>
+                                                            </div>
+                                                            <div class="full-width" style="margin-top:15px;">
+                                                                <span ng-if="genericData.returnType == 'valuebased'">
+                                                                <input type="text" id="returntype1"
+                                                                       percentage
+                                                                       ng-model="vendorsData.tableVendorReturnValuePercentage" placeholder="% Value"
+                                                                       class="form-control darkgrey-bottom-border input-less-padding">
+                                                                </span>
+                                                                <span ng-if="genericData.returnType == 'quantitybased'">
+                                                                <input type="text" id="returntype2"
+                                                                       percentage
+                                                                       ng-model="vendorsData.tableVendorReturnQuantity" placeholder="% Quantity"
+                                                                       class="form-control darkgrey-bottom-border input-less-padding">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-x-small">
+                                    <md-toolbar class="md-small accordion-color">
+                                        <div class="md-toolbar-tools" style="width:100% ">
+                                            <span class="font-big">Configure SKU Mapping</span>
+                                            <span flex=""></span>
+                                            <md-button class="md-icon-button" aria-label="Favorite"
+                                                       ng-click="skuMapClickedRow()">
+                                                <md-icon ng-show="skuMapClicked==false"
+                                                         md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                <md-icon ng-show="skuMapClicked==true"
+                                                         md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                    </md-toolbar>
+                                </div>
+
+                                <div ng-if="skuMapClicked==true">
+                                    <div class="row row-margin-top">
+                                        <div class="col-md-2 margin-top-5">
+                                            <span class="semi-bold-text">Map SKU <span style="color:red">*</span></span>
+                                        </div>
+                                    <div class="col-md-4">
+                                        <angucomplete-alt ng-class="{submitted: isProductSelected}" id="products"
+                                        placeholder="Search product" pause="400"
+                                        selected-object="productObject"
+                                        title-field="tableSkuName"
+                                        description-field="tableSkuDescription"
+                                        input-class="form-control darkgrey-bottom-border"
+                                        image-field="tableSkuImageUrl"
+                                        code-field="tableSkuClientSkuCode"
+                                        ></angucomplete-alt>
+                                    </div>
+                                        <div class="col-md-2">
+                                            <button type="button" title="Click here to see all SKUs."
+                                                    style="position: absolute; top: 0px;"
+                                                    class="btn btn-sm truncate-text"
+                                                    ng-click="masterSkuDialog($event, true);">. . .</button>
+                                        </div>
+                                    <div class="col-md-2">
+                                        <input ng-class="{submitted: isVendorSkuCodeEntered}"
+                                        type="text"
+                                        ng-model="genericData.vendorSkuCode" name="vendorSkuCode" placeholder="Vendor SKU Code"
+
+                                        class="form-control darkgrey-bottom-border"
+                                        style="text-align: left;"/></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn small-actn-btn"
+                                            ng-click="createMap(productObject,genericData.vendorSkuCode)">Add to List</button>
+                                    </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" ng-if="mapList.length > 0">
+                                        <table id="productTable"
+                                                   class="table boldtable table-responsive table-bordered table-hover">
+                                                <thead class="data-grid-header">
+                                                <tr>
+                                                    <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product Name
+                                                    </th>
+                                                    <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Vendor SKU Code
+                                                    </th>
+                                                    <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="data-grid-data">
+                                                <tr ng-repeat="product in mapList">
+                                                    <td>{{product.tableSku.tableSkuName}}</td>
+                                                    <td style="text-align: right;">
+                                                        {{product.tableVendorSystemSkuMapVendorSkuCode}}
+                                                    </td>
+                                                    <td style="text-align: center; padding: 0;">
+                                                        <md-button class="md-icon-button" md-no-ink="true"
+                                                                   ng-click="removeMap($index)" placeholder="Delete"
+                                                                   style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                            <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                     ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                     ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                     ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                     style="width: 20px;"></md-icon>
+                                                        </md-button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+									<br>	<br>	<br>	<br>	<br>								
+							</form>
+					</div>
+
+
+                        <!--===================================== add vendor for bulk upload =======================-->
+
+                        <div class="tab-pane container-fluid vendorTabHeight" id="tab2">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <div id="uploadFileButton" class="uploadFileBulkOrder"
+                                         data-toggle="modal" data-target="#vendorsBulkUpload" data-dismiss="modal"></div>
+                                    <br>
+                                    <span id="uploadFileText" class="uploadFileLabel"
+                                          data-toggle="modal" data-target="#vendorsBulkUpload" data-dismiss="modal">Upload File</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a >
+                                        <div class="downloadFileBulkOrder" data-ng-click="VendorTemplateDownload()"></div>
+                                    </a>
+                                    <br>
+                                        <span class="downloadFileLabel">
+                                                <a data-ng-click="VendorTemplateDownload()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                </div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div style="text-align: center;">
+                                    <a ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                                </div>
+                            </div>                             
+                        </div>
+                        </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{vendorsData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >
+                <div ng-if="singleVendorTab==true && bulkVendorTab==false">
+                <div ng-if="vendorMode == 'add'">
+                    <span flex></span>
+                    <md-button class="cancel-btn" ng-click="cancelvendorData()">
+                        Cancel
+                    </md-button>
+                    <button class="action-btn" ng-click="savevendorData(vendorsData)">
+                        Add
+                    </button>
+                </div>
+                <div ng-if="vendorMode == 'edit'">
+                    <span flex></span>
+                    <md-button class="cancel-btn" ng-click="cancelvendorData()">
+                        Cancel
+                    </md-button>
+                    <button class="action-btn" ng-click="savevendorData(vendorsData)">
+                        Update
+                    </button>
+                </div>
+                </div>
+                <div ng-if="singleVendorTab==false && bulkVendorTab==true">
+                    <button type="button" class="cancel-btn" ng-click="cancelvendorData()">Cancel
+                    </button>
+                </div>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+ <!-- Bulk Upload vendors File Dialog -->
+        <div class="modal fade" id="vendorsBulkUpload" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog modalDialogProp modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header modal-dialog-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                          <span aria-hidden="true">&times;</span>
+                          <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">Upload File</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                                <div class="col-md-8">
+                                    <div ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                                    </div>
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+
+                                </div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col"></div>
+                                <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderUploadfile.name}}</div>
+                            </div>
+                            <div class="row upload-file-dialog-row">
+                                <div class="col-md-3 bulkFile-heading-col"></div>
+                                <div class="col-md-8">
+                                    <b class="fileFormat">* File Format should be .xls,.xlsx</b>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-dialog-footer">
+                        <button type="button" class="cancel-btn" ng-click="bulkOrderUploadfile=null;" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="action-btn" ng-click="uploadBulkOrderFile(bulkOrderUploadfile);bulkOrderUploadfile=null;" data-dismiss="modal">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>

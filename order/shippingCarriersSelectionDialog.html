@@ -1,0 +1,62 @@
+<script type="text/ng-template" id="dialog2.tmpl.html" ng-controller="orderController">
+    <md-dialog aria-label="Shipping Carrier" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #f5f6e8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Shipping Allocation</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelWarehouseSelection()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div layout="row">
+                        <b style="width: 15%;font-weight:600">Order No.</b>
+                        <input type="text" style="color: #F0592B;font-size: 14px;width: 40%;padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                    </div>
+                    <!-- {{wareHousesArray}} -->
+                    <br>
+                    <div layout="row">
+                        <b style="width: 35%;font-weight:600">Please Select the Shipping Carrier</b>
+                    </div>
+                    <div class="row main-list">
+                        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                            <thead class="warehouse-selection-header">
+                                <tr height="45">
+                                    <td>Select</td>
+                                    <td>Shipping Carrier Name</td>
+                                    <td>Cost</td>
+                                    <td>Distance From Customers</td>
+                                </tr>
+                            </thead>
+                            <tbody data-ng-repeat="option in shippingCarrierArray">
+                                <tr class="warehouse-selection-row">
+                                    <td>
+                                        <input type="radio" name="choice" ng-model="radio1" value="{{option}}" ng-change="onvalue1(radio1)" />
+                                    </td>
+                                    <td>{{option.tableShippingCarrierServices.tableShippingCarrierServicesName}}</td>
+                                    <td> Rs. {{option.cost}}</td>
+                                    <td>{{option.distanceFromCustomer}} Kms</td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button style="background-color: #727374; color: #ffffff;font-weight: 700;
+        text-transform: capitalize !important; min-width:150px;min-height: 40px;
+        margin-right: 20px; font-size: 16px;" ng-click="cancelWarehouseSelection()">
+                    Cancel
+                </md-button>
+                <button type="button" class="action-btn" ng-click="selectShippingCarrierAction(orderId,tableSaleOrderId,shippingObject);">Select</button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

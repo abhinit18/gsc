@@ -1,0 +1,150 @@
+<script type="text/ng-template" id="ViewInventory.tmpl.html" ng-controller="inventoryController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 1280px;max-width:100%; position: relative;" ng-cloak>
+
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">View Inventory Details</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelViewInventory($event)">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content style="overflow: auto;">
+                <div class="full-width" style = "padding-top: 20px">
+                    <div class="full-width">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span class="col-lg-2 col-md-6 col-sm-12 col-xs-12"><b>Sku Code</b></span>
+                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="color:orangered;">{{selectedWarehouse.skuCode}}</span>
+                            </h4>
+                            <h4 class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span class="col-lg-2 col-md-6 col-sm-12 col-xs-12"><b>Sku Name</b></span>
+                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="color:orangered;">{{selectedWarehouse.skuName}}</span>
+                            </h4>
+                            <h5 class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <span class="col-lg-2 col-md-6 col-sm-12 col-xs-12"><b>Description</b></span>
+                                <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12">{{selectedWarehouse.skuDescription}}</span>
+                            </h5>
+                        </div>
+                        <div class="full-width">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <table id="SkuInventoryTableList"
+                           class="table boldtable table-responsive table-bordered table-hover">
+                        <thead class="data-grid-header">
+                        <tr>
+
+                            <th style="width:7%;">Inward Date</th>
+                            <th style="width:7%;">MRP</th>
+                            <th style="width:7%;">Vendor</th>
+                            <th style="width:7%;">Batch No.</th>
+                            <th style="width:7%;">Remaining Life</th>
+                            <th style="width:7%;">Available</th>
+                            <th style="width:7%;">Allocated</th>
+                            <th style="width:7%;">Bad</th>
+                            <th style="width:7%;">Blocked</th>
+                            <th style="width:7%;">In Transit</th>
+                            <th style="width:7% !important;">Total</th>
+
+                        </tr>
+                        </thead>
+                        <tbody class="data-grid-data"
+                               ng-repeat="SkuData in viewDataTableList">
+                        <tr>
+                            <td style="width:7%;text-align: center;">
+                                <span>
+                                    {{SkuData.tableSkuInventoryInwardDateTime | utcToLocalOrHyphen}}
+                                </span>
+                            </td>
+                            <td style="width:7%;text-align: center;">
+                                <span>{{SkuData.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}</span>
+                            </td>
+                            <td style="width:7%;text-align: center;">
+                                <span ng-if="SkuData.tableVendor != null">{{SkuData.tableVendor.tableVendorName}}</span>
+                                                <span ng-if="SkuData.tableVendor == null">
+                                                    N/A
+                                                </span>
+                            </td>
+                            <td style="width:7%;text-align: center;">
+                                <span ng-if="SkuData.tableSkuInventoryBatchNo != null">{{SkuData.tableSkuInventoryBatchNo}}</span>
+                                                <span ng-if="SkuData.tableSkuInventoryBatchNo == null">
+                                                    N/A
+                                                </span>
+                            </td>
+                            <td style="width:7%;text-align: center;">
+                                <span ng-if="SkuData.tableSkuInventoryShelfLifeInDays != null">{{SkuData.tableSkuInventoryShelfLifeInDays}}</span>
+                                                <span ng-if="SkuData.tableSkuInventoryShelfLifeInDays == null">
+                                                    N/A
+                                                </span>
+                            </td>
+
+                            <td style="width:7%;text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryAvailableCount != null">
+                                        {{SkuData.tableSkuInventoryAvailableCount}}
+                                    </span>
+                                                <span ng-if="SkuData.tableSkuInventoryAvailableCount == null">
+                                        N/A
+                                    </span>
+
+                            </td>
+                            <td style="width:7%; text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryAllocatedCount != null">
+                                        {{SkuData.tableSkuInventoryAllocatedCount}}
+                                    </span>
+                                                <span ng-if="SkuData.tableSkuInventoryAllocatedCount == null">
+                                        N/A
+                                    </span>
+
+                            </td>
+
+                            <td style="width:7%; text-align: center;">
+                                    <span>
+                                        {{SkuData.tableSkuInventoryInwardQcFailedCount + SkuData.tableSkuInventoryOutwardQcFailedCount}}
+                                    </span>
+
+
+                            </td>
+                            <td style="width:7%; text-align: center;">
+                                    <span ng-if="SkuData.tableSkuInventoryBlockedCount != null">
+                                        {{SkuData.tableSkuInventoryBlockedCount}}
+                                    </span>
+                                                <span ng-if="SkuData.tableSkuInventoryBlockedCount == null">
+                                        N/A
+                                    </span>
+                            </td>
+                            <td style="width:7%; text-align: center;">
+                                                <span ng-if="SkuData.tableSkuInventoryIntransitCount != null">
+                                                    {{SkuData.tableSkuInventoryIntransitCount}}
+                                                </span>
+                                                <span ng-if="SkuData.tableSkuInventoryIntransitCount == null">
+                                                    N/A
+                                                </span>
+
+                            </td>
+                            <td style="width:7%; text-align: center;">
+                                    <span>
+                                        {{SkuData.tableSkuInventoryAvailableCount + SkuData.tableSkuInventoryIntransitCount+ SkuData.tableSkuInventoryBlockedCount + SkuData.tableSkuInventoryInwardQcFailedCount+SkuData.tableSkuInventoryOutwardQcFailedCount + SkuData.tableSkuInventoryAllocatedCount}}
+                                    </span>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn" ng-click="cancelViewInventory($event)">Cancel
+                </button>
+
+            </md-dialog-actions>
+
+    </md-dialog>
+</script>

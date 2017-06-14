@@ -1,0 +1,132 @@
+<script type="text/ng-template" id="bulkorder.tmpl.html" ng-controller="orderController">
+    <md-dialog aria-label="Create New Email Template" style="width:1000px;" ng-cloak>
+        <md-toolbar style="background-color: #F2F7F8;">
+            <div class="md-toolbar-tools">
+                <p class="dialog-heading-p">Upload File</p>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="closebulkOrderUploadCsv()">
+                    <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="container-fluid">
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select the Channel</div>
+                    <div class="col-md-8">
+                        <select ng-class="{submitted:bulkSelectChannel}"  class="form-control bulkFile-select" ng-model="bulkOrderSettingData.channelId" ng-change="checkbulkMappingSettingsAvailable(bulkOrderSettingData.channelId)">
+                              <option value="">Select the Channel</option>
+                              <option ng-repeat="option in channelNamesData"
+                              value="{{option.idtableSalesChannelValueInfoId}}" ng-if="option.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId==2">
+                              {{option.tableSalesChannelValueInfoName}}
+                          </option>
+                      </select>
+                    </div>
+                </div>
+                <div ng-class="{submitted:bulkSelectFile}" class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                    <div  class="col-md-8">
+                        <div ng-show="csvTrue==true" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".csv" ngf-pattern="'.csv'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                        </div>
+                        <div ng-show="csvTrue==false" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                        </div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderUploadfile.name}}</div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8">
+                        <b ng-show="csvTrue==true" class="fileFormat">* File Format should be .csv</b>
+                        <b ng-show="csvTrue==false" class="fileFormat">* File Format should be .xls,.xlsx</b>
+                    </div>
+                </div>                
+            </div>
+        </md-dialog-content>
+
+
+        <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+            <button class="cancel-btn" ng-click="closebulkOrderUploadCsv();bulkOrderUploadfile=null;bulkOrderSettingData=null">
+                        Cancel
+                    </button>
+            <button class="action-btn" ng-click="uploadBulkOrderFile(bulkOrderUploadfile,bulkOrderSettingData);bulkOrderUploadfile=null;bulkOrderSettingData=null">
+                        Upload
+                    </button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>
+
+
+
+<!--================================== bulk po order =======================================-->
+
+
+<script type="text/ng-template" id="PoBulkorder.tmpl.html" ng-controller="poController">
+    <md-dialog aria-label="Create New Email Template" style="width:1000px;" ng-cloak>
+        <md-toolbar style="background-color: #F2F7F8;">
+            <div class="md-toolbar-tools">
+                <p class="dialog-heading-p">Upload File</p>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="closebulkOrderUploadCsv()">
+                    <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="container-fluid">
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select the Channel</div>
+                    <div class="col-md-8">
+                        <select class="form-control bulkFile-select" ng-model="bulkOrderSettingData.channelId" ng-change="checkbulkMappingSettingsAvailable(bulkOrderSettingData.channelId)">
+                            <option value="">Select the Channel</option>
+                            <option ng-repeat="option in channelNamesData"
+                                    value="{{option.idtableSalesChannelValueInfoId}}" ng-if="option.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId==2">
+                                {{option.tableSalesChannelValueInfoName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col font">Select a File</div>
+                    <div class="col-md-8">
+                        <div ng-show="csvTrue==true" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".csv" ngf-pattern="'.csv'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                        </div>
+                        <div ng-show="csvTrue==false" ngf-drop ngf-select class="drop-box cursorPointer" ng-model="bulkOrderUploadfile" ngf-drag-over-class="'dragover'" accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                            <img src="images/svg/upload_icon_1.svg" style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to upload or click to select
+                        </div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                    </div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8 font">File:&nbsp;&nbsp;{{bulkOrderUploadfile.name}}</div>
+                </div>
+                <div class="row upload-file-dialog-row">
+                    <div class="col-md-3 bulkFile-heading-col"></div>
+                    <div class="col-md-8">
+                        <b ng-show="csvTrue==true" class="fileFormat">* File Format should be .csv</b>
+                        <b ng-show="csvTrue==false" class="fileFormat">* File Format should be .xls,.xlsx</b>
+                    </div>
+                </div>               
+            </div>
+        </md-dialog-content>
+
+
+        <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+            <button class="cancel-btn" ng-click="closebulkOrderUploadCsv();bulkOrderUploadfile=null;bulkOrderSettingData=null">
+                Cancel
+            </button>
+            <button class="action-btn" ng-click="uploadBulkOrderFile(bulkOrderUploadfile,bulkOrderSettingData);bulkOrderUploadfile=null;bulkOrderSettingData=null">
+                Upload
+            </button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>

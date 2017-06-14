@@ -1,0 +1,220 @@
+        <div class="row search-row-heading">
+
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row search-row search-row-content search-row-top-border">
+            <div class="row row-margin-top-x-medium-sku">
+                <div class="col-md-2 col-md-offset-1 margin-top-5">
+                    <span class="total-count-heading">Search Kit</span>
+                </div>
+                <div class="col-md-4" style="left: -70px;">
+                    <input type="text" id="sellerSkuId" name="sellerSkuId" ng-model="skuKitString" class="form-control darkgrey-bottom-border font input-less-padding" ng-change="callDisabledKit()" />
+                </div>
+                <div class="col-md-1" style="left: -60px; top: -2px;">
+                    <button type="button" class="btn btn-default mybut"  ng-click="submitKitMainSkuAction(skuKitString)">Search</button>
+                </div>
+                <div class="col-md-1" style="margin-top: 4px;">
+                    <button title="Reset search filter" style="margin-left: 0px;"  class="btn clearFilter" ng-click="clearKitSkuAction();skuKitString=null;">
+                    </button>
+                </div>
+            </div>
+        </div>
+		<div class="row search-row search-row-content search-row-top-border">
+			<div class="row row-margin-top-x-medium-sku">
+				<div class="col-xs-3" style="padding-top: 5px; padding-left: 128px;">
+					<span class="total-count-heading">Total Kits</span>
+				</div>
+				<div class="col-xs-3">
+					<div class="circle-oval circle-orange" style="margin-left: -45px;">
+						<span>{{kitskuMainCount}}</span>
+					</div>
+				</div>
+			</div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="button" class="btn addsharpbutton font pull-right btn-top-margin" style="min-width: 160px;" ng-click="showkitAddBox($event)"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Add New Kit</button>
+            </div>
+        </div>
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-sku">
+                    <!-- table header -->
+                    <tr>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuClientSkuCode',sortReverseKit)">
+                                SKU ID&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuClientSkuCode' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuClientSkuCode' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                SKU ID&nbsp;
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuName',sortReverseKit)">
+                                SKU Name&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuName' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuName' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                SKU Name&nbsp;
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuPrimaryUpcEan',sortReverseKit)">
+                                ISBN/UPC/EAN&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuPrimaryUpcEan' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuPrimaryUpcEan' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                ISBN/UPC/EAN&nbsp;
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuNode.skuNodeName',sortReverseKit)">
+                                Category&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuNode.skuNodeName' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuNode.skuNodeName' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Category
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuBrandCode.tableSkuBrandCodeString',sortReverseKit)">
+                                Brand&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuBrandCode.tableSkuBrandCodeString' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuBrandCode.tableSkuBrandCodeString' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Brand
+                            </a>
+                        </td>
+                        <td>Dimensions (LxBxH/W)</td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuStatusType.tableSkuStatusTypeString',sortReverseKit)">
+                                Status&nbsp;
+                                <span ng-if="sortTypeKit == 'tableSkuStatusType.tableSkuStatusTypeString' && !sortReverseKit"
+                                class="fa fa-caret-down"></span>
+                                <span ng-if="sortTypeKit == 'tableSkuStatusType.tableSkuStatusTypeString' && sortReverseKit"
+                                class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting" href="">
+                                Status
+                            </a>
+                        </td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                <tbody data-ng-repeat="kitData in kitSkuLists" data-ng-switch on="dayDataCollapse[$index]">
+                    <tr class="clickable-row-sku">
+                        <td><a ng-click="showInventory(kitData.idtableSkuId)" style="color:#f0592b;cursor:pointer;">{{kitData.tableSkuClientSkuCode}}</a></td>
+                        <td>{{kitData.tableSkuName}}</td>
+                        <td>{{kitData.tableSkuPrimaryUpcEan}}</td>
+                        <td>{{kitData.tableSkuNode.skuNodeName}}</td>
+                        <td>{{kitData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
+                        <td>{{kitData.tableSkuLength}}&nbsp;<strong>x</strong>&nbsp;{{kitData.tableSkuWidth}}&nbsp;<strong>x</strong>&nbsp;{{kitData.tableSkuHeight}}&nbsp;{{kitData.tableSkuUodmType.tableSkuUodmTypeString.toLowerCase()}}&nbsp;<strong>/</strong>&nbsp;{{kitData.tableSkuWeight}}&nbsp;{{kitData.tableSkuUowmType.tableSkuUowmTypeString}}</td>
+                        <td>
+                            <a class="active-status" ng-if="kitData.tableSkuStatusType.idtableSkuStatusTypeId == 1" href="" data-ng-click="access.editAccess && deactivateSku(kitData.idtableSkuId, kitData,kitData.tableSkuType.tableSkuTypeString,$event)">{{kitData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Deactivate-70.svg" title="Click to deactivate SKU" class="status-img" alt=""></a>
+                            <a class="deactive-status" ng-if="kitData.tableSkuStatusType.idtableSkuStatusTypeId == 2" href="" data-ng-click="access.editAccess && activateSku(kitData.idtableSkuId, kitData,kitData.tableSkuType.tableSkuTypeString,$event)">{{kitData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Activate.svg" title="Click to activate SKU" class="status-img" alt=""></a>
+                        </td>
+                        <td>
+                            <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || kitData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}" width="20px" height="20px" data-ng-click="access.editAccess && editSku($index, kitData.idtableSkuId,kitData.tableSkuType.tableSkuTypeString)" ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                 ng-class="{disableAccess: !access.editAccess || kitData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                                 ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- END TABLE -->
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="kitSkuSize<kitskuMainCount">Showing Kit {{kitSkuStart + 1}} to {{kitSkuSize}} of {{kitskuMainCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="kitSkuSize>=kitskuMainCount && kitskuMainCount!=0">Showing Kit {{kitSkuStart + 1}} to {{kitskuMainCount}} of {{kitskuMainCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="kitskuMainCount==0">No Kits Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPagerKit.pages.length && modeKitSku=='normal'" class="pagination">
+                            <li ng-show="vmPagerKit.currentPage == 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage > 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a ng-click="listOfKitSkusCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a> &lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage > 1" ng-class="{enabled:vmPagerKit.currentPage > 1}">
+                                <a ng-click="listOfKitSkusCount(vmPagerKit.currentPage - 1)"> &lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPagerKit.pages" ng-class="{active:vmPagerKit.currentPage == page}">
+                                <a ng-click="listOfKitSkusCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage < vmPagerKit.totalPages" ng-class="{enabled:vmPagerKit.currentPage > vmPagerKit.totalPages}">
+                            <a ng-click="listOfKitSkusCount(vmPagerKit.currentPage + 1)">Next &gt; </a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a>Next &gt; </a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage < vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a ng-click="listOfKitSkusCount(vmPagerKit.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPagerKit.pages.length && modeKitSku=='mutual'" class="pagination">
+                            <li ng-show="vmPagerKit.currentPage == 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage > 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a ng-click="listOfKitMutualSkusCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == 1" ng-class="{disabled:vmPagerKit.currentPage == 1}">
+                                <a> &lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage > 1" ng-class="{enabled:vmPagerKit.currentPage > 1}">
+                                <a ng-click="listOfKitMutualSkusCount(vmPagerKit.currentPage - 1)"> &lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPagerKit.pages" ng-class="{active:vmPagerKit.currentPage == page}">
+                                <a ng-click="listOfKitMutualSkusCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage < vmPagerKit.totalPages" ng-class="{enabled:vmPagerKit.currentPage > vmPagerKit.totalPages}">
+                                <a ng-click="listOfKitMutualSkusCount(vmPagerKit.currentPage + 1)">Next &gt; </a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a>Next &gt; </a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage < vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a ng-click="listOfKitMutualSkusCount(vmPagerKit.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPagerKit.currentPage == vmPagerKit.totalPages" ng-class="{disabled:vmPagerKit.currentPage == vmPagerKit.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+<!-- Add New Kit Dialog -->
+
+<div ng-include src="'sku/deactivateSku.html'"></div>
+<div ng-include src="'sku/activateSku.html'"></div>

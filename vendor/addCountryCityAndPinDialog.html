@@ -1,0 +1,60 @@
+<script type="text/ng-template" id="dialog4.tmpl.html">
+    <md-dialog aria-label="Add Address" style="width: 800px;" ng-cloak>
+        <form name="vendForm">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p" ng-if="addressEntity == 'Country'">Add New Country</p>
+					<p class="dialog-heading-p" ng-if="addressEntity == 'State'">Add New State</p> 
+					<p class="dialog-heading-p" ng-if="addressEntity == 'District'">Add New District</p>
+					<p class="dialog-heading-p" ng-if="addressEntity == 'City'">Add New City</p>
+                <span flex></span>
+				<md-button class="md-icon-button" ng-click="cancelvendorData()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+                </div>
+				
+            </md-toolbar>
+          
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+							<form name="addVendorForm" >
+								
+								
+								<div layout="row" ng-if="addressEntity == 'Country'">
+									<b class="vendorfieldskey">Enter Country</b>
+									<input ng-class="{submitted: isAddressEntityCountryEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter Country" ng-model="addressData.entity">
+								</div> 
+								<div layout="row" ng-if="addressEntity == 'State'">
+									<b class="vendorfieldskey">Enter State</b>
+									<input ng-class="{submitted: isAddressEntityStateEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter State" ng-model="addressData.entity">
+								</div>
+								<div layout="row" ng-if="addressEntity == 'District'">
+									<b class="vendorfieldskey">Enter District</b>
+									<input ng-class="{submitted: isAddressEntityDistrictEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter District" ng-model="addressData.entity">
+								</div> 
+								<div layout="row" ng-if="addressEntity == 'City'">
+									<b class="vendorfieldskey">Enter City</b>
+									<input ng-class="{submitted: isAddressEntityCityEntered}" name="leadTimeField" type="text" class="darkgrey-bottom-border" placeholder="Enter City" ng-model="addressData.entity">
+								</div> 
+								
+								
+							</form>
+						</div>
+					</div>
+				</div>
+            </md-dialog-content>
+            <!-- {{vendorsData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >
+                    <span flex></span>
+                <button type="button" class="cancel-btn" ng-click="cancelAddressData()">Cancel
+                </button>
+                    <button class="action-btn" ng-click="saveAddressEntity(addressData, addressEntity)">
+                        Add
+                    </button>
+
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

@@ -1,0 +1,371 @@
+<script type="text/ng-template" id="addDiscountDialog.tmpl.html" ng-controller="DiscountController">-->
+<md-dialog aria-label="Add Discount Dialog"
+	style="width: 900px;position: relative;" ng-cloak>
+<form name="PoModal" novalidate>
+	<md-toolbar style="background-color: #F2F7F8; ">
+	<div class="md-toolbar-tools">
+		<p ng-if="genericData.dialogMode == 'add'" class="dialog-heading-p"
+			id="addDiscountRuleAddButton">Add Discount Rule</p>
+		<p ng-if="genericData.dialogMode == 'edit'" class="dialog-heading-p"
+			id="addDiscountRuleEditButton">Edit Discount Rule</p>
+		<span flex></span>
+		<md-button class="md-icon-button"
+			ng-click="cancelDiscountRuleDialog();"> <md-icon
+			md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+		</md-button>
+	</div>
+
+	</md-toolbar>
+	<md-dialog-content>
+	<div class="md-dialog-content">
+		<div class="md-dialog-content">
+			<div class="full-width" style="">
+				<div class="row row-margin-top">
+					<div class="col-md-3 margin-top-5">
+						<span class="semi-bold-text">Discount Rule Name <span
+							style="color: red">*</span>
+						</span>
+					</div>
+					<div class="col-md-8">
+						<input capitalize-first type="text" placeholder="Enter Discount Rule Name"
+							class="form-control darkgrey-bottom-border"
+							ng-model="discountData.tableDiscountRuleName">
+					</div>
+				</div>
+			</div>
+			<div class="full-width">
+				<div class="row row-margin-top">
+					<div class="col-md-3 margin-top-5">
+						<span class="semi-bold-text">Discount % <span
+							style="color: red">*</span>
+						</span>
+					</div>
+					<div class="col-md-8">
+						<input type="text" percentage
+							placeholder="Enter Discount %"
+							class="form-control darkgrey-bottom-border"
+							ng-model="discountData.tableDiscountRuleDiscount">
+					</div>
+				</div>
+			</div>
+			<div class="full-width">
+				<div class="row row-margin-top">
+					<div class="col-md-3 margin-top-5">
+						<span class="semi-bold-text">Select Date</span>
+					</div>
+					<div class="col-md-4">
+						<md-datepicker timezoned-date ng-model="discountData.tableDiscountRuleStartDate"
+							md-min-date="minDateShipping" md-max-date="maxDateShipping" md-placeholder="Start date"
+							name="startDate"
+							ng-change="onShippingDateChange(discountData.tableDiscountRuleStartDate)"></md-datepicker>
+					</div>
+					<div class="col-md-4">
+						<md-datepicker timezoned-date ng-model="discountData.tableDiscountRuleEndDate"
+							md-min-date="minDateDelivery" md-max-date="maxDateDelivery" md-placeholder="End date"
+							name="endDate"
+							ng-change="onDeliveryDateChange(discountData.tableDiscountRuleEndDate)"></md-datepicker>
+					</div>
+				</div>
+			</div>
+			<div class="row row-margin-top-x-small">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 10px;margin-top:10px;">
+					<md-toolbar class="md-small accordion-color">
+					<div class="md-toolbar-tools" style="margin-top: 10px; width: 100%">
+						<span class="font-big">Configure sales channel for this
+							rule</span> <span flex=""></span>
+						<md-button class="md-icon-button" aria-label="Favorite"
+							ng-click="salesChannelClickedRow()"> <md-icon
+							ng-show="genericData.salesChannelClicked==false"
+							md-svg-icon="images/svg/expand_icon.svg"></md-icon> <md-icon
+							ng-show="genericData.salesChannelClicked==true"
+							md-svg-icon="images/svg/collaps_icon.svg"></md-icon> </md-button>
+					</div>
+					</md-toolbar>
+				</div>
+			</div>
+			<div class="full-width" ng-if="genericData.salesChannelClicked">
+				<div class="full-width">
+					<div class="row row-margin-top">
+						<div class="col-md-5 margin-top-5 text-center">
+							<span> <md-checkbox
+									ng-model="discountData.tableDiscountRuleAllScSelected"
+									aria-label="Enable"> </md-checkbox> &nbsp;Select all sales
+								channel
+							</span>
+						</div>
+						<div class="col-md-6 margin-top-5 text-right"
+							ng-if="!discountData.tableDiscountRuleAllScSelected">
+							<span> <md-checkbox
+									ng-model="discountData.tableDiscountRuleSalesChannelExclusion"
+									aria-label="Enable"> </md-checkbox> &nbsp;Exclude Selected
+								sales channel
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="full-width"
+					ng-if="!discountData.tableDiscountRuleAllScSelected">
+					<div class="row row-margin-top" style="margin-bottom: 10px;">
+						<div class="col-md-3 margin-top-5 text-center">
+							<span class="semi-bold-text" style="margin-left: 40px;">Sales
+								Channel <span style="color: red">*</span>
+							</span>
+						</div>
+						<div class="col-md-6 margin-top-5 text-right">
+							<select required name="channelObject"
+								ng-model="genericData.selectedSalesChannel"
+								ng-change="setSelectedChannel(genericData.selectedSalesChannel)"
+								class="form-control add-single-order-select"
+								ng-options="option as option.tableSalesChannelValueInfoName for option in salesChannels">
+								<option value="" disabled selected style="display: none;">Choose
+									Channel</option>
+							</select>
+						</div>
+						<div class="col-md-2 col-sm-12 col-xs-12">
+							<button type="button" class="btn addsharpbutton font"
+								style="margin-top: 4px; height: auto;"
+								ng-click="addSalesChannelToList()">Add to List</button>
+						</div>
+					</div>
+				</div>
+				<div class="full-width" style="background: #f5f5f5; padding: 15px;"
+					ng-if="!discountData.tableDiscountRuleAllScSelected && discountData.tableDiscountSalesChannelExclusions.length > 0">
+					<table id="salesChannelTable"
+						class="table boldtable table-responsive table-bordered table-hover">
+						<thead class="data-grid-header">
+							<tr>
+								<th style="width: 80%;">Channel Name</th>
+
+								<th style="width: 20%;">Action</th>
+							</tr>
+						</thead>
+						<tbody class="data-grid-data">
+							<tr
+								ng-repeat="tableDiscountSalesChannelExclusion in discountData.tableDiscountSalesChannelExclusions track by $index">
+								<td>
+									{{tableDiscountSalesChannelExclusion.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}
+								</td>
+								<td class="text-center"><a class="table-btn"
+									ng-click="removeSalesChannelFromList($index)"><span
+										class="fa fa-trash fa-lg" /></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="full-width" ng-if="enableQuantity">
+					<div class="row row-margin-top">
+						<div class="col-md-3 margin-top-5">
+							<span class="semi-bold-text">Quantity Threshold <span
+								style="color: red">*</span>
+							</span>
+						</div>
+						<div class="col-md-8">
+							<input type="text"
+                                    only-integer
+                                    prevent-typing-greater
+                                    max = "999999999"
+								    placeholder="Enter quantity threshold"
+								    class="form-control darkgrey-bottom-border-number"
+								    ng-model="discountData.tableDiscountRuleMinQuantity">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="full-width">
+				<div class="row row-margin-top-x-small">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<md-toolbar class="md-small accordion-color">
+						<div class="md-toolbar-tools"
+							style="margin-top: 10px; width: 100%">
+							<span class="font-big">Configure SKUs/Categories for this
+								rule</span> <span flex=""></span>
+							<md-button class="md-icon-button" aria-label="Favorite"
+								ng-click="entityClickedRow()"> <md-icon
+								ng-show="genericData.entityClicked==false"
+								md-svg-icon="images/svg/expand_icon.svg"></md-icon> <md-icon
+								ng-show="genericData.entityClicked==true"
+								md-svg-icon="images/svg/collaps_icon.svg"></md-icon> </md-button>
+						</div>
+						</md-toolbar>
+					</div>
+				</div>
+				<div class="row row-margin-top" ng-if="genericData.entityClicked">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div class="full-width">
+							<div class="full-width">
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									<span class="semi-bold-text" style="margin-left: 40px;">Select
+										criteria <span style="color: red">*</span>
+									</span>
+								</div>
+								<div class="col-md-8 ">
+									<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+										<md-radio-group
+											ng-model="discountData.tableDiscountRuleSelectedEntity"
+											ng-change="clickChangeValue(discountData.tableDiscountRuleSelectedEntity)">
+										<md-radio-button value="Category" class="md-primary"
+											ng-style="{'display':'inline'}">
+										Category&nbsp;&nbsp;&nbsp;</md-radio-button> <md-radio-button value="SKU"
+											class="md-primary" ng-style="{'display':'inline'}">
+										SKU </md-radio-button> </md-radio-group>
+									</div>
+
+								</div>
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+									style="margin-top: 10px; margin-bottom: 10px;">
+									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"
+										style="margin-top: 20px; padding: 0px;">
+										<span class="" style="font-size: 14px; margin-left: 40px;"
+											ng-if="discountData.tableDiscountRuleSelectedEntity == 'Category'">
+											<md-checkbox
+												ng-model="discountData.tableDiscountRuleAllCategorySelected"
+												ng-change="allCategorySelectionChanged()"
+												aria-label="Enable"> </md-checkbox> Select All Category
+										</span> <span class="" style="font-size: 14px; margin-left: 40px;"
+											ng-if="discountData.tableDiscountRuleSelectedEntity == 'SKU'">
+											<md-checkbox
+												ng-model="discountData.tableDiscountRuleAllSkuSelected"
+												ng-change="allSkuSelectionChanged()" aria-label="Enable">
+											</md-checkbox> Select All SKU
+										</span>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center"
+										style="margin-top: 20px;"
+										ng-if="(discountData.tableDiscountRuleSelectedEntity == 'Category'
+                                                                                                    && discountData.tableDiscountRuleAllCategorySelected == false )">
+										<span class="full-width"> <md-checkbox
+												ng-model="discountData.tableDiscountRuleSkuCategoryExclusion"
+												aria-label="Enable"> </md-checkbox> &nbsp;Exclude selected
+											category
+										</span>
+									</div>
+									<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center"
+										style="margin-top: 15px;"
+										ng-if="(discountData.tableDiscountRuleSelectedEntity == 'SKU'
+                                                                                                                && discountData.tableDiscountRuleAllSkuSelected == false)">
+										<span class="full-width"> <md-checkbox
+												ng-model="discountData.tableDiscountRuleSkuExclusion"
+												aria-label="Enable"> </md-checkbox> &nbsp;Exclude selected
+											SKU
+										</span>
+									</div>
+
+								</div>
+								<div class="full-width"
+									style="margin-top: 10px; margin-bottom: 10px;"
+									ng-if="(discountData.tableDiscountRuleSelectedEntity == 'Category' && discountData.tableDiscountRuleAllCategorySelected == false)
+                                                            || (discountData.tableDiscountRuleSelectedEntity == 'SKU' && discountData.tableDiscountRuleAllSkuSelected == false)">
+									<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+										<span class="semi-bold-text" style="margin-left: 30px;">Select
+											{{discountData.tableDiscountRuleSelectedEntity}} <span
+											style="color: red">*</span>
+										</span>
+									</div>
+									<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+										<angucomplete-alt-long id="category"
+											ng-if="discountData.tableDiscountRuleSelectedEntity == 'SKU'"
+											placeholder="Search {{discountData.tableDiscountRuleSelectedEntity}}"
+											pause="400" selected-object="searchedEntitySelected"
+											remote-url="{{entitySearchUrl}}"
+											title-field="{{angucompleteTitleField}}"
+											input-class="main-bottom-border font input-less-padding">
+										</angucomplete-alt-long>
+
+										
+										
+										<select
+											ng-options="option as option.skuNodeName for option in categoryTypeLists"
+											required
+											ng-if="discountData.tableDiscountRuleSelectedEntity == 'Category'"
+											ng-model="genericData.searchedCategory"
+											class="form-control add-single-order-select">
+											<option value="" disabled selected style="display: none;">Choose
+												Category</option>
+										</select>
+
+									</div>
+									<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+										<button type="button" title="Click here to see all SKUs." ng-if="discountData.tableDiscountRuleSelectedEntity == 'SKU'"
+													style="position: absolute; top:8px;"
+													class="btn btn-sm truncate-text"
+													ng-click="masterSkuDialog($event, true);">. . .</button>
+									</div>
+									
+
+									<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+										<button type="button" class="btn addsharpbutton font"
+											ng-click="addEntityToDiscountRule()" style="height: auto;">
+											Add to List</button>
+									</div>
+								</div>
+								<table id="categoryTable"
+									ng-if="discountData.tableDiscountRuleSelectedEntity == 'Category' && discountData.tableDiscountSkuCategoryExclusions.length > 0"
+									class="table boldtable table-responsive table-bordered table-hover">
+									<thead class="data-grid-header">
+										<tr>
+											<th style="width: 80%;">
+												{{discountData.tableDiscountRuleSelectedEntity}}</th>
+
+											<th style="width: 20%;">Action</th>
+										</tr>
+									</thead>
+									<tbody class="data-grid-data">
+										<tr
+											ng-repeat="tableDiscountSkuCategoryExclusion in discountData.tableDiscountSkuCategoryExclusions track by $index">
+											<td>
+												{{tableDiscountSkuCategoryExclusion.tableSkuNode.skuNodeName}}
+											</td>
+											<td class="text-center"><a class="table-btn"
+												ng-click="removeEntityFromDiscountRule($index)"><span
+													class="fa fa-trash fa-lg" /></a></td>
+										</tr>
+									</tbody>
+								</table>
+
+								<table id="skuTable"
+									ng-if="discountData.tableDiscountRuleSelectedEntity == 'SKU' && discountData.tableDiscountSkuExclusions.length > 0"
+									class="table boldtable table-responsive table-bordered table-hover">
+									<thead class="data-grid-header">
+										<tr>
+											<th style="width: 80%;">
+												{{discountData.tableDiscountRuleSelectedEntity}}</th>
+
+											<th style="width: 20%;">Action</th>
+										</tr>
+									</thead>
+									<tbody class="data-grid-data">
+										<tr
+											ng-repeat="tableDiscountSkuExclusion in discountData.tableDiscountSkuExclusions track by $index">
+											<td>{{tableDiscountSkuExclusion.tableSku.tableSkuName}}</td>
+											<td class="text-center"><a class="table-btn"
+												ng-click="removeEntityFromDiscountRule($index)"><span
+													class="fa fa-trash fa-lg" /></a></td>
+										</tr>
+									</tbody>
+								</table>
+
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</md-dialog-content>
+
+	<md-dialog-actions style="background-color: #30373B; min-height: 60px;"
+		layout="row"> <span flex></span>
+	<button type="button" class="cancel-btn"
+		ng-click="cancelDiscountRuleDialog()">Cancel</button>
+	<button ng-if="genericData.dialogMode == 'add'" type="button"
+		class="action-btn" ng-click="AddDiscountRule(discountData)">Add</button>
+	<button ng-if="genericData.dialogMode == 'edit'" type="button"
+		class="action-btn" ng-click="updateDiscountRule(discountData)">Update</button>
+	</md-dialog-actions>
+</form>
+</md-dialog>
+</script>

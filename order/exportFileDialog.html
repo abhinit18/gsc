@@ -1,0 +1,81 @@
+<script type="text/ng-template" id="exportFile.tmpl.html" ng-controller="orderController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Export Order Item</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelWarehouseSelection()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="full-width" style="margin-bottom:20px;">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                            <a href="javascript:void(0);"  class="">
+                                <div class="downloadFileBulkOrder" ng-click="DownloadOrderFileExport()"></div>
+                            </a>
+                            <br>
+                            <span class="downloadFileLabel">Orders</span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                            <a href="javascript:void(0);" ng-click="DownloadOrderItemFileExport()" class="">
+                                <div class="downloadFileBulkOrder"></div>
+                            </a>
+                            <br>
+                            <span class="downloadFileLabel">Order Items</span>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+
+
+<script type="text/ng-template" id="exportOrderReturnFile.tmpl.html" ng-controller="orderController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Export Order Return Item</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelWarehouseSelection()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="full-width" style="margin-bottom:20px;">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                            <a href="javascript:void(0);"  class="">
+                                <div class="downloadFileBulkOrder" ng-click="DownloadOrderReturnFileExport()"></div>
+                            </a>
+                            <br>
+                            <span class="downloadFileLabel">Order Return</span>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
+                            <a href="javascript:void(0);" ng-click="DownloadOrderReturnItemFileExport()" class="">
+                                <div class="downloadFileBulkOrder"></div>
+                            </a>
+                            <br>
+                            <span class="downloadFileLabel">Order Return Items</span>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

@@ -1,0 +1,90 @@
+<script type="text/ng-template" id="skuSalesChannelMapUploadDialog.tmpl.html">
+<md-dialog aria-label="Map Sku with sales channel"
+	style="width: 900px;position: relative;" ng-cloak>
+<form ng-submit="PoModal.$valid && saveSingleOrder()" name="PoModal" novalidate>
+	<md-toolbar style="background-color: #F2F7F8; ">
+	<div class="md-toolbar-tools">
+		<p class="dialog-heading-p" id="myModalLabel">Map SKU with Sales Channel</p>
+		<span flex></span>
+		<md-button class="md-icon-button" ng-click="cancelSkuSalesChannelDialog();">
+		<md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+		</md-button>
+	</div>
+
+	</md-toolbar>
+	<md-dialog-content >
+    <div class="full-width">
+        <ul class="nav nav-tabs" id="ordertabs">
+            <li class="active"><a data-target="#table1"
+                                  data-toggle="tab" class="btn sharp">Bulk Map</a></li>
+            <li><a data-target="#table2" data-toggle="tab"
+                   class="btn sharp">Single Map</a></li>
+
+        </ul>
+    </div>
+	<div class="md-dialog-content">
+
+		<div class="tab-content">
+			<div class="tab-pane container-fluid" id="table2">
+				<h3>This feature will be available soon.</h3>
+			</div>
+			<div class="tab-pane active container-fluid" id="table1">
+				<div
+					class="row row-margin-top-large row-margin-bottom-large text-center">
+					<div class="col-md-6 light-grey-right-border">
+						<!--<div id="uploadFileButton" class="uploadFileBulkOrder"-->
+						<!--ng-click="uploadFileBulkOrder($event)"></div>-->
+						<div ngf-drop ngf-select class="drop-box"
+							ng-change="BulkSKuSaleChannelMapUpload(genericData.bulkOrderUploadfile);"
+							ng-model="genericData.bulkOrderUploadfile"
+							ngf-drag-over-class="'dragover'" accept=".xls,.xlsx"
+							ngf-pattern="'.xls,.xlsx'">
+							<img src="images/svg/upload_icon_1.svg"
+								style="height: 40px; width: 40px;" /> &nbsp;&nbsp;Drag file to
+							upload or click to select
+						</div>
+
+						<div ngf-no-file-drop>File Drag/Drop is not supported for
+							this browser</div>
+						<br> <span id="uploadFileText" class="uploadFileLabel">Upload
+							File</span> <br>
+						<h5></h5>
+						<span> <span><b>Selected File:</b></span> <span
+							ng-if="genericData.fileName != null"
+							style="width: 100%; word-wrap: break-word;">{{genericData.fileName}}</span> <span
+							ng-if="genericData.fileName == null">No file selected</span>
+						</span>
+					</div>
+					<div class="col-md-6">
+						<a href="javascript:void(0);" ng-click="downloadSKUSalesChannelMaptemplate()">
+							<div class="downloadFileBulkOrder"></div>
+						</a> <br> <span class="downloadFileLabel"> <a
+							href="javascript:void(0);" ng-click="downloadSKUSalesChannelMaptemplate()">
+								Download File Template </a>
+						</span>
+					</div>
+				</div>
+				<div style="text-align: center;">
+					<a ng-click="cancelSkuSalesChannelDialog()"
+						style="color: #00ACE4; font-weight: 600; cursor: pointer;">Go
+						to "Bulk upload reports" for more details.</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</md-dialog-content>
+
+	<md-dialog-actions style="background-color: #30373B; min-height: 60px;"
+		layout="row"> <span flex></span>
+	
+	<div class="full-width text-right">
+		<button type="button" class="cancel-btn" ng-click="cancelSkuSalesChannelDialog();">Cancel
+		</button>
+		<button type="button" class="action-btn"
+			ng-click="uploadSKUSalesChannelBulkUpload(genericData.bulkOrderUploadfile)">Upload
+		</button>
+	</div>
+	</md-dialog-actions>
+</form>
+</md-dialog>
+</script>

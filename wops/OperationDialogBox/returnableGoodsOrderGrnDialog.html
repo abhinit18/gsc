@@ -1,0 +1,142 @@
+<script type="text/ng-template" id="returnableGoodsOrderGrnDialog.tmpl.html">
+    <md-dialog aria-label="Cancel Order Item" style="width: 1096px; position: relative;" ng-cloak>
+        <form ng-submit="QuickGRN.$valid && SubmitGrn(quickGRNSkuDetails.tableSkuInventoryRecords)" novalidate name="QuickGRN">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Quick GRN</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelGrnDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="full-width">
+                        <div class="col-md-12">
+                            <table id="productTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th style="width: 10%" class="text-center">SKU Code</th>
+                                    <th style="width: 10%" class="text-center">SKU Name</th>
+                                    <th style="width: 10%" class="text-center">Batch No.</th>
+                                    <th style="width: 10%" class="text-center">Vendor</th>
+                                    <th style="width: 10%" class="text-center">MFG. Date</th>
+                                    <th style="width: 10%" class="text-center">Expiry Date</th>
+                                    <th style="width: 10%" class="text-center">MRP</th>
+                                    <th style="width: 10%" class="text-center">MSP</th>
+                                    <th style="width: 10%" class="text-center">Good Quantity</th>
+                                    <th style="width: 10%" class="text-center">Bad Quantity</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="product in quickGRNSkuDetails.tableSkuInventoryRecords">
+                                    <td style="width: 10%" >
+                                        <span style="color: orangered;" ng-if="product.tableSku.tableSkuClientSkuCode">{{product.tableSku.tableSkuClientSkuCode}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSku.tableSkuClientSkuCode">-</span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span style="color: orangered;" ng-if="product.tableSku.tableSkuName">{{product.tableSku.tableSkuName}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSku.tableSkuName">-</span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span style="color: orangered;" ng-if="product.tableSkuInventory.tableSkuInventoryBatchNo">{{product.tableSkuInventory.tableSkuInventoryBatchNo}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSkuInventory.tableSkuInventoryBatchNo"></span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span ng-if="product.tableSkuInventory.tableVendor.tableVendorName">{{product.tableSkuInventory.tableVendor.tableVendorName}}</span>
+                                        <span ng-if="!product.tableSkuInventory.tableVendor.tableVendorName">-</span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span ng-if="product.tableSkuInventory.tableSkuInventoryMfgDate">
+                                            {{product.tableSkuInventory.tableSkuInventoryMfgDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventory.tableSkuInventoryMfgDate">
+                                           -
+                                        </span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span ng-if="product.tableSkuInventory.tableSkuInventoryExpiryDate">
+                                            {{product.tableSkuInventory.tableSkuInventoryExpiryDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventory.tableSkuInventoryExpiryDate">
+                                            -
+                                        </span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span>
+                                          {{product.tableSkuInventory.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <span>
+                                            {{product.tableSkuInventory.tableSkuInventoryMinSalePrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+
+                                    <td  style="width: 10%" class="text-center">
+                                        <input type="text" class="form-control"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max = "999999999"
+                                               style="border:1px solid gray; text-align: right"
+                                               ng-model="product.tableSkuInventory.tableSkuInventoryAvailableCount">
+                                    </td>
+                                    <td  style="width: 10%" class="text-center">
+                                        <input type="text"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max = "999999999"
+                                               class="form-control"
+                                               style="border:1px solid gray;text-align: right"
+                                               ng-model="product.tableSkuInventory.tableSkuInventoryInwardQcFailedCount">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn" ng-click="cancelGrnDialog()">Cancel
+                </button>
+                <button type="submit" ng-disabled="disableSubmitGrn" class="action-btn">Submit</button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+
+<!--========================================== dialog for claim conformation ======================================-->
+
+<script type="text/ng-template" id="askClaimReturnableGoodsAtGrnDialog.tmpl.html" ng-controller="returnableGoodsOrderController">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">&nbsp;</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelReturnableGoodsOrderAskClaimDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <p class="text-center">Do you want to raise claim for bad quantity?</p>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn" ng-click="cancelReturnableGoodsOrderAskClaimDialog()">No
+                </button>
+                <button type="button" ng-click="claimConfirmationAction(true,ReturnableGoodsOrderDialogGrnInventory)" class="action-btn">Yes</button>
+            </md-dialog-actions>
+
+    </md-dialog>
+</script>

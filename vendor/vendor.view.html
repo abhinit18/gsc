@@ -1,0 +1,600 @@
+
+    <link href="vendor/vendor.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/multiple-select.css">
+    <div class="container-fluid">
+        <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">Vendors Master</h4></div>
+        <div class="row vendor-search row-margin-top-small" style="margin-left: auto; margin-right: auto;">
+            <img width="22px" height="22px" src="images/svg/header_search.svg" />
+            <span class="vendor-subheading">&nbsp;&nbsp;Search Vendor</span>
+            <img width="22px" height="22px" ng-if="searchVendorClicked==false" class="pull-right" src="images/svg/expand_icon.svg" ng-click="toggleSearchRow()" />
+            <img width="22px" height="22px" ng-if="searchVendorClicked==true" class="pull-right" src="images/svg/collaps_icon.svg" ng-click="toggleSearchRow()" />
+        </div>
+
+        <div ng-if="searchVendorClicked==true" class="row search-row-content search-row-top-border" style="margin-left: auto; margin-right: auto;">
+            <div class="row vendor-search-row">
+                <div class="col-xs-3 font">Search Vendor</div>
+                <div class="col-xs-3" style="margin-left: -77px;">
+                    <input type="text" class="vendor-inputtext input-less-padding" ng-model="vendorText" placeholder="Search Vendor" ng-change="callDisabledMutual();">
+                </div>
+                <div class="col-xs-2">
+					
+				</div>
+                <div class="col-xs-2">
+                    <button type="button" style="margin-left: 0px !important; margin-top: -5px !important;" class="btn btn-default mybut"  ng-click="submitvendorAction(vendorText)">Search</button>
+                </div>
+                <div class="col-xs-2">
+                    <button title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearMutualVendorAction();vendorText=null">
+                    </button>
+                </div>
+            </div>
+            <div class="row text-center vendor-search-separator">
+                --------------------------------------------OR--------------------------------------------
+            </div>
+            <div class="row vendor-search-row">
+                <div class="col-xs-3 font">SKU Wise Vendor Search</div>
+                <div class="col-xs-3" style="margin-left: -77px;">
+                    <angucomplete-alt id="productsfilter" placeholder="Search product" pause="400" selected-object="searchedProductForFilter" remote-url="{{baseSkuUrl}}" title-field="tableSkuName" description-field="tableSkuDescription" image-field="tableSkuImageUrl" code-field="tableSkuClientSkuCode" input-changed="newChanged"
+                        input-class="main-bottom-border font input-less-padding">
+                    </angucomplete-alt>
+                </div>
+                <div class="col-xs-2">
+					<button type="button" title="Click here to see all SKUs."
+						style="position: absolute; top: 0px;"
+						class="btn btn-sm truncate-text"
+						ng-click="masterSkuDialog($event, false);">. . .</button>
+
+				</div>
+                <div class="col-xs-2">
+                    <button type="button" style="margin-left: 0px !important; margin-top: -5px !important;" class="btn btn-default mybut"  ng-click="submitSkuMapCendorAction(skuId)">Search</button>
+                </div>
+                <div class="col-xs-2">
+                    <button title="Clear Applied Filters"  class="btn clearFilter" ng-click="clearSkuMapVendorAction();">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top vendor-search" style="margin-left: auto; margin-right: auto;">
+            <div class="col-xs-2" style="padding-top: 5px;">
+                <span class="total-count-heading">Total Vendors</span>
+            </div>
+            <div class="col-xs-3">
+                <div class="circle-oval circle-orange" style="margin-left: -45px;">
+                    <span>
+                      {{vendorCount}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid vendors-listheading">
+        <div class="row" style="margin-left: auto; margin-right: auto;">
+            <div class="col-md-12" ng-if="access.createAccess">
+                <button type="button" class="btn addsharpbutton font pull-right" ng-click="showvendorAddBox($event)">
+                  <img width="20px" height="20px" color="white" src="images/svg/add.svg">
+                  &nbsp;&nbsp;Add New Vendor
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row main-list">
+            <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-vendor">
+                    <tr>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableVendorName',sortReverse)">
+                                Vendor Company Name&nbsp;
+                                <span ng-if="sortType == 'tableVendorName' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span ng-if="sortType == 'tableVendorName' && sortReverse" class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting">
+                                Vendor Company Name&nbsp;&nbsp;
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableVendorClientVendorCode',sortReverse)">
+                                Ref Code&nbsp;
+                                <span ng-if="sortType == 'tableVendorClientVendorCode' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span ng-if="sortType == 'tableVendorClientVendorCode' && sortReverse" class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting">
+                                Ref Code&nbsp;&nbsp;
+                            </a>
+                        </td>
+                        <td>
+                            <a ng-if = "genericData.enableSorting" href="" ng-click="tableSorting('tableVendorSystemNo',sortReverse)">
+                            Vendor Code&nbsp;
+                                <span ng-if="sortType == 'tableVendorSystemNo' && !sortReverse" class="fa fa-caret-down"></span>
+                                <span ng-if="sortType == 'tableVendorSystemNo' && sortReverse" class="fa fa-caret-up"></span>
+                            </a>
+                            <a ng-if = "!genericData.enableSorting">
+                                Vendor Code&nbsp;
+                            </a>
+                        </td>
+                        <td>Vendor Contact Person</td>                        
+                        <td>Email Id</td>
+                        <td>Phone No</td>
+                        <td>Lead Time</td>                        
+                        <td>Action</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody data-ng-repeat="vendorData in vendorsLists" data-ng-switch on="dayDataCollapse[$index]">
+                    <tr class="clickable-row-vendor">
+                        <td>{{vendorData.tableVendorName}}</td>
+                        <td>{{vendorData.tableVendorClientVendorCode}}</td>
+						<td><a style="cursor: pointer"
+							title="Click here to see vendor history."
+							ng-click="showVendorHistory($event, vendorData.tableVendorSystemNo);">{{vendorData.tableVendorSystemNo}}</a></td>
+						<td>{{vendorData.tableVendorContactPerson}}</td>
+                        <td>{{vendorData.tableVendorEmailId}}</td>
+                        <td>{{vendorData.tableVendorPhoneNumber}}</td>
+                        <td>{{vendorData.tableVendorDefaultLeadTimeDays?vendorData.tableVendorDefaultLeadTimeDays:"0"}} days</td>
+                        <td>
+                            <img ng-src="{{imgsrc1}}" ng-attr-title="{{!access.editAccess || vendorData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit Vendor'}}" ng-class="{disableAccess: !access.editAccess || vendorData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}" width="20px" height="20px" data-ng-click="access.editAccess && editVendor($event,vendorData.idtableVendorId)" ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')" ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                        </td>
+                        <td ng-click="callVendorSkuMapRepeatData(vendorData.idtableVendorId); selectTableRow($index, vendorData.idtableVendorId);" ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                        <td ng-click="callVendorSkuMapRepeatData(vendorData.idtableVendorId); selectTableRow($index, vendorData.idtableVendorId);" data-ng-switch-when="false"><img src="images/svg/expand_icon.svg" height="22" /></td>
+                        <td data-ng-switch-when="true" ng-click="selectTableRow($index, vendorData.idtableVendorId);"><img src="images/svg/collaps_icon.svg" height="22" /></td>
+                    </tr>
+
+                    <tr data-ng-switch-when="true" class="vendor-acc-data-row">
+                        <td colspan="9">
+                            <!-- Header Row -->
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    Address
+                                </div>
+                                <div class="col-xs-7">
+                                    SKUs
+                                </div>
+                            </div>
+
+                            <!-- Data Row -->
+                            <div class="row" id="row-vendor">
+
+                                <!-- Vendor Address -->
+                                <div class="col-xs-5">
+                                    <div class="row" data-ng-repeat="shipList in vendorData.tableVendorAddresses">
+                                        <div class="col-xs-8">
+                                            {{shipList.tableAddress.tableAddressFull}}
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <span class="pull-right" ng-if="access.editAccess" ng-click="editShippingAddressVendor(vendorData.idtableVendorId,shipList.idtableVendorAddressId)">Edit Address</span>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <hr />
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-bottom-small" ng-show="vendorData.tableVendorAddresses.length == 0">
+                                        <div class="col-xs-12 font text-center">
+                                            No Addresses Available. Add One by clicking 'Add Address'
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SKU List -->
+                                <div class="col-xs-7">
+                                    <!-- ng-repeat row -->
+                                    <div class="row" ng-repeat="skuMap in skuMapData">
+                                        <div class="col-xs-10">
+                                            <div class="row">
+                                                <div class="col-xs-3 font margin-top-5 padding-left-20">
+                                                    <b>SKU Code<br>SKU Name</b>
+                                                </div>
+                                                <div class="col-xs-3 margin-top-5 padding-left-20" style="font-weight: 600; color: #F0592B; margin-left: -25px;">
+                                                    {{skuMap.tableSku.tableSkuClientSkuCode}}<br>{{skuMap.tableSku.tableSkuName}}
+                                                </div>
+
+                                                <div class="col-xs-4 font margin-top-5 padding-left-10">
+                                                    <b>Vendor SKU Code</b>
+                                                </div>
+                                                <div class="col-xs-2 margin-top-5 padding-left-20" style="margin-left: -25px;">
+                                                    {{skuMap.tableVendorSystemSkuMapVendorSkuCode}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-3 font margin-top-5 padding-left-20">
+                                                    <b>Min Order Qty</b>
+                                                </div>
+                                                <div class="col-xs-3 margin-top-5 padding-left-20" style="margin-left: -25px;">
+                                                    {{skuMap.tableVendorSystemSkuMapMinOrderQty}}
+                                                </div>
+
+                                                <div class="col-xs-4 font margin-top-5 padding-left-10">
+                                                    <b>Lead Time(In Days)</b>
+                                                </div>
+                                                <div class="col-xs-2 margin-top-5 padding-left-20" style="margin-left: -25px;">
+                                                    {{skuMap.tableVendorSystemSkuMapLeadTime}}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4 font"></div>
+                                                <div class="col-xs-6">
+                                                    <!-- Back Order Checkbox -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2" style="margin-left: -15px; margin-top: 7px;">
+                                            <span class="pull-right" ng-click="editVendorSkuMap(vendorData.idtableVendorId,skuMap.idtableVendorSystemSkuMapId)">Edit SKU</span>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <hr />
+                                        </div>
+                                    </div>
+                                    <div class="row row-margin-bottom-small" ng-show="skuMapData.length == 0">
+                                        <div class="col-xs-12 font text-center">
+                                            No Vendor SKUs Available. Add One by clicking 'Add Vendor SKU'
+                                        </div>
+                                    </div>
+									
+									
+
+                                </div>
+                            </div>
+
+
+
+                            <!-- Footer Rows -->
+                            <div class="row add-address-row">
+                                <div class="col-xs-5">
+                                    <span ng-click="addAddress(vendorData.idtableVendorId)" ng-if="access.createAccess">Add Address</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span data-toggle="modal" data-target="#addVendorSku" ng-if="access.createAccess" ng-click="addVendorSkuGetId(vendorData.idtableVendorId)">Add Vendor SKU</span>
+                                </div>
+								<div class="col-xs-4">
+                                    <span data-toggle="modal" ng-click="showSkuMapWithVendorDialog($event, vendorData.idtableVendorId, $index)" ng-if="access.createAccess">Map SKUs</span>
+                                </div>
+                                <hr />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- END TABLE -->
+            <div class="row pagination-row" style="margin-top: 0px;">
+                <div class="col-md-6">
+                    <p class="showingOrderLabel" ng-show="vendorsize<vendorCount">Showing Vendors {{vendorstart + 1}} to {{vendorsize}} of {{vendorCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="vendorsize>=vendorCount && vendorCount!=0">Showing Vendors {{vendorstart + 1}} to {{vendorCount}} of {{vendorCount}}
+                    </p>
+                    <p class="showingOrderLabel" ng-show="vendorCount==0">No Vendors Available
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length && modeVendor=='normal'" class="pagination">
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfVendorsCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfVendorsCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfVendorsCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                            <a ng-click="listOfVendorsCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfVendorsCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPager.pages.length && modeVendor=='mutual'" class="pagination">
+                          <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a ng-click="listOfMutualVendorsCount(1)">&lt;&lt; First</a>
+                          </li>
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfMutualVendorsCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfMutualVendorsCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfMutualVendorsCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfMutualVendorsCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                        <ul ng-if="vmPager.pages.length && modeVendor=='skumap'" class="pagination">
+                          <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a>&lt;&lt; First</a>
+                          </li>
+                          <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                              <a ng-click="listOfSkuMapVendorsCount(1)">&lt;&lt; First</a>
+                          </li>
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfSkuMapVendorsCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfSkuMapVendorsCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfSkuMapVendorsCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfSkuMapVendorsCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages" ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addVendorSku" role="dialog" aria-labelledby="addVendorSkuLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width: 1000px;">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                        <button type="button" ng-click="cancelCleanData()" class="close">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only" >Close</span>
+                        </button>
+                        <p class="dialog-heading-p" ng-show="vendorSkuMapMode=='add'" id="addVendorSkuLabel">Add Vendor SKU</p>
+                        <p class="dialog-heading-p" ng-show="vendorSkuMapMode=='edit'" id="addVendorSkuLabel1">Edit Vendor SKU</p>
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                        <div class="container-fluid">
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 font">Search SKU <span class="label-red">*</span></div>
+                                <div class="col-md-3">
+                                    <!-- SKU Search Control -->
+                                    <angucomplete-alt ng-class="{submitted: isProductSelected}" id="products" placeholder="Search product" pause="400" selected-object="searchedProduct" remote-url="{{baseSkuUrl}}" title-field="tableSkuName" description-field="tableSkuDescription" image-field="tableSkuImageUrl"
+                                        code-field="tableSkuClientSkuCode" initial-value="skuString" input-class="form-control darkgrey-bottom-border font"></angucomplete-alt>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" title="Click here to see all SKUs."
+                                            style="position: absolute; top: 10px; left:1px;"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);">. . .</button>
+                                </div>
+                                <div class="col-md-2 font">Vendor SKU Code <span class="label-red">*</span></div>
+                                <div class="col-md-4">
+                                    <!-- Input -->
+                                    <input type="text" ng-class="{submitted:vendorSkuCodeEntered}"
+                                           ng-change="vendorSkuCodeChanged(vendorSkuData.tableVendorSystemSkuMapVendorSkuCode)"
+                                           class="form-control darkgrey-bottom-border font" ng-model="vendorSkuData.tableVendorSystemSkuMapVendorSkuCode"
+                                        placeholder="Enter Vendor SKU Code">
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 font">Min Order Qty <span class="label-red">*</span></div>
+                                <div class="col-md-4">
+                                    <!-- Input -->
+                                    <input type="text" only-integer
+                                           prevent-typing-greater
+                                           max = "999999999"
+                                           ng-class="{submitted:minOrderQtyEntered}" ng-change="minOrderQtyChanged(vendorSkuData.tableVendorSystemSkuMapMinOrderQty)"
+                                           class="form-control darkgrey-bottom-border textRightOnFocus font" ng-model="vendorSkuData.tableVendorSystemSkuMapMinOrderQty"
+                                        placeholder="Enter Min Order Quantity">
+                                </div>
+                                <div class="col-md-2 font">Lead Time <span class="label-red">*</span></div>
+                                <div class="col-md-4">
+                                    <!-- Input -->
+                                    <input type="text"
+                                           only-integer
+                                           prevent-typing-greater
+                                           max = "999999999"
+                                           ng-class="{submitted:leadTimeEntered}" ng-change="leadTimeChanged(vendorSkuData.tableVendorSystemSkuMapLeadTime)"
+                                           class="form-control darkgrey-bottom-border textRightOnFocus font" ng-model="vendorSkuData.tableVendorSystemSkuMapLeadTime" placeholder="Enter Lead Time (In Days)">
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-12">
+                                    <!-- Pricing Tiers Accordion -->
+                                    <div class="row row-margin-top-x-small">
+                                        <md-toolbar class="md-small accordion-color">
+                                            <div class="md-toolbar-tools">
+                                                <span class="font-big">Pricing Tiers Details</span>
+                                                <span flex=""></span>
+                                                <md-button class="md-icon-button" aria-label="Favorite" ng-click="pricingtierDetailRow()">
+                                                    <md-icon ng-if="pricingtierDetailsClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                                    <md-icon ng-if="pricingtierDetailsClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </md-toolbar>
+                                    </div>
+                                    <div ng-if="pricingtierDetailsClicked==true" class="row accordion-color">
+                                        <div class="col-md-12" style="padding-left: 25px !important;">
+
+                                            <div class="row row-margin-top-small">
+                                                <div class="col-md-3">
+                                                    <input type="text"
+                                                           only-integer
+                                                           prevent-typing-greater
+                                                           max = "999999999"
+                                                           ng-class="{submitted: isPTMinQtyEntered}" ng-change="PTMinQtyChanged(PT.tableVendorSkuPricingTiersQtyMin)"
+                                                           ng-model="PT.tableVendorSkuPricingTiersQtyMin" placeholder="Min Quantity" class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text"
+                                                           only-integer
+                                                           prevent-typing-greater
+                                                           max = "999999999"
+                                                           ng-class="{submitted: isPTMaxQtyEntered}"
+                                                           ng-change="PTMaxQtyChanged(PT.tableVendorSkuPricingTiersQtyMax)"
+                                                           ng-model="PT.tableVendorSkuPricingTiersQtyMax" placeholder="Max Quantity"
+                                                           class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text"  price ng-class="{submitted: isPTPriceEntered}" ng-change="PTPriceChanged(PT.tableVendorSkuPricingTiersPrice)" ng-model="PT.tableVendorSkuPricingTiersPrice" placeholder="Price" class="form-control darkgrey-bottom-border font input-less-padding">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn small-actn-btn" ng-click="addPricingtier();">
+                                                      Add to List
+                                                  </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row row-margin-top" ng-if="pricingTiers.length > 0">
+                                                <div class="col-md-12">
+                                                    <span class="font">List of Selected Pricing Tiers</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="row row-margin-top-small row-margin-bottom-small" ng-if="pricingTiers.length > 0">
+                                                <div class="col-md-12">
+                                                    <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                                        <thead class="data-grid-header">
+                                                            <tr>
+                                                                <th style="text-align: right;"><span class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Min Qty</th>
+                                                                <th style="text-align: right;"><span class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Max Qty</th>
+                                                                <th style="text-align: right;"><span class="fa fa-inr fa-md"></span>&nbsp;&nbsp;Price</th>
+                                                                <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="data-grid-data">
+                                                            <tr ng-repeat="tiers in pricingTiers">
+                                                                <td style="text-align: right;">{{tiers.tableVendorSkuPricingTiersQtyMin}}</td>
+                                                                <td style="text-align: right;">{{tiers.tableVendorSkuPricingTiersQtyMax}}</td>
+                                                                <td style="text-align: right;">{{tiers.tableVendorSkuPricingTiersPrice | priceOrHyphen}}</td>
+                                                                <td style="text-align: center; padding: 0;">
+                                                                    <md-button class="md-icon-button" md-no-ink="true" ng-click="removeProduct($index)" placeholder="Delete" style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image" ng-init="imgsrc1='images/svg/delete.svg'" ng-mouseover="imgsrc1='images/svg/delete_hover.svg'" ng-mouseout="imgsrc1='images/svg/delete.svg'" style="width: 20px;"></md-icon>
+                                                                    </md-button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer modal-dialog-footer">
+                        <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelCleanData()">Cancel</button>
+                        <button type="button" ng-show="vendorSkuMapMode=='add'" class="action-btn" ng-click="saveVendorSkuMap()">Save</button>
+                        <button type="button" ng-show="vendorSkuMapMode=='edit'" class="action-btn" ng-click="saveVendorSkuMap()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal1" data-backdrop="static" data-keyboard="true" role="dialog">
+            <div class="modal-dialog" style="width: 1000px;">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <p class="dialog-heading-p">Add New OQM Config</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row row-margin-top">
+                            <div class="col-md-2 margin-top-5">
+                                <span class="font">Multiplier</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="number" ng-keypress="Num1($event)" min="1" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter Multiplier" ng-model="multiplier" ng-class="{submitted: isMultipierValid}">
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-md-2">
+                                <span class="font">OQM Type</span>
+                            </div>
+                            <div class="col-md-4 margin-top-5">
+                                <select ng-model="typeopt" class="form-control" ng-class="{submitted: isOqmTypeValid}">
+                                  <option value="">
+                                      Select
+                                  </option>
+                                  <option ng-repeat="option in oqmTypes" value="{{option}}">
+                                    {{option.tableSkuUoqmTypeString}}
+                                  </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <a style="color: #00ACE4; cursor: pointer;" data-toggle="modal" data-target="#myModal2">
+                                    <span class="fa fa-plus fa-lg"></span> Add New OQM Type
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer modal-dialog-footer">
+                        <button type="button" class="btn action-btn" ng-click="saveOqmConfig(multiplier,typeopt,skuSelected);">Save</button>
+                        <button type="button" class="btn cancel-btn" ng-click="closeBrandBox();qcName=null" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal2" data-backdrop="static" data-keyboard="true" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <p class="dialog-heading-p">Add New OQM Type</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <b class="inputQcLabel">OQM Type String</b>
+                            <input class="inputQcModel" type="text" ng-model="oqmString" ng-class="{submitted: isOqmStringValid}">
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-dialog-footer">
+                        <button type="button" class="btn action-btn" ng-click="saveOqmString(oqmString);oqmString=null">Save</button>
+                        <button type="button" class="btn cancel-btn" ng-click="closeBrandBox();oqmString=null" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Vendor Dialog -->
+        <div ng-include src="'vendor/addNewVendorDialog.html'"></div>
+        <!-- Add New Vendor Address Dialog -->
+        <div ng-include src="'vendor/addNewVendorAddressDialog.html'"></div>
+		<div ng-include src="'vendor/mapSkuWithVendorDialog.html'"></div>
+		<div ng-include src="'vendor/addCountryCityAndPinDialog.html'"></div>
+		<div ng-include src="'services/masterSkuDialog.html'"></div>
+		<div ng-include src="'vendor/showVendorPoDialog.html'"></div>
+        <div ng-include src="'services/CommonMasterSkuDialog.html'"></div>
+		
+    </div>

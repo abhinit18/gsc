@@ -1,0 +1,608 @@
+
+<link href="settings/saleschannels/saleschannels.css" rel="stylesheet">
+<div class="container-fluid sale-channel-container">
+    <div class="row" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-12">
+            <p class="screen-heading">Sale Channel</p>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-4 sale-channel-list-heading">
+            Select the Sale Channel
+        </div>
+        <div class="col-md-4 sale-channel-name padding-left-35">
+            {{channelName}}
+        </div>
+        <div class="col-md-4 text-right" style="padding: 0px;" ng-if="access.createAccess && channelName != null && channelName != undefined">
+            <a href="javascript:void(0);"
+               class="btn action-btn"
+               style="margin-right:0px;"
+               ng-click="openChannel()">Add New Sales Channel</a>
+        </div>
+    </div>
+
+    <div class="row margin-top-10" style="margin-left: auto; margin-right: auto;">
+        <div class="col-md-4 light-border">
+            <!-- ng-repeat on row -->
+            <div id="salechanneltype" ng-repeat="channelData in saleChannelData" class="row sale-channel-row"
+                 ng-class="{active: isActive(channelData.tableSalesChannelMetaInfoName)}"
+                 ng-click="listOfSubSaleChannels(channelData)">
+                <div>
+                    <img class="col-md-5 light-border sale-channel-img"
+                         ng-src="{{channelData.tableSalesChannelMetaInfoLogo}}">
+                </div>
+                <div class="col-md-7 sale-channel-name padding-top-21 padding-left-25">
+                    {{channelData.tableSalesChannelMetaInfoName}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" ng-if="channelName">
+            <div class="row main-list padding-left-35 padding-top-0 padding-right-0">
+                <table class="table table-striped-custom table-condensed table-responsive table-hover">
+                    <thead class="main-list-header-sc">
+                    <tr>
+                        <td>Name of Sale Channel</td>
+                        <td>Action</td>
+                    </tr>
+                    </thead>
+
+                    <!-- ng-repeat on tbody -->
+                    <tbody ng-repeat="subSaleChannelData in subSaleChannelData">
+                    <tr class="clickable-row-sc">
+                        <td>{{subSaleChannelData.tableSalesChannelValueInfoName}}</td>
+                        <td>
+                            <img id="editsalechannel" ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                                 ng-click="access.editAccess && editSaleChannelConfig(subSaleChannelData.idtableSalesChannelValueInfoId)"
+                                 ng-init="imgsrc1='images/svg/edit.svg'"
+                                 ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                                 ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tbody ng-if="subSaleChannelData == '' || subSaleChannelData == null">
+                        <tr>
+                            <td colspan="2">
+                                <h3 class="text-center">Configure a sales channel.</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-8 text-center row-margin-top-larger font" ng-if="!channelName">Please select a Sale Channel
+        </div>
+    </div>
+</div>
+
+<!--======================================== Add New sales channel =================================-->
+
+<div class="modal fade" id="AddNewSalesChannelDialog" role="dialog"
+     aria-labelledby="myModalLabelleded" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:1000px !important;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button type="button" class="close" ng-click="cancelAddNewSalesChannelDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabelleded">Configure {{channelName}}</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="md-dialog-content">
+                    <div class="full-width" style ="padding-top: 20px">
+                        <div class="full-width">
+                            <div class="row padding-left-35">
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" style="padding: 0px;">
+                                    <div class="col-md-3 font margin-top-5">Channel Name</div>
+                                    <div class="col-md-4">
+                                        <!-- input -->
+                                        <input capitalize-first id="salechannelname" type="text" ng-class="{submitted: isChannelNameEntered}"
+                                               id="channelName"
+                                               ng-model="subChannelData.tableSalesChannelValueInfoName"
+                                               placeholder="Enter channel name"
+                                               class="form-control darkgrey-bottom-border input-less-padding"
+                                               ng-change="channelNameEntered(subChannelData.tableSalesChannelValueInfoName)"
+                                               ng-blur="isSalesChannelExist()">
+                                    </div>
+                                    <div class="row padding-left-35"
+                                         ng-show="channelData.idtableSalesChannelMetaInfoId == 5 && saleChannelMode=='edit'">
+                                        <a id="viewftp" ng-click="viewftpcred()"
+                                           style="color: #00ACE4; font-weight: 600;cursor: pointer;">View FTP
+                                            Credentials</a>
+                                    </div>
+                                    <div class="" ng-repeat="key in metaChannelData track by $index">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                             style="margin-top:10px;margin-bottom:10px;">
+                                            <div ng-hide="(key.tableSalesChannelValueMetaValue=='User Name' || key.tableSalesChannelValueMetaValue=='Password' || key.tableSalesChannelValueMetaValue=='URL') && channelData.idtableSalesChannelMetaInfoId == 5 "
+                                                 class="col-md-3 font margin-top-5" style="padding: 0px;">
+                                                {{key.tableSalesChannelValueMetaValue}}
+                                            </div>
+                                            <div ng-hide="(key.tableSalesChannelValueMetaValue=='User Name' || key.tableSalesChannelValueMetaValue=='Password' || key.tableSalesChannelValueMetaValue=='URL') && channelData.idtableSalesChannelMetaInfoId == 5 "
+                                                 class="col-md-4" style="padding-left: 10px;padding-right: 10px;">
+                                                <input id="value{{$index}}" ng-attr-type="{{(key.tableSalesChannelValueMetaValue == 'Password')?'password':'text'}}" ng-class="{submitted: isKeyEntered[$index]}"
+                                                       ng-model="key.tableSalesChannelValueInfoValue" id="channel{{$index}}"
+                                                       placeholder="Type Here"
+                                                       class="form-control darkgrey-bottom-border input-less-padding"
+                                                       ng-change="authTokenEntered($index)">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"
+                                             ng-show="channelData.tableSalesChannelType.idtableSalesChannelTypeId==1 && $index+1 == metaChannelData.length && showVerifyIntegration">
+                                            <button id="verifyintegration{{$index}}" type="button" class="btn small-actn-btn"
+                                                    ng-click="verifyIntegration(subChannelData,channelData,metaChannelData)">Verify
+                                                Integration
+                                            </button>
+                                        </div>
+                                        <div class="col-md-4"
+                                             ng-show="channelData.tableSalesChannelType.idtableSalesChannelTypeId==1 && $index+1 == metaChannelData.length && integrationVerified">
+                                            <div id="verified" class="verify-integration">
+                                                <md-icon md-svg-src="images/svg/status_confirm_icon.svg"
+                                                         style="width: 30px; height: 30px;"></md-icon>
+                                                &nbsp;&nbsp;{{verificationmessage}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"
+                                             ng-show="channelData.tableSalesChannelType.idtableSalesChannelTypeId==1 && $index+1 == metaChannelData.length && integrationNotVerified">
+                                            <div id="verificationfailed" class="no-verification-reqd">
+                                                <md-icon md-svg-src="images/svg/status_alert_icon.svg"
+                                                         style="width: 25px; height: 25px;"></md-icon>
+                                                &nbsp;&nbsp;Verification Failed
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="">
+                                        <div class="full-width" style="margin-top:15px;"
+                                             ng-show="channelData.idtableSalesChannelMetaInfoId!=2  && subSaleChannelData!=null">
+                                            ** To authorize the Glaucus Integration with {{channelName}}<br> account please follow
+                                            these <a id="helpsteps"
+                                                     style="cursor: pointer"
+                                                     ng-click="openHelpModal(channelData.idtableSalesChannelMetaInfoId)">steps</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="padding-right: 50px;">
+                                    <div>
+                            <span class="add-new-sp-row" ng-show="channelData.idtableSalesChannelMetaInfoId==1">
+                                <md-checkbox id="fbaenabled"
+                                             ng-model="subChannelData.tableSalesChannelValueInfoFbaEnabled"
+                                             aria-label="Enable">
+                                </md-checkbox> FBA Enabled
+                            </span>
+
+                                    </div>
+                                    <div>
+                            <span class="add-new-sp-row" ng-show="channelData.idtableSalesChannelMetaInfoId==2">
+                                <md-checkbox id="isdefault"
+                                             ng-model="subChannelData.tableSalesChannelValueInfoIsDefault"
+                                             aria-label="Enable">
+                                </md-checkbox> Set as default
+                            </span>
+                                    </div>
+                                    <div>
+                            <span class="add-new-sp-row"
+                                  ng-show="channelData.idtableSalesChannelMetaInfoId==1 && clientprofile.tableClientProfileAskStandardCategoryMaster ==0 &&  clientprofile.tableClientProfileStandardCategoryMaster ==0">
+                                <md-checkbox id="pullproduct"
+                                             ng-model="subChannelData.tableSalesChannelValueInfoPullProduct"
+                                             aria-label="Enable">
+                                </md-checkbox> Pull Products
+                            </span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row padding-left-35">
+                                <hr>
+
+                                <div class="row padding-left-20 integration-row-heading">
+                                    Advanced config
+                                </div>
+                                <div class="padding-left-20">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+                                        <div style="padding-top:10px;">
+                                    <span class="add-new-sp-row"
+                                          ng-if="channelData.tableSalesChannelMetaInfoSkuLevelSplitAllowed != null">
+                                        <md-checkbox id="itemsplit"
+                                                     class="inputChecked"
+                                                     ng-disabled="true"
+                                                     ng-model="channelData.tableSalesChannelMetaInfoSkuLevelSplitAllowed"
+                                                     aria-label="Enable">
+                                        </md-checkbox> Split order items
+                                    </span>
+                                        </div>
+                                        <div style="padding-top:10px;">
+                                    <span class="add-new-sp-row"
+                                          ng-if="channelData.tableSalesChannelMetaInfoSkuLevelSplitAllowed == null">
+                                        <md-checkbox id="itemsplit1"
+
+                                                     ng-model="subChannelData.tableSalesChannelValueInfoSkuLevelSplitAllowed"
+                                                     aria-label="Enable">
+                                        </md-checkbox> Split order items
+                                    </span>
+                                        </div>
+                                        <div style="padding-top:10px;">
+                                    <span class="add-new-sp-row"
+                                          ng-if="channelData.tableSalesChannelMetaInfoSkuQuantityLevelSplitAllowed != null">
+                                        <md-checkbox id="itemqtysplit"
+                                                     class="inputChecked"
+                                                     ng-disabled="true"
+                                                     ng-model="channelData.tableSalesChannelMetaInfoSkuQuantityLevelSplitAllowed"
+                                                     aria-label="Enable">
+                                        </md-checkbox> Split order item quantity
+                                    </span>
+                                        </div>
+                                        <div style="padding-top:10px;">
+                                    <span class="add-new-sp-row"
+                                          ng-if="channelData.tableSalesChannelMetaInfoSkuQuantityLevelSplitAllowed == null">
+                                        <md-checkbox
+                                                id="itemqtysplit1"
+                                                ng-model="subChannelData.tableSalesChannelValueInfoSkuQuantityLevelSplitAllowed"
+                                                aria-label="Enable">
+                                        </md-checkbox> Split order item quantity
+                                    </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding: 0px;">
+
+                                        <div class="full-width" style="padding-top: 10px"
+                                             ng-if="channelData.tableCustomerType != null">
+                                            <b class="customerfieldskey">Type Of Customer </b>
+                                            <md-radio-group ng-model="channelData.tableCustomerType.tableCustomerTypeString"
+                                                            ng-disabled="true">
+                                                <md-radio-button id="customertypeid" required
+                                                                 ng-repeat="customerType in customerTypes"
+                                                                 ng-value="customerType.tableCustomerTypeString" class="md-primary"
+                                                                 ng-style="{'display':'inline'}">
+                                                    {{customerType.tableCustomerTypeString}}&nbsp;&nbsp;
+                                                </md-radio-button>
+                                            </md-radio-group>
+                                        </div>
+                                        <div class="full-width" style="padding-top: 10px"
+                                             ng-if="channelData.tableCustomerType == null">
+                                            <b class="customerfieldskey">Type Of Customer</b>
+                                            <md-radio-group ng-model="subChannelData.tableCustomerType.tableCustomerTypeString">
+                                                <md-radio-button id="customertypeid1" required
+                                                                 ng-repeat="customerType in customerTypes"
+                                                                 ng-value="customerType.tableCustomerTypeString" class="md-primary"
+                                                                 ng-style="{'display':'inline'}">
+                                                    {{customerType.tableCustomerTypeString}}&nbsp;&nbsp;
+                                                </md-radio-button>
+                                            </md-radio-group>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12" style="padding: 0px;">
+                                        <div class="full-width">
+                                            <div class="channel-return-setting-div">
+                                                <div class="full-width bg-dark" style="margin-bottom: 10px;">
+                                                    <h5 style="margin: 0px;">Return Config</h5>
+                                                </div>
+                                                <div class="pdd-10">
+                                                    <div>
+                                <span class="add-new-sp-row">
+                                    <md-checkbox style="margin-bottom: 10px;" id="onlyexpired"
+                                                 ng-model="subChannelData.tableSalesChannelValueInfoReturnOnlyExpired"
+                                                 aria-label="Enable">
+                                    </md-checkbox> Return only expired
+                                </span>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            Return window
+                                                        </div>
+                                                        <input type="text" id="returnwindow" maxlength="3"
+                                                        		only-integer
+                                                               ng-model="subChannelData.tableSalesChannelValueInfoReturnWindowInDays"
+                                                               placeholder="Return window in days"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                    </div>
+                                                    <div style="margin-top: 15px;">
+                                <span class="add-new-sp-row">
+                                   Return threshold basis
+                                </span>
+                                                        <md-radio-group ng-model="genericData.returnType"
+                                                                        ng-change="changeReturnType()">
+                                                            <md-radio-button id="returntype{{$index}}" required
+                                                                             ng-repeat="returnType in returnTypes track by $index"
+                                                                             ng-value="returnType.returnTypeString" class="md-primary"
+                                                                             ng-style="{'display':'inline'}">
+                                                                {{returnType.returnTypeDisplayString}}&nbsp;&nbsp;
+                                                            </md-radio-button>
+                                                        </md-radio-group>
+                                                    </div>
+
+                                                    <div ng-if="genericData.returnType == 'valuebased'" style="margin-top:10px;">
+                                                        <input type="text" id="returntype1"
+                                                               percentage
+                                                               ng-model="subChannelData.tableSalesChannelValueInfoReturnValue"
+                                                               placeholder="% Value"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                    </div>
+                                                    <div ng-if="genericData.returnType == 'quantitybased'" style="margin-top:10px;">
+                                                        <input type="text" id="returntype2"
+                                                               percentage
+                                                               ng-model="subChannelData.tableSalesChannelValueInfoReturnQuantity"
+                                                               placeholder="% Quantity"
+                                                               class="form-control darkgrey-bottom-border input-less-padding">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <hr class="full-width">
+                            </div>
+
+                            <div class="row page-actions-row">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="cancel" class="cancel-btn"
+                        ng-click="cancelAddNewSalesChannelDialog(channelData)">
+                    Cancel
+                </button>
+                <button id="done"
+                        ng-show="saleChannelMode=='add' && channelData.idtableSalesChannelMetaInfoId != 5"
+                        ng-click="saveSubChannel(subChannelData,channelData,metaChannelData)"
+                        class="action-btn pull-right" style="margin-right: 0px !important;">
+                    Add
+                </button>
+                <button id="done1"
+                        ng-show="saleChannelMode=='add' && channelData.idtableSalesChannelMetaInfoId == 5"
+                        ng-click="saveSubChannelMetaId5(subChannelData,channelData,metaChannelData)"
+                        class="action-btn pull-right" style="margin-right: 0px !important;">
+                    Add
+                </button>
+                <button id="update"
+                        ng-show="saleChannelMode=='edit' && channelData.idtableSalesChannelMetaInfoId != 5"
+                        ng-click="saveSubChannel(subChannelData,channelData,metaChannelData)"
+                        class="action-btn pull-right" style="margin-right: 0px !important;">
+                    Update
+                </button>
+                <button id="update1"
+                        ng-show="saleChannelMode=='edit' && channelData.idtableSalesChannelMetaInfoId == 5"
+                        ng-click="updateSubChannelMetaId5(subChannelData,channelData)"
+                        class="action-btn pull-right" style="margin-right: 0px !important;">
+                    Update
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="helpMagentoModal" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="magentocross" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Magento Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="magento-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">To authorize Glaucus's integration with your Magento Community,
+                        Professional, or Enterprise web store, simply follow these steps:
+                    </div>
+                    <ol class="magento-instructions">
+                        <li>Log in your Magento Admin console, then select <b>'System'</b> ⇒ <b>'Web Services'</b> ⇒ <b>'SOAP/SML-RPC
+                            - Users'</b>.
+                        </li>
+                        <li>Click the <b>'Add New User'</b> button and create a new user for Glaucus. Click the <b>'Save
+                            User'</b> button, then enter the User Name and API Key you created into the fields below.
+                        </li>
+                        <li>Assign an <u>all-access</u> <b>SOAP/SML-RPC</b> role to the Glaucus user. If such a role
+                            doesn't already exist, create one by going to <b>'System'</b> ⇒ <b>'Web Services'</b> ⇒ <b>'SOAP/SML-RPC
+                                - Roles'</b></li>
+                        <li>Enter your Store URL domain (i.e. http[s]://www.&lt;your_store&gt;.com) then click 'Verify
+                            Integration'.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div id="magentocancel" class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="helpAmazonModal" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="amazoncross" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel2">Amazon Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="amazon-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">To authorize Glaucus's integration with your Amazon.in Seller Account,
+                        simply follow these steps:
+                    </div>
+
+                    <ol class="amazon-instructions">
+                        <li>Go to <a href="https://sellercentral.amazon.in" target="_blank">https://sellercentral.amazon.in</a>.
+                        </li>
+                        <li>Log into your Amazon seller account.</li>
+                        <li>Go to settings, click on User Permissions</li>
+                        <li>On User Permissions Page, Click on <b>Authorise a developer</b></li>
+                        <li>On the MWS registration page, click the button for <b>I want to use an application to access
+                            my Amazon seller account with MWS</b>.
+                        </li>
+                        <li>In the <b>Application Name</b> text box, enter: <span class="ui-state-highlight"
+                                                                                  id="skubanaName"
+                                                                                  style="border:none; padding-right:2px; padding-left:2px; border-radius:2px;"><strong>GlaucusEPS</strong></span>
+                        </li>
+                        <li>In the <b>Application's Developer Account Number</b> text box, enter: <span
+                                class="ui-state-highlight" id="skubanaAmazonAccount"
+                                style="border:none; padding-right:2px; padding-left:2px; border-radius:2px;"><strong>7543-9230-6696</strong></span>
+                        </li>
+                        <li>Click the <b>Next</b> button.</li>
+                        <li>Accept the Amazon MWS License Agreement and click <b>Next</b>.</li>
+                        <li>Enter your <b>MWS Auth Token</b> and <b>Seller ID</b> below, then click
+                            <b>'Verify Integration'</b>.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="amazoncancel" type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="helpftpModal" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="ftpcross" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel">FTP Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="ftp-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">To manage orders using glaucus ftp plateform, simply follow these
+                        steps:
+                    </div>
+
+                    <ol class="ftp-instructions">
+                        <li>For Creating Orders , upload new orders file at /{ftpName}/{ftpId}/received folder</li>
+                        <li>To Check Order list statuses uploaded by Glaucus Web Plateform, Go To
+                            /{ftpName}/{ftpId}/webreceived
+                        </li>
+                        <li>for cancelled orders, upload cancelled orders file at /{ftpName}/{ftpId}/cancelled</li>
+                        <li>To check cancelled orders, go to /{ftpName}/{ftpId}/omscancelled</li>
+                        <li>To check packed orders, go to /{ftpName}/{ftpId}/packed</li>
+                        <li>To check shipped orders, go to /{ftpName}/{ftpId}/shipped</li>
+                        <li>To check delivered orders, go to /{ftpName}/{ftpId}/delivered</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="helpFlipkartModal" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="flipkartcross" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="uploadAppDocLabel1">Flipkart Integration</p>
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row rowSale-margin-top-large text-center" style="margin-left: 1%">
+                        <div class="flipkart-img"></div>
+                    </div>
+                    <div style="margin-left:5px;">To authorize Glaucus's integration with your Flipkart Seller Account,
+                        simply follow these steps:
+                    </div>
+
+                    <ol class="flipkart-instructions">
+                        <li>Log into the https://api.flipkart.net/oauth-register/login using your seller username and
+                            password
+                        </li>
+                        <li>Click the <b>'Register New Application'</b> button and create a new application for glaucus.
+                            Enter Application name and application description as <b>'GlaucusEPS' </b> and <b>'Glaucus
+                                Application for Flipkart integration'</b> Respectively
+                        </li>
+                        <li>After filling details Click on <b> 'Register Application' </b> , Application Id and
+                            Application secret will be created
+                        </li>
+                        <li>Enter App Id and App Secret then click 'Verify Integration'.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="flipkartcancel" type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewCredentials" role="dialog" aria-labelledby="helpSaleChannelModal" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button id="credentialcross" type="button" class="close" ng-click="clearHelpDialog()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">FTP Credentials</p>
+            </div>
+            <br><br>
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div style="margin-left:5px;">Use the Following FTP Credentials</div>
+
+                    <ol class="flipkart-instructions">
+                        <li ng-repeat="item in metaRESChannelData"><b>{{item.tableSalesChannelValueMetaValue}}</b> -
+                            {{item.tableSalesChannelValueInfoValue}}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button id="credentialcancel" type="button" class="cancel-btn" ng-click="clearHelpDialog()">Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<style>
+    md-checkbox[disabled].inputChecked .md-icon {
+        background-color: lightgray !important;
+    }
+</style>

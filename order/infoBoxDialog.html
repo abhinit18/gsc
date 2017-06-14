@@ -1,0 +1,28 @@
+<script type="text/ng-template" id="infoDialog.tmpl.html" >
+    <md-dialog aria-label="State Trials Info" style="width: 1340px;max-width:100%;position: relative;" ng-cloak>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: bolder;color: #30373B;">Order Journey</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelInfoBox()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content style="overflow-y: hidden;overflow-x: auto;">
+                <div class="md-dialog-content">
+                    <div class="horizontal-slide">
+                        <ng-stepwise ng-steps="steps"></ng-stepwise>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="action-btn" ng-click="cancelInfoBox()">
+                    Done
+                </button>
+            </md-dialog-actions>
+    </md-dialog>
+</script>

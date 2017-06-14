@@ -1,0 +1,544 @@
+<div class="modal fade customizeDialog" id="addKitDialog"  data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <form name="skuForm">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                    <button type="button" class="close" ng-click="cancelSkuData();">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p ng-show="dialogBoxKitMode=='add'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Add New Kit</p>
+                    <p ng-show="dialogBoxKitMode=='edit'" style="font-size: 20px;font-weight: bolder;color: #30373B;">Update Kit</p>
+                    <span flex></span>
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row row-margin-top">
+                            <div class="col-md-6">
+                                <div class="row" ng-show="dialogBoxKitMode=='edit'">
+                                    <!-- SKU ID -->
+                                    <div class="col-md-4 margin-top-9">
+                                        <span class="font">SKU ID</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" id="skuid" ng-model="skuClientCode" ng-readonly="true" class="form-control darkgrey-bottom-border font input-less-padding" style="border: none !important; margin-top: 3px; color: #F0592B; font-weight: 600;">
+                                    </div>
+                                </div>
+                                <div class="row" ng-show="dialogBoxKitMode=='add'">
+                                    <!-- SKU ID -->
+                                    <div class="col-md-12 margin-top-9">
+                                        <span class="font" style="color: #737373;">NOTE: SKU ID will be auto generated</span>
+                                    </div>
+                                </div>
+                                <div class="row padding-top-15">
+                                    <!-- Seller SKU ID -->
+                                    <div class="col-md-4 margin-top-9">
+                                        <span class="font">Seller SKU ID<span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input ng-class="{submitted:isSellerSkuIdEntered}" placeholder="Enter Seller SKU ID" type="text" id="sellerSkuId" ng-model="kitData.tableSkuClientSkuCode" ng-change="skuClientCodeChanged(kitData.tableSkuClientSkuCode)" class="form-control darkgrey-bottom-border font input-less-padding">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl1($file)" ngf-select="changeSkuImgUrl1($file)" ngf-select-disabled="isFile1SelectDisabled()" ng-model="skuImgFile1" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg1Present()}">
+                                                <img ng-src="{{skuImgUrl1}}" ng-mouseover="skuImageHover1()" ng-mouseleave="skuImageHover1()" ng-class="{darken: isImg1Present()}">
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg1Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('1')" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl2($file)" ngf-select="changeSkuImgUrl2($file)" ngf-select-disabled="isFile2SelectDisabled()" ng-model="skuImgFile2" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg2Present()}">
+                                                <img ng-src="{{skuImgUrl2}}" ng-mouseover="skuImageHover2()" ng-mouseleave="skuImageHover2()" ng-class="{darken: isImg2Present()}">
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg2Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('2')">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl3($file)" ngf-select="changeSkuImgUrl3($file)" ngf-select-disabled="isFile3SelectDisabled()" ng-model="skuImgFile3" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg3Present()}">
+                                                <img ng-src="{{skuImgUrl3}}" ng-mouseover="skuImageHover3()" ng-mouseleave="skuImageHover3()" ng-class="{darken: isImg3Present()}">
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg3Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('3')">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 no-padding sku-drop-box-container">
+                                        <div ngf-drop="changeSkuImgUrl4($file)" ngf-select="changeSkuImgUrl4($file)" ngf-select-disabled="isFile4SelectDisabled()" ng-model="skuImgFile4" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
+                                            <div ng-class="{'img-holder': isImg4Present()}">
+                                                <img ng-src="{{skuImgUrl4}}" ng-mouseover="skuImageHover4()" ng-mouseleave="skuImageHover4()" ng-class="{darken: isImg4Present()}">
+                                            </div>
+                                            <div class="del-img-btn text-center" ng-if="isImg4Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('4')">
+                                                    <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Name <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-4">
+                                <input capitalize-first ng-class="{submitted:isSkuNameEntered}" placeholder="Enter Name" type="text" id="skuName" ng-model="kitData.tableSkuName" ng-change="skuNameChanged(kitData.tableSkuName)" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">ISBN/UPC/EAN</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input ng-class="{submitted:isUpcCodeEntered}" placeholder="Enter ISBN/UPC/EAN" type="text" id="upc" ng-model="kitData.tableSkuPrimaryUpcEan" ng-change="upcCodeChanged(kitData.tableSkuPrimaryUpcEan)" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Alternate code </span>
+                            </div>
+                            <div class="col-md-4">
+                                <input placeholder="Enter alternate code" type="text" id="alternatecode" ng-model="kitData.tableSkuAlternateCode" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Shelf Life Type <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-3 select-style" ng-class="{submitted: isShelfTypeSelected}">
+                                <select id="tableSkuShelfLifeType" ng-change="shelfTypeChanged(kitData.tableSkuShelfLifeType)" ng-model="kitData.tableSkuShelfLifeType" ng-options="option as option.tableSkuShelfLifeTypeString for option in shelfTypeLists">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row margin-top-9">
+                            <div class="col-md-6">
+                                <div class="row row-margin-top-small">
+                                    <div class="col-md-4">
+                                        <span class="font">Category <span style="color:red">*</span></span>
+                                    </div>
+
+                                    <div class="col-md-7 select-style" ng-class="{submitted: isSkuCategorySelected}">
+                                        <select ng-change="skuCategoryChanged(kitData.tableSkuNode)" title="{{kitData.tableSkuNode.skuNodeName}}" ng-model="kitData.tableSkuNode" ng-options="option as option.skuNodeName for option in categoryTypeLists">
+                                            <option value="">Select</option>
+                                        </select>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row row-margin-top-small">
+                                    <div class="col-md-4">
+                                        <span class="font">Brand <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 select-style" ng-class="{submitted: isSkuBrandSelected}">
+                                        <select ng-change="skuBrandChanged(kitData.tableSkuBrandCode)" ng-model="kitData.tableSkuBrandCode" ng-options="option as option.tableSkuBrandCodeString for option in brandTypeLists">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1" style="padding-left: 0px !important;">
+                                        <img src="images/svg/blue_add.svg" style="width: 20px; height: 20px; cursor: pointer;" ng-click="openBrandBox();">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row row-margin-top-small">
+                                    <div class="col-md-4">
+                                        <span class="font">Classification</span>
+                                    </div>
+                                    <div class="col-md-6 select-style">
+                                        <select ng-model="kitData.tableSkuAbcClassification" ng-options="option as option for option in skuClassificationArray">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row row-margin-top-small">
+                            <div class="col-md-2 margin-top-9">
+                                <span class="font">Description <span style="color:red">*</span></span>
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text" ng-class="{submitted:isSkuDescEntered}" ng-change="skuDescChanged(kitData.tableSkuDescription)" placeholder="Enter Description" ng-model="kitData.tableSkuDescription" class="form-control darkgrey-bottom-border font input-less-padding">
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Product Dimension</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="productDiminvRow()">
+                                        <md-icon ng-if="productDimClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="productDimClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-show="productDimClicked==true" class="row">
+                            <div class="col-md-12" style="margin-top: 25px !important;margin-bottom:25px;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Dimension Unit</span>
+                                            </div>
+                                            <div class="col-md-7 select-style" style="left: -15px;margin:0px;" ng-class="{submitted: isDimUnitSelected}">
+                                                <select id="tableSkuUodmType" ng-change="dimUnitChanged(kitData.tableSkuUodmType)" ng-model="kitData.tableSkuUodmType" ng-options="option as option.tableSkuUodmTypeString for option in dimLists">
+                                                    <option value="">Select</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5 text-right">
+                                                <span class="font">Length</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input style="padding: 0px !important;" id="tableSkuLength" floating precision="2" type="text" min="0" ng-model="kitData.tableSkuLength" placeholder="Enter Length" ng-class="{submitted: isSkuLengthEntered}" ng-change="skuLengthChanged(kitData.tableSkuLength)"
+                                                       class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-small">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Width</span>
+                                            </div>
+                                            <div class="col-md-7" style="margin-left:-30px;">
+                                                <input style="padding:0px !important;width:217px;" floating precision="2" type="text" min="0" ng-model="kitData.tableSkuWidth" id="tableSkuWidth" placeholder="Enter Width" ng-class="{submitted: isSkuWidthEntered}" ng-change="skuWidthChanged(kitData.tableSkuWidth)"
+                                                       class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="row">
+                                            <div class="col-md-5  text-right">
+                                                <span class="font">Height</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <input style="padding: 0px !important;" floating precision="2" type="text" min="0" id="tableSkuHeight" placeholder="Enter Height" ng-class="{submitted: isSkuHeightEntered}" ng-change="skuHeightChanged(kitData.tableSkuHeight)" ng-model="kitData.tableSkuHeight"
+                                                       class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-small">
+
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <span class="font">Weight Unit</span>
+                                            </div>
+                                            <div class="col-md-7 select-style" style="left: -15px;margin:0px;" ng-class="{submitted: isWeightUnitSelected}">
+                                                <select id="tableSkuUowmType" ng-change="weightUnitChanged(kitData.tableSkuUowmType)" ng-model="kitData.tableSkuUowmType" ng-options="option as option.tableSkuUowmTypeString for option in weightLists">
+                                                    <option value="">Select</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="col-md-5  text-right">
+                                            <span class="font">Weight</span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input style="padding: 0px !important;width:183px;left:-2px;" type="text" floating precision="3" id="tableSkuWeight" placeholder="Enter Weight" ng-class="{submitted: isSkuWeightEntered}" ng-change="skuWeightChanged(kitData.tableSkuWeight)" ng-model="kitData.tableSkuWeight"
+                                                   class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Attributes Details</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="attributesinvRow()">
+                                        <md-icon ng-if="attributesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="attributesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="attributesClicked==true" class="row">
+                            <div class="col-md-12" style="margin-top: 25px;margin-bottom:25px;">
+                                <div class="row" ng-repeat="key in attributeListArray track by $index">
+                                    <div class="col-md-4 margin-top-9">
+                                        <span class="font" style="text-transform: capitalize;">{{key.attributeTypeString}}</span>
+                                    </div>
+                                    <div class="col-md-4 select-style" >
+                                        <select ng-if = "key.attributeType == 'select'"  ng-change="skuAttributeValueChanged(key, attributeListSelectedValuesArray[key.attributeTypeString])" ng-model="attributeListSelectedValuesArray[key.attributeTypeString]" ng-options="option as option.nodeAttributePossibleValuesValue for option in key.tableSkuNodeAttributePossibleValueses track by option.nodeAttributePossibleValuesValue ">
+                                            <option value="">Select</option>
+                                        </select>
+                                        <input  class="form-control darkgrey-bottom-border font input-less-padding margin-top-9" ng-if = "key.attributeType == 'text'" ng-model="attributeListSelectedValuesArray[key.attributeTypeString]" ng-blur="skuAttributeValueAdded(key, attributeListSelectedValuesArray[key.attributeTypeString])">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Properties</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="propinvRow()">
+                                        <md-icon ng-if="propertiesClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="propertiesClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="propertiesClicked==true" class="row">
+                            <div class="col-md-12" style="padding-left: 25px !important;">
+                                <div class="row row-margin-top-small row-margin-bottom-small">
+                                    <div class="col-md-6 font" ng-repeat="item in items">
+                                        <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+                                            {{ item }} <span ng-if="exists(item, selected)"></span>
+                                        </md-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top-x-small">
+                            <md-toolbar class="md-small accordion-color">
+                                <div class="md-toolbar-tools">
+                                    <span class="font-big">Kit Details</span>
+                                    <span flex=""></span>
+                                    <md-button class="md-icon-button" aria-label="Favorite" ng-click="kitDetinvRow()">
+                                        <md-icon ng-if="kitDetailsClicked==false" md-svg-icon="images/svg/expand_icon.svg"></md-icon>
+                                        <md-icon ng-if="kitDetailsClicked==true" md-svg-icon="images/svg/collaps_icon.svg"></md-icon>
+                                    </md-button>
+                                </div>
+                            </md-toolbar>
+                        </div>
+                        <div ng-if="kitDetailsClicked==true" class="row">
+                            <div class="col-md-12" style="padding-left: 25px !important;">
+
+                                <div class="row row-margin-top-small" ng-show="dialogBoxKitMode=='add'  || (dialogBoxKitMode=='edit' && kitData.tableSkuIsKitEditable==true)">
+                                    <div class="col-md-3">
+                                        <angucomplete-alt ng-class="{submitted: isProductSelected}" id="kits"
+                                                          placeholder="Search product" pause="400"
+                                                          selected-object="kitData.productObj" remote-url="{{baseSkuUrl}}"
+                                                          title-field="tableSkuName"
+                                                          description-field="tableSkuDescription"
+                                                          input-class="form-control darkgrey-bottom-border font input-less-padding"
+                                                          image-field="tableSkuImageUrl"
+                                                          code-field="tableSkuClientSkuCode"
+                                                          initial-value="skuSelected"></angucomplete-alt>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" title="Click to see all customers"
+                                                style="position: absolute; top: 8px;"
+                                                class="btn btn-sm truncate-text"
+                                                ng-click="masterSkuDialog($event, true);">. . .
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4 col-md-offset-1">
+                                        <input type="text" ng-class="{submitted: isQuantityEntered}" ng-model="quantityNo"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max = "999999999"
+                                               placeholder="Quantity" class="form-control darkgrey-bottom-border-number font input-less-padding">
+                                    </div>
+                                    <div class="col-md-2 col-md-offset-1">
+                                        <button type="button" class="btn small-actn-btn" ng-click="addKitDetails(kitData.productObj,quantityNo,id);quantityNo=null;">
+                                            Add to Kit
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-12">
+                                        <span class="font">List of Selected Products</span>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-small row-margin-bottom-small" ng-show="dialogBoxKitMode=='add' || (dialogBoxKitMode=='edit' && kitData.tableSkuIsKitEditable==true)">
+                                    <div class="col-md-12">
+                                        <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product Name</th>
+                                                <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Quantity</th>
+                                                <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp; Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="kit in skuKitList">
+                                                <td>{{kit.sku.tableSkuName}}</td>
+                                                <td>{{kit.quantity}}</td>
+                                                <td>
+                                                    <a class="table-btn" ng-click="removeKit($index)"><span class="fa fa-trash fa-lg"></span></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-small row-margin-bottom-small" ng-show="dialogBoxKitMode=='edit' && kitData.tableSkuIsKitEditable==false">
+                                    <div class="col-md-12">
+                                        <table class="table boldtable table-responsive table-bordered table-hover" style="width:100%;">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product Name</th>
+                                                <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Quantity</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="kit in skuKitList">
+                                                <td>{{kit.sku}}</td>
+                                                <td>{{kit.quantity}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addNewCatg" data-backdrop="static" data-keyboard="false" role="dialog">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                                        <button type="button" class="close" ng-click="newCatg=null; closeCategoryBox();">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                        <p class="dialog-heading-p">Add New Category</p>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row row-margin-top">
+                                                <div class="col-md-4">
+                                                    <span class="font">Category Name</span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text" onkeypress="if (event.keyCode == 13) {return false;}" placeholder="Enter Category Name" ng-class="{submitted: isNewCatgNameEntered}" ng-change="newCatgNameChanged(newCatg.categoryName)" ng-model="newCatg.categoryName" class="form-control darkgrey-bottom-border font input-less-padding">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer modal-dialog-footer">
+                                        <button type="button" class="action-btn" ng-click="addCategory(newCatg.categoryName);">
+                                            Save
+                                        </button>
+                                        <button type="button" class="cancel-btn" ng-click="newCatg=null; closeCategoryBox();">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer modal-dialog-footer">
+                    <span flex></span>
+                    <button class="cancel-btn" ng-click="cancelSkuData($event)">
+                        Cancel
+                    </button>
+                    <button ng-show="dialogBoxKitMode=='add'" class="action-btn" ng-click="saveKitData(kitData)">
+                        Add
+                    </button>
+                    <button ng-show="dialogBoxKitMode=='edit'" class="action-btn" ng-click="saveKitData(kitData)">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addNewAttribute" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="newAttribute=null; closeAttributeBox();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Attribute</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Attribute Key</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" onkeypress="if (event.keyCode == 13) {return false;}" placeholder="Enter Attribute Name" ng-class="{submitted: isNewAttributeNameEntered}" ng-change="newAttributeNameChanged(newAttribute.attributeName)" ng-model="newAttribute.attributeName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="action-btn" ng-click="addAttribute(newAttribute.attributeName);">Save</button>
+                <button type="button" class="cancel-btn" ng-click="newAttribute=null; closeAttributeBox();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addNewBrand" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="newBrand=null; closeBrandBox();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p">Add New Brand</p>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-4">
+                            <span class="font">Brand Name</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" onkeypress="if (event.keyCode == 13) {return false;}" placeholder="Enter Brand Name" ng-class="{submitted: isNewBrandNameEntered}" ng-change="newBrandNameChanged(newBrand.brandName)" ng-model="newBrand.brandName" class="form-control darkgrey-bottom-border font input-less-padding">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="action-btn" ng-click="addBrand(newBrand.brandName);">Save</button>
+                <button type="button" class="cancel-btn" ng-click="newBrand=null; closeBrandBox();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

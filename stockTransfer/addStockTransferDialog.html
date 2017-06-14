@@ -1,0 +1,390 @@
+<script type="text/ng-template" id="stockTransfer.tmpl.html" ng-controller="inventoryController">
+<md-dialog aria-label="Add New Inventory"
+	style="width: 900px;position: relative;" ng-cloak>
+<form ng-submit="stockModel.$valid && saveSingleOrder()" name="stockModel" novalidate>
+	<md-toolbar style="background-color: #F2F7F8; ">
+	<div class="md-toolbar-tools" >
+		<p class="dialog-heading-p" id="myModalLabellled"
+			ng-if="genericData.orderDialogMode != 'edit'">Add Stock Order</p>
+		<p class="dialog-heading-p" id="myModalLabel"
+			ng-if="genericData.orderDialogMode == 'edit'">Edit Stock Order</p>
+		<span flex></span>
+		<md-button class="md-icon-button" ng-click="cancelSingleOrder()">
+		<md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+		</md-button>
+	</div>
+
+	</md-toolbar>
+	<md-dialog-content ng-if="genericData.orderDialogMode=='addnew' || genericData.orderDialogMode == 'edit' || genericData.orderDialogMode == 'editdraft'">
+        <div class="full-width" style="margin-bottom: 20px;">
+            <ul class="nav nav-tabs" id="ordertabs">
+                <li class="active"><a data-target="#table1" data-toggle="tab"
+                                      class="btn sharp" ng-click="singleOrderTabMode()">Single Order</a></li>
+                <li ng-if="singleOrderMode == 'add'"><a data-target="#table2"
+                                                        data-toggle="tab" class="btn sharp" ng-click="bulkOrderTabMode()">Bulk
+                    Order</a></li>
+            </ul>
+        </div>
+        <div class="md-dialog-content">
+
+                    <div class="tab-content">
+                        <div class="tab-pane  active container-fluid" id="table1">
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">ST Ref. No.</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <input id="orderRef" type="text"
+                                           md-autofocus
+                                           class="form-control darkgrey-bottom-border" name="OrderNo"
+                                           ng-model="singleorderData.orderNo" maxlength="45"
+                                           placeholder="ST Ref. No."> <i
+                                        class="fa fa-question-circle-o date-help" data-container="body"
+                                        data-toggle="popover" data-trigger="focus" tabindex="0"
+                                        title="ST Ref. No." data-html="true"
+                                        data-content="Reference number can be order reference number of any other system"
+                                        aria-hidden="true"></i>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5" style="padding-right: 1px">
+						<span class="semi-bold-text">From Warehouse <span
+                                style="color: red">*</span>
+						</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="fromWarehouse" ng-focus="HideError()"
+                                            ng-change="clearProductList();WareHouseCheck();getPriceOfProduct();"
+                                            class="form-control add-single-order-select" required
+                                            ng-options="option.tableWarehouseDetailsShortname for option in wareHousesData track by option.idtableWarehouseDetailsId"
+                                            ng-model="singleorderData.FromwareHousesData" name="From">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Warehouse
+                                        </option>
+                                    </select>
+
+                                    <div class="error ng-hide" ng-show="stockModel.$submitted"
+                                         aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="stockModel.From.$error.required && stockModel.From.$pristine">
+                                            From Warehouse is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+						<span class="semi-bold-text">To Warehouse <span
+                                style="color: red">*</span>
+						</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="toWarehouse" ng-change="WareHouseCheck()"
+                                            class="form-control add-single-order-select" required
+                                            ng-options="option.tableWarehouseDetailsShortname for option in toWarehouses track by option.idtableWarehouseDetailsId"
+                                            ng-model="singleorderData.TowareHousesData" name="To">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            WareHouse
+                                        </option>
+                                    </select>
+
+                                    <div class="error ng-hide" ng-show="stockModel.$submitted"
+                                         aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="stockModel.To.$error.required && stockModel.To.$pristine">
+                                            To Warehouse is required.
+                                        </small>
+                                    </div>
+                                    <small class="error-msg text-danger" ng-show="WareHouseMatch">
+                                        Please choose different warehouse
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+						<span class="semi-bold-text">Quantity Type <span
+                                style="color: red">*</span>
+						</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="quantityType"
+                                            class="form-control add-single-order-select" required
+                                            ng-change="checkQuantityType();"
+                                            ng-options="option for option in quantityTypes track by option"
+                                            ng-model="singleorderData.quantityType" name="quantityType">
+                                        <option value="" disabled selected style="display: none;">Select
+                                            Quantity Type
+                                        </option>
+                                    </select>
+
+                                    <div class="error ng-hide" ng-show="stockModel.$submitted"
+                                         aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="singleorderData.quantityType.$error.required && singleorderData.quantityType.$pristine">
+                                            Quantity Type is required.
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">Add Product</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <angucomplete-alt id="products" placeholder="Search product"
+                                                      pause="400" selected-object="searchedProduct"
+                                                      remote-url="{{baseSkuUrl}}" title-field="tableSkuName"
+                                                      description-field="tableSkuDescription"
+                                                      image-field="tableSkuImageUrl" code-field="tableSkuClientSkuCode"
+                                                      input-class="darkgrey-bottom-border font form-control"></angucomplete-alt>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" style="position: absolute; top: 0px;"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);"
+                                            title="Click to see all SKUs.">. . .
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Available Qty.</span>
+                                </div>
+                                <div class="col-md-8" style="padding: 0px;">
+                                    <div class="col-md-5">
+                                        <input type="text" disabled="disabled"
+                                               ng-model="singleorderData.AvailableData" id="AvailableNumber"
+                                               placeholder="Available Quantity"
+                                               class="form-control darkgrey-bottom-border"
+                                               style="max-width: 400px; width: 100%;"/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input id="quantity" ng-keypress="Num1($event)" type="text"
+                                               ng-model="singleorderData.quantityNo" id="number1"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max = "999999999"
+                                               placeholder="Quantity"
+                                               class="form-control darkgrey-bottom-border-number"
+                                               ng-blur="getQuantityProduct(singleorderData.AvailableData,singleorderData.quantityNo)"/>
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <button id="addToList" type="button"
+                                                ng-disabled="singleorderData.AvailableData < singleorderData.quantityNo"
+                                                class="btn small-actn-btn"
+                                                ng-click="addProduct(singleorderData.quantityNo,id,singleorderData.priceProd)">
+                                            Add to List
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-10 col-md-offset-2">
+						<span class="semi-bold-text">List of Selected Products <span
+                                style="color: red">*</span>
+						</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <table id="productTable1"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Product
+                                                Name
+                                            </th>
+                                            <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;Quantity</th>
+                                            <th><span class="fa fa-calendar fa-lg"></span>&nbsp;&nbsp;
+                                                Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr ng-repeat="product in products">
+                                            <td>{{product.tableSku.tableSkuName}}</td>
+                                            <td>{{product.tableStockXferOrderSkusSkuQuantity}}</td>
+                                            <td><a class="table-btn" ng-click="removeProduct($index)"><span
+                                                    class="fa fa-trash fa-lg"/></a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+						<span class="semi-bold-text">Pick Up Date<span
+                                style="color: red"
+                                ng-if="singleorderData.FromwareHousesData.tableWarehouseType.idtableWarehouseTypeId == 1">*</span>
+						</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <md-datepicker id="pickUpDate" ng-model="singleorderData.pickUpDate"
+                                                   timezoned-date
+                                                   ng-required="singleorderData.FromwareHousesData.tableWarehouseType.idtableWarehouseTypeId == 1"
+                                                   md-min-date="startaddminDate"
+                                                   md-max-date="startaddmaxDate" md-placeholder="Enter date"
+                                                   name="startDate"
+                                                   ng-change="sendAddStartDate(singleorderData.pickUpDate)"></md-datepicker>
+                                    <div class="error ng-hide" ng-show="stockModel.$submitted"
+                                         aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="stockModel.startDate.$error.required && stockModel.startDate.$pristine">
+                                            Start Date is required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 margin-top-5">
+						<span class="semi-bold-text">Drop Date <span
+                                style="color: red"
+                                ng-if="singleorderData.TowareHousesData.tableWarehouseType.idtableWarehouseTypeId == 1">*</span>
+						</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <md-datepicker id="dropDate" ng-model="singleorderData.dropDate"
+                                                   timezoned-date
+                                                   ng-required="singleorderData.TowareHousesData.tableWarehouseType.idtableWarehouseTypeId == 1"
+                                                   md-min-date="endaddminDate" md-placeholder="Enter date"
+                                                   name="endDate"
+                                                   ng-change="sendAddEndDate(singleorderData.dropDate)"></md-datepicker>
+                                    <div class="error ng-hide" ng-show="stockModel.$submitted"
+                                         aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="stockModel.endDate.$error.required && stockModel.endDate.$pristine">
+                                            End Date is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top row-margin-bottom-small"
+                                 ng-if="singleorderData.tableStockXferOrderRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <span class="semi-bold-text">Remarks History</span>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="singleorderData.tableStockXferOrderRemarkses.length > 0">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <table id="remarkstable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th style="width:20%;">Date-Time</th>
+                                            <th style="text-align: right;">User
+                                            </th>
+                                            <th style="text-align: right;">Remarks
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data">
+                                        <tr ng-repeat="remarks in singleorderData.tableStockXferOrderRemarkses">
+                                            <td>{{remarks.tableStockXferOrderRemarksDateTime | utcToLocalTimeOrHyphen}}</td>
+                                            <td style="text-align: right;">
+                                                {{remarks.tableStockXferOrderRemarksUser}}
+                                            </td>
+                                            <td style="text-align: right;">
+                                                {{remarks.tableStockXferOrderRemarksString}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">Remarks</span>
+                                </div>
+                                <div class="col-md-8">
+
+                                        <textarea caps id="remarks" class="form-control" ng-trim="false" maxlength="2000"
+                                                  ng-model="singleorderData.Remarks"
+                                                  placeholder="Enter Your Remarks"></textarea>
+                                    <h6 style="color:gray;">Maximum character limit:2000, Limit Left:
+                                        {{2000-singleorderData.Remarks.length}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane container-fluid" id="table2">
+                            <div
+                                    class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 light-grey-right-border">
+                                    <!--<div id="uploadFileButton" class="uploadFileBulkOrder"-->
+                                    <!--ng-click="uploadFileBulkOrder($event)"></div>-->
+                                    <div ngf-drop ngf-select class="drop-box cursorPointer"
+                                         ng-change="uploadBulkOrderFile(singleorderData.bulkOrderUploadfile);"
+                                         ng-model="singleorderData.bulkOrderUploadfile"
+                                         ngf-drag-over-class="'dragover'" accept=".xls,.xlsx"
+                                         ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg"
+                                             class="cursorPointer"
+                                             style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                        upload or click to select
+                                    </div>
+
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for
+                                        this browser
+                                    </div>
+                                    <br> <span id="uploadFileText" class="uploadFileLabel cursorPointer">Upload
+							File</span> <br>
+                                    <h5></h5>
+                                    <span> <span><b>Selected File:</b></span> <span
+                                            ng-if="fileName != null"
+                                            style="width: 100%; word-wrap: break-word;">{{fileName}}</span> <span
+                                            ng-if="fileName == null">No file selected</span>
+						</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="javascript:void(0);" ng-click="downloadSTOtemplate()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a> <br> <span class="downloadFileLabel"> <a
+                                        href="javascript:void(0);" ng-click="downloadSTOtemplate()">
+								Download File Template </a>
+						</span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()"
+                                   style="color: #00ACE4; font-weight: 600; cursor: pointer;">Go
+                                    to "Bulk upload reports" for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;"
+                               layout="row"><span flex></span>
+                <div class="full-width text-right"
+                     ng-if="singleOrderTab==true && bulkOrderTab==false">
+                    <button id="cancel" type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSingleOrder()">Cancel
+                    </button>
+                    <button id="submit" type="submit" class="action-btn"
+                            ng-if="genericData.orderDialogMode == 'addnew'">Submit
+                    </button>
+                    <button id="saveToDraft" type="button" class="action-btn"
+                            ng-if="genericData.orderDialogMode == 'addnew' || genericData.orderDialogMode == 'editdraft'"
+                            ng-click="Drafted()">Save To Draft
+                    </button>
+                    <button id="update" type="button" ng-click="EditOrdered()"
+                            ng-if="genericData.orderDialogMode == 'edit'" class="action-btn">Update
+                    </button>
+                    <button id="updateDraft" type="button" ng-click="SendDraft()"
+                            ng-if="genericData.orderDialogMode == 'editdraft'" class="action-btn">
+                        Confirm Draft
+                    </button>
+                </div>
+                <div class="full-width text-right"
+                     ng-if="singleOrderTab==false && bulkOrderTab==true">
+                    <button id="bulkCancel" type="button" class="cancel-btn" ng-click="cancelSingleOrder();">Cancel
+                    </button>
+                    <button id="bulkUpload" type="button" class="action-btn"
+                            ng-click="uploadPoBulkUpload(singleorderData.bulkOrderUploadfile,bulkOrderSettingData)">
+                        Upload
+                    </button>
+                </div>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

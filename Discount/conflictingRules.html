@@ -1,0 +1,37 @@
+<script type="text/ng-template" id="conflictingRule.tmpl.html" ng-controller="DiscountController">
+    <md-dialog aria-label="Conflicting Rules" style="width: 600px;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p">Conflicting Rules</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" >
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog" ng-click="cancelConflictingRulesDialog()"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row">
+                        <div class="col-md-12 margin-top-5 text-left">
+                            <span class="semi-bold-text">List of conflicting rules</span>
+                        </div>
+                    </div>
+                    <div class="row" ng-repeat="tableDiscountRule in genericData.conflictingRules">
+                        <div class="col-md-12 margin-top-5 text-left">
+                            {{tableDiscountRule}}
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="cancel-btn"  ng-click="cancelConflictingRulesDialog()">
+                    OK
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+

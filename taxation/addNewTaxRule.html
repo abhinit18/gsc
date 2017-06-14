@@ -1,0 +1,157 @@
+<script type="text/ng-template" id="addNewTaxRule.tmpl.html" ng-controller="taxationController">
+    <md-dialog aria-label="Tax Rule" style="width: 800px; position: relative;" ng-cloak>
+        <md-toolbar style="background-color: #F2F7F8;">
+            <div class="md-toolbar-tools">
+                <p style="font-size: 20px;font-weight: 600;color: #30373B;">Tax Rule</p>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancelTaxRuleModal()">
+                    <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="overflow: auto;">
+            <div class="full-width" style="margin-bottom: 30px;">
+                <div class="container-fluid">
+                    <div class="row row-margin-top" style="margin-top: 20px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <md-radio-group
+                                        ng-model="ScopeTypeRule"
+                                        ng-change="sendSearchUrl(ScopeTypeRule)">
+                                    <md-radio-button value="Category" class="md-primary"
+                                                     ng-style="{'display':'inline'}"> Category&nbsp;&nbsp;&nbsp;</md-radio-button>
+                                    <md-radio-button value="SKU" class="md-primary"
+                                                     ng-style="{'display':'inline'}">
+                                        SKU
+                                    </md-radio-button>
+                                    <md-radio-button value="Service" class="md-primary"
+                                                     ng-style="{'display':'inline'}">
+                                        Service
+                                    </md-radio-button>
+                                </md-radio-group>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row row-margin-top" style="margin-top: 10px;">
+                        <div class="col-md-3 margin-top-5">
+                            <span class="semi-bold-text">Select {{ScopeTypeRule}} <span style="color:red">*</span> </span>
+                        </div>
+                        <div class="col-md-7 margin-top-5">
+                        
+                            <select
+                                    ng-options="option as option.skuNodeName for option in categoryTypeLists"
+                                    required
+                                    ng-if="ScopeTypeRule == 'Category'"
+                                    ng-model="taxRule.tableSkuNode"
+                                    class="form-control add-single-order-select">
+                                <option value="" disabled selected style="display: none;">Choose
+                                    Category</option>
+                            </select>
+                            <angucomplete-alt id="category" placeholder="Search {{ScopeTypeRule}}" pause="400"
+                                                   ng-if="ScopeTypeRule == 'SKU'"
+                                                   selected-object="searchedEntitySelected"
+                                                   remote-url="{{entitySearchUrl}}" title-field="{{angucompleteTitleField}}"
+                                                   input-class="darkgrey-bottom-border font"></angucomplete-alt>
+                            <button type="button" title="Click here to see all SKUs."
+                                    ng-if="ScopeTypeRule == 'SKU'" style="position: absolute; top:8px; right: -40px;"
+                                    class="btn btn-sm truncate-text"
+                                    ng-click="masterSkuDialog($event, true);">. . .</button>
+                            <select
+                                    ng-options="option as option.tableGrossTaxTypeString for option in tableGrossTaxTypes"
+                                    required
+                                    ng-if="ScopeTypeRule == 'Service'"
+                                    ng-model="taxRule.tableGrossTaxType"
+                                    class="form-control add-single-order-select">
+                                <option value="" disabled selected style="display: none;">Choose Service</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row row-margin-top">
+                        <div class="col-md-3 margin-top-5">
+                            <span class="semi-bold-text" style="float: left;width:120px;">Tax Class Name <span style="color:red">*</span> </span>
+                        </div>
+                        <div class="col-md-7 margin-top-5">
+                            <select class="form-control add-single-order-select" ng-model="genericData.selectedTaxClass"
+                                    ng-options="option.tableTaxClassName for option in taxClasses track by option.idtableTaxClassId">
+                                <option value="" disabled selected style="display: none;">Select
+                                    tax class
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 margin-top-5" style="padding: 0px;">
+                            <button type="button" ng-click="addTaxClassToTaxRule(genericData.selectedTaxClass)"
+                                    class="btn addsharpbutton font"
+                                    style="height:auto;padding:6px 7px;">
+                                Add to List
+                            </button>
+                        </div>
+
+                        <div class="full-width" ng-if="taxRule.tableTaxRuleClassMaps.length > 0"
+                             style="margin-top: 15px;">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">&nbsp;</div>
+                            <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12" style="padding-left: 15px;">
+                                <span class="semi-bold-text">Tax classes</span>
+                            </div>
+                        </div>
+
+                        <div class="full-width" ng-if="taxRule.tableTaxRuleClassMaps.length > 0"
+                             style="margin-top: 10px;">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">&nbsp;</div>
+                            <div class="col-md-8 col-sm-12 col-xs-12" style="padding-right: 0px;padding-left: 15px;">
+                                <table id="taxClassesTable"
+                                       class="table boldtable table-responsive table-bordered table-hover">
+                                    <thead class="data-grid-header">
+                                    <tr>
+                                        <th>Tax class name
+                                        </th>
+                                        <th style="text-align: center;">Action
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="data-grid-data">
+                                    <tr ng-repeat="tableTaxRuleClassMap in taxRule.tableTaxRuleClassMaps track by $index">
+                                        <td>{{tableTaxRuleClassMap.tableTaxClass.tableTaxClassName}}</td>
+                                        <td style="text-align: center; padding: 0;">
+                                            <md-button class="md-icon-button" md-no-ink="true"
+                                                       ng-click="removeTaxClassFromTaxRule($index)" placeholder="Delete"
+                                                       style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                         ng-init="imgsrc1='images/svg/delete.svg'"
+                                                         ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                         ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                         style="width: 20px;"></md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4 margin-top-5" ng-if="taxRule.tableTaxRuleClassMaps.length > 1"
+                             style="margin-top: 10px;">
+                            <md-checkbox id="cascadetaxclasses"
+                                         ng-model="taxRule.tableTaxRuleCascadeClass"
+                                         aria-label="Enable">
+                            </md-checkbox> <span style="color:red">*</span> Cascade Tax Classes
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+            <span flex></span>
+            <button type="button" class="cancel-btn" ng-click="cancelTaxRuleModal()">Cancel
+                <button type="button" class="action-btn" ng-disabled="genericData.disableButton"
+                        ng-click="AddTaxRule()">Add Rule
+                </button>
+            </button>
+
+        </md-dialog-actions>
+    </md-dialog>
+</script>

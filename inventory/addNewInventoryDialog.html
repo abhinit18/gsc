@@ -1,0 +1,434 @@
+<script type="text/ng-template" id="dialog1.tmpl.html" ng-controller="inventoryController">
+    <md-dialog aria-label="Add New Inventory" style="width: 900px;position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8; ">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p" ng-if="mode=='add'">Add New Inventory</p>
+
+                    <p class="dialog-heading-p" ng-if="mode=='edit'">Block Inventory</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content ng-if="mode=='add'">
+                <div class="full-width" style="margin-bottom: 20px;">
+                    <ul class="nav nav-tabs" id="ordertabs">
+                        <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                              ng-click="singleOrderTabMode()">Single</a></li>
+                        <li ng-if="singleOrderMode == 'add'"><a data-target="#tab2" data-toggle="tab" class="btn sharp"
+                                                                ng-click="bulkOrderTabMode()">Bulk</a></li>
+                    </ul>
+                </div>
+                <div class="md-dialog-content">
+
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="tab1">
+                    <!-- Product Search -->
+                    <div class="row">
+                        <div class="col-md-2 margin-top-5">
+
+                            <span class="semi-bold-text">Product <span class="label-red">*</span></span>
+                        </div>
+                        <div  class="col-md-6" >
+                            <angucomplete-alt  tabindex="1"  id="products"  placeholder="Search product" pause="400"
+                                              selected-object="searchedProduct" remote-url="{{baseSkuUrl}}"
+                                              title-field="tableSkuName" description-field="tableSkuDescription"
+                                              image-field="tableSkuImageUrl" code-field="tableSkuClientSkuCode"
+                                              input-class="form-control darkgrey-bottom-border input-less-padding"></angucomplete-alt>
+                      
+				<button type="button" title="Click to see all SKUs." style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterSkuDialog($event, true);">. . .</button>
+
+  			</div>
+
+                        {{inventoryData.tableSku=$parent.selectedSku;""}}
+                        {{skuShelfType=$parent.selectedSku.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId;""}}
+                    </div>
+
+                    <!-- SKU ID -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">SKU ID </span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" tabindex="2" placeholder="Enter SKU ID" id="skuid" name="skuid"
+                                   ng-model="skuClientCode" class="darkgrey-bottom-border">
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <!-- Warehouse and Vendor -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2" style="padding-top: 5px;">
+                            <span class="semi-bold-text">Warehouse <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4">
+
+                            <input
+                                    type="text"
+                                    disabled = "disabled"
+                                    class="form-control darkgrey-bottom-border"
+                                    ng-model="InventorywareHousesData[0].tableWarehouseDetailsShortname"
+                                    style="border: none !important; color: #786eff; font-weight: 600;padding-bottom: 5px;">
+                        </div>
+                        <div class="col-md-2" style="padding-top: 5px;">
+                            <span class="semi-bold-text">Vendor <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4">
+                            <select ng-model="inventoryData.tableVendor"
+                                    tabindex="4"
+                                    ng-options="option.tableVendorName for option in vendorsData track by option.idtableVendorId"
+                                    class="form-control">
+                                <option value="">Select Vendor</option>
+
+                            </select>
+                            <span title="Create mapping for system and vendor SKU code" class="fa fa-plus fa-lg fa-lg" ng-click="AddVendorSkuMap($event)"
+
+                                  style="color:#00ACE4;position:absolute;top:10px;right:-10px;"></span>
+                        </div>
+                    </div>
+
+                    <!-- MRP and MSP -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">MRP <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border" placeholder="Enter MRP"
+                                   tabindex="5"
+                                   type="text"
+                                   price
+                                   id="mrp" name="mrp"
+                                   ng-model="inventoryData.tableSkuInventoryMaxRetailPrice"
+                                   ng-change="checkMspGrtMrp(inventoryData.tableSkuInventoryMaxRetailPrice,inventoryData.tableSkuInventoryMinSalePrice)">
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Min Sale Price</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border" placeholder="Enter MSP" value = "0.00"
+                                   tabindex="6"
+                                   type="text"
+                                   price
+                                   id="msp" name="msp"
+                                   ng-model="inventoryData.tableSkuInventoryMinSalePrice"
+                                   ng-change="checkMspGrtMrp(inventoryData.tableSkuInventoryMaxRetailPrice,inventoryData.tableSkuInventoryMinSalePrice)">
+                        </div>
+                    </div>
+
+                    <!-- Available and Bad Quantity -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Good Quantity <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border textRightOnFocus" placeholder="Enter Good Quantity"
+                                   tabindex="7"
+                                   ng-change="checkValidAvblQty(inventoryData.tableSkuInventoryAvailableCount);"
+                                   ng-class="{submitted:validAvblQty}"
+                                   type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   ng-model="inventoryData.tableSkuInventoryAvailableCount">
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Bad Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border textRightOnFocus" placeholder="Enter Bad Quantity"
+                                   tabindex="8"
+                                   type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="badQuality" name="badQuality"
+                                   ng-model="inventoryData.tableSkuInventoryInwardQcFailedCount">
+                        </div>
+                    </div>
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Batch No.</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border" placeholder="Enter Batch No." type="text"
+                                   tabindex="9"
+                                   id="batchNo"
+                                   name="batchNo" ng-model="inventoryData.tableSkuInventoryBatchNo">
+                        </div>
+
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Rate Total</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border" placeholder="Enter Rate total" tabindex="8"
+                                   type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="rateTotal"
+                                   name="rateTotal" ng-model="inventoryData.tableSkuInventoryRateTotal">
+                        </div>
+
+                        <div class="col-md-2" ng-if="skuShelfType==1">
+                            <span class="semi-bold-text">Mfg Date  <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==1">
+                            <md-datepicker ng-if="skuShelfType==1" md-max-date="mainstartmaxDate"
+                                           ng-model="inventoryData.tableSkuInventoryMfgDate"
+                                           md-placeholder="Enter date"></md-datepicker>
+                        </div>
+
+                    </div>
+
+                    <!-- Mfg and Expiry Date -->
+                    <div class="row row-margin-top">
+
+
+                        <div class="col-md-2" ng-if="skuShelfType==1">
+                            <span class="semi-bold-text">Shelf Life(Days) <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==1">
+                            <input class="darkgrey-bottom-border" placeholder="Enter Shelf Life"
+                                   tabindex=""
+                                    type="number" min="0" id="shelfLife" name="shelfLife"
+                                   ng-model="inventoryData.tableSkuInventoryShelfLifeInDays">
+                        </div>
+
+                        <div class="col-md-2" ng-if="skuShelfType==2">
+                            <span class="semi-bold-text">Expire Date  <span class="label-red">*</span></span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==2">
+                            <md-datepicker ng-if="skuShelfType==2" md-min-date="invMinDate"
+                                           ng-model="inventoryData.tableSkuInventoryExpiryDate"
+                                           md-placeholder="Enter date"></md-datepicker>
+                        </div>
+                    </div>
+                    </div>
+                        <div class="tab-pane container-fluid" id="tab2">
+                            <div class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-6 text-center light-grey-right-border">
+
+                                    <div ngf-drop ngf-select class="drop-box cursorPointer"
+                                         ng-change="uploadBulkOrderFile(singleorderData.bulkOrderUploadfile);"
+                                         ng-model="singleorderData.bulkOrderUploadfile" ngf-drag-over-class="'dragover'"
+                                         accept=".xls,.xlsx" ngf-pattern="'.xls,.xlsx'">
+                                        <img src="images/svg/upload_icon_1.svg"
+                                             style="height: 40px; width: 40px;"/> &nbsp;&nbsp;Drag file to
+                                        upload or click to select
+                                    </div>
+
+                                    <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                                    <br>
+                                    <span id="uploadFileText" class="uploadFileLabel cursorPointer">Upload File</span>
+                                    <br>
+                                    <h5>
+
+                                    </h5>
+                                            <span>
+
+                                                <span><b>Selected File:</b></span>
+                                                <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
+                                                <span ng-if="fileName == null">No file selected</span>
+                                            </span>
+
+                                </div>
+
+                                <div class="col-md-6 text-center">
+                                    <a href="javascript:void(0);" ng-click="InventoryTemplateDownload()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a>
+                                    <br>
+                                        <span class="downloadFileLabel">
+                                                <a href="javascript:void(0);" ng-click="InventoryTemplateDownload()">
+                                                    Download File Template
+                                                </a>
+                                            </span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()" style="color: #00ACE4; font-weight: 600;cursor: pointer;">Go to "Bulk upload reports" for more details.</a>
+                            </div>
+                        </div>
+                        </div>
+                    <!-- {{inventoryData}} -->
+                    {{$parent.invData=inventoryData;""}}
+                </div>
+            </md-dialog-content>
+            <md-dialog-content ng-if="mode=='edit'">
+                <div class="md-dialog-content">
+                    <!-- SKU ID -->
+                    <div class="row">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">SKU ID</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="skuid" name="skuid" ng-model="productId"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+                        </div>
+                    </div>
+
+                    <!-- Product Search -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2 margin-top-5">
+                            <span class="semi-bold-text">Product</span>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="skuid" name="skuid" ng-model="productName"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <!-- Warehouse and Vendor -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Selected Warehouse</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="skuid" name="skuid" ng-model="tableWareHouseName"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Selected Vendor</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="skuid" name="skuid" ng-model="tableVendorName"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+                        </div>
+                    </div>
+
+                    <!-- MRP and MSP -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">MRP</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   price
+                                   id="mrp1" name="mrp"
+                                   ng-model="inventoryData.tableSkuInventoryMaxRetailPrice"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Min Sale Price</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text"
+                                   price
+                                   id="msp1" name="msp"
+                                   ng-model="inventoryData.tableSkuInventoryMinSalePrice" class="darkgrey-bottom-border"
+                                   ng-readonly="true">
+                        </div>
+                    </div>
+
+                    <!-- Available and Bad Quantity -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Available Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="quantity" name="quantity"
+                                   ng-model="inventoryData.tableSkuInventoryAvailableCount"
+                                   class="darkgrey-bottom-border-number" ng-readonly="true">
+                        </div>
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Bad Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="badQuantity" name="badQuantity"
+                                   ng-model="inventoryData.tableSkuInventoryOutwardQcFailedCount"
+                                   class="darkgrey-bottom-border-number" ng-readonly="true">
+                        </div>
+                    </div>
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Batch No.</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="batchNo" name="batchNo"
+                                   ng-model="inventoryData.tableSkuInventoryBatchNo" class="darkgrey-bottom-border"
+                                   ng-readonly="true">
+                        </div>
+                        <div class="col-md-2" ng-if="skuShelfType==1">
+                            <span class="semi-bold-text">Shelf Life(Days)</span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==1">
+                            <input  type="number" min="0" id="shelfLife" name="shelfLife"
+                                   ng-model="inventoryData.tableSkuInventoryShelfLifeInDays"
+                                   class="darkgrey-bottom-border" ng-readonly="true">
+                        </div>
+                    </div>
+
+                    <!-- Mfg and Expiry Date -->
+                    <div class="row row-margin-top">
+                        <div class="col-md-2" ng-if="skuShelfType==1">
+                            <span class="semi-bold-text">Mfg Date</span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==1">
+                            <input class="darkgrey-bottom-border" type="text" id="mfgDate" name="mfgDate"
+                                   ng-model="inventoryData.tableSkuInventoryMfgDate" ng-readonly="true">
+                        </div>
+                        <div class="col-md-2" ng-if="skuShelfType==2">
+                            <span class="semi-bold-text">Expire Date</span>
+                        </div>
+                        <div class="col-md-4" ng-if="skuShelfType==2">
+                            <input class="darkgrey-bottom-border" type="text" id="expDate" name="expDate"
+                                   ng-model="inventoryData.tableSkuInventoryExpiryDate" ng-readonly="true">
+                        </div>
+                    </div>
+
+                    <div class="row row-margin-top">
+                        <div class="col-md-2">
+                            <span class="semi-bold-text">Block Quantity</span>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="darkgrey-bottom-border-number"  type="text"
+                                   only-integer
+                                   prevent-typing-greater
+                                   max = "999999999"
+                                   id="blockQu" name="batchNo" ng-model="inventoryData.tableSkuInventoryBlockedCount"
+                                   ng-change="validateAvBl(inventoryData.tableSkuInventoryBlockedCount,inventoryData.tableSkuInventoryAvailableCount)"
+                                   md-autofocus>
+                        </div>
+                    </div>
+
+                    {{$parent.invData=inventoryData;""}}
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <div class="full-width text-right" ng-if="singleOrderTab==true && bulkOrderTab==false">
+                    <button class="cancel-btn" ng-click="cancelInventory()">
+                        Cancel
+                    </button>
+                    <button ng-if="mode=='add'"  class="action-btn"
+                            ng-click="addInventory(invData);">
+                        Add
+                    </button>
+                </div>
+                <div class="full-width text-right" ng-if="singleOrderTab==false && bulkOrderTab==true">
+                    <button type="button" class="cancel-btn" ng-click="cancelInventory()">Cancel
+                    </button>
+                    <button type="button" class="action-btn"  ng-click="uploadInventoryBulkUpload(singleorderData.bulkOrderUploadfile)">Upload
+                    </button>
+                </div>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<style>
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+        background-color: #E9EEEF;
+    }
+</style>

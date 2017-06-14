@@ -1,0 +1,53 @@
+<script type="text/ng-template" id="splitOrderSku.tmpl.html" >
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Split Order</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelWarehouseSelection()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+				<table class="table table-striped-custom table-condensed table-responsive table-hover">
+                <thead class="main-list-header-order">
+				
+				<tr>
+				<td>
+				 Select
+				</td>
+				<td>
+				SKU Name
+				</td>
+				<td>
+				SKU Code
+				</td>
+				</tr>				
+				</thead>				
+				<tbody data-ng-repeat="skusforsplit in skusListForOrderSplit" data-ng-switch on="dayDataCollapse[$index]">
+				    <tr class="clickable-row-order">
+					<td><md-checkbox ng-click="updateSkuArray(skusforsplit.idtableSaleOrderSkusId)"></md-checkbox></td>
+					<td><span class="font">{{skusforsplit.tableSku.tableSkuName}}</span></td>
+					<td><span class="font">{{skusforsplit.tableSku.tableSkuClientSkuCode}}</span></td>
+					</tr>					
+				</tbody>        
+				
+				</table>
+                    <span class="" style="font-size: 14px; margin-left: 40px">
+											<md-checkbox ng-model="genericData.splitCost" aria-label="Enable"> </md-checkbox> Split cost</span>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button class="action-btn" ng-click="splitOrderBySkus();">
+                    Confirm Split
+                </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

@@ -1,0 +1,472 @@
+<div class="modal fade" id="addOrderDialog" role="dialog"
+     style="overflow:hidden;max-width:940px;margin:0 auto;width:100%;left:50px;z-index:1050;"
+     aria-labelledby="addOrderDialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:100% !important;">
+
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+
+                    <p class="dialog-heading-p" ng-if="singleOrderMode == 'add'">Add
+                        Order</p>
+
+                    <p class="dialog-heading-p" ng-if="singleOrderMode == 'edit'">Edit
+                        Order</p>
+                    <p class="dialog-heading-p" ng-if="singleOrderMode == 'EditDraft'">Draft
+                        Order</p>
+
+                    <p class="dialog-heading-p" ng-if="singleOrderMode == 'copy'">Copy
+                        Order</p>
+
+                    <ul class="nav nav-tabs" id="ordertabs">
+                        <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                              ng-click="singleOrderTabMode()" style="width:auto;">Single Order</a>
+                        </li>
+                        <li ng-if="bulkUploadTabShow"><a data-target="#tab2" data-toggle="tab"
+                                                         class="btn sharp"
+                                                         ng-click="bulkOrderTabMode()"
+                                                         style="width:auto;">Bulk Order</a></li>
+                    </ul>
+
+                </div>
+
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <!--<div class="full-width" style="margin-bottom: 15px;">
+                        <ul class="nav nav-tabs" id="ordertabs">
+                            <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                                                  ng-click="singleOrderTabMode()" style="width:auto;">Single Order</a>
+                            </li>
+                            <li ng-if="bulkUploadTabShow"><a data-target="#tab2" data-toggle="tab"
+                                                                      class="btn sharp"
+                                                                      ng-click="bulkOrderTabMode()"
+                                                                      style="width:auto;">Bulk Order</a></li>
+                        </ul>
+                    </div>-->
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid" id="tab1">
+
+                            <form name="addOrderForm">
+
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Ref. No.</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input
+                                                ng-class="{submitted:orderNumberEntered}" name="orderNumberId"
+                                                type="text" id="ordernumberId"
+                                                md-autofocus class="form-control darkgrey-bottom-border"
+                                                ng-model="singleorderData.orderNo"
+                                                ng-change="orderNumberChanged(singleorderData.orderNo)"
+                                                placeholder="Order Ref. No.">
+                                        <i class="fa fa-question-circle-o date-help" data-container="body"
+                                           data-toggle="popover" data-trigger="focus" tabindex="0"
+                                           title="Ref. No." data-html="true"
+                                           data-content="Reference number can be any of the following :  <br/><br/> 1. Sales channel order number
+                                                                                                                                                                                    <br/> 2. Order reference number of any other system"
+                                           aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Channel <span style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select ng-class="{submitted:salesChannelSelected}" required
+                                                name="channelObject" ng-model="singleorderData.channelObject"
+                                                id="channelModel" ng-value="singleorderData.channelObject"
+                                                ng-change="getChannelId()"
+                                                class="form-control add-single-order-select"
+                                                ng-options="option as option.tableSalesChannelValueInfoName for option in channelNamesData">
+                                            <option value="" disabled selected style="display: none;">Choose
+                                                Channel
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+				                        <span class="semi-bold-text">Add Product <span
+                                            style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <angucomplete-alt ng-class="{submitted: isProductSelected}"
+                                                          id="products" placeholder="Search product" pause="400"
+                                                          selected-object="productObject" remote-url="{{baseSkuUrl}}"
+                                                          title-field="tableSkuName"
+                                                          description-field="tableSkuDescription"
+                                                          input-class="form-control darkgrey-bottom-border"
+                                                          image-field="tableSkuImageUrl"
+                                                          code-field="tableSkuClientSkuCode"
+                                                          initial-value="skuSelected"></angucomplete-alt>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" title="Click to see all SKUs."
+                                                style="position: absolute; top: 8px;"
+                                                class="btn btn-sm truncate-text"
+                                                ng-click="masterSkuDialog($event, true);">. . .
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input
+                                                price
+                                                type="text"
+                                                min="0" ng-model="singleorderData.priceProd" id="number"
+                                                name="price" placeholder="Price" ng-maxlength="15"
+                                                class="form-control darkgrey-bottom-border textRightOnFocus"
+                                                /> <span
+                                            ng-show="addOrderForm.price.$error.maxlength" style="color: red;">
+					                        Price can not be greater than 999999999999.99</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input ng-class="{submitted: isQuantityEntered}"
+                                               type="text"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max="999999999"
+                                               ng-model="singleorderData.quantityNo" id="number1" name="quantity"
+                                               placeholder="Quantity"
+                                               class="form-control darkgrey-bottom-border textRightOnFocus"
+                                               /> <span
+                                            ng-show="addOrderForm.quantity.$error.maxlength"
+                                            style="color: red;"> Quantity can not be greater than
+					                        999999999</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn small-actn-btn"
+                                                ng-click="addProduct(singleorderData.quantityNo,id,singleorderData.priceProd)">
+                                            Add to List
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top row-margin-bottom-small"
+                                     ng-if="products.length > 0">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <span class="semi-bold-text">List of Selected Products</span>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="products.length > 0">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <table id="productTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product
+                                                    Name
+                                                </th>
+                                                <th style="text-align: right;"><span class="fa fa-inr fa-md"></span>&nbsp;&nbsp;Price
+                                                </th>
+                                                <th style="text-align: right;"><span
+                                                        class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Quantity
+                                                </th>
+                                                <th style="text-align: center;"><span
+                                                        class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="product in products">
+                                                <td>{{product.tableSku.tableSkuName}}</td>
+                                                <td style="text-align: right;">
+                                                    {{product.tableSaleOrderSkusChargeses[0].tableSaleOrderSkusChargesValue
+                                                    | priceOrHyphen}}
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    {{product.tableSaleOrderSkusSkuQuantity}}
+                                                </td>
+                                                <td style="text-align: center; padding: 0;">
+                                                    <!-- <a style="color: #F0592B; cursor: pointer;" ng-click="removeProduct($index)"><span class="fa fa-trash fa-lg" /></a> -->
+                                                    <md-button class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeProduct($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+				                        <span class="semi-bold-text">Customer <span
+                                            style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <angucomplete-alt ng-class="{submitted: isCustomerSelected}"
+                                                          id="customers" placeholder="Search customer" pause="400"
+                                                          selected-object="customerObj" remote-url="{{baseCustomerUrl}}"
+                                                          title-field="tableCustomerFullName"
+                                                          code-field="tableCustomerClientCustomerCode"
+                                                          description-field="tableCustomerEmail"
+                                                          phone-field="tableCustomerPhone"
+                                                          input-class="form-control darkgrey-bottom-border"
+                                                          initial-value="custName"
+                                                          input-changed="customerChanged"></angucomplete-alt>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" title="Click to see all customers"
+                                                style="position: absolute; top: 8px;"
+                                                class="btn btn-sm truncate-text"
+                                                ng-click="masterCustomerDialog($event, true);">. . .
+                                        </button>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <span title="Add New Customer" class="fa fa-plus fa-lg fa-lg"
+                                              style="color: #00ACE4; margin-top: 13px;"
+                                              ng-click="openCustomerMode($event)"/>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5 add-single-order-da-heading">
+                                        <span class="semi-bold-text">Shipping Address <span
+                                            style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select ng-class="{submitted:deliveryAddressSelected}" required
+                                                ng-change="toggleDeliveryAddressSubmittedValue()"
+                                                ng-model="singleorderData.deliveryAddressName"
+                                                name="deliveryAddressName"
+                                                class="form-control add-single-order-select"
+                                                id="deiveryAddressSelected"
+                                                ng-options="option as option.tableAddressFull for option in deliveryAddressArray track by option.idtableAddressId">
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Shipping Address
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 add-delivery-address-btn"
+                                         ng-if="singleorderData.customerObj!=null">
+                                        <a style="color: #00ACE4;"
+                                           ng-click="addShippingAddress(singleorderData.customerObj.idtableCustomerId)"><span
+                                                class="fa fa-plus fa-lg"/>&nbsp;&nbsp;Add Shipping Address</a>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-5 margin-top-5 text-center">
+                                        <span> <md-checkbox
+                                                ng-model="singleorderData.billingAddressSameAsShipping"
+                                                aria-label="Enable"> </md-checkbox> &nbsp;Billing address same as shipping address
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top" ng-if="!singleorderData.billingAddressSameAsShipping">
+                                    <div class="col-md-2 margin-top-5 add-single-order-da-heading">
+                                        <span class="semi-bold-text">Billing Address <span
+                                                style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select ng-class="{submitted:billingAddressSelected}" required
+                                                ng-change="toggleBillingAddressSubmittedValue()"
+                                                ng-model="singleorderData.billingAddress" name="billingAddress"
+                                                class="form-control add-single-order-select"
+                                                id="billingAddress"
+                                                ng-options="option as option.tableAddressFull for option in billingAddressArray track by option.idtableAddressId">
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Billing Address
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 add-delivery-address-btn"
+                                         ng-if="singleorderData.customerObj!=null">
+                                        <a style="color: #00ACE4;"
+                                           ng-click="addBillingAddress(singleorderData.customerObj.idtableCustomerId)"><span
+                                                class="fa fa-plus fa-lg"/>&nbsp;&nbsp;Add Billing Address</a>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Payment Type <span
+                                            style="color: red">*</span></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select ng-class="{submitted:paymentTypeSelected}" required
+                                                ng-change="togglePaymentTypeSubmittedValue(singleorderData.paymentObject)"
+                                                ng-model="singleorderData.paymentObject" id="payType"
+                                                class="form-control add-single-order-select"
+                                                ng-options="option as option.tableSaleOrderPaymentTypeString for option in paymentNamesData">
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Payment Type
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Sales Channel Date <span
+                                                style="color: red">*</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <md-datepicker timezoned-date
+                                                       ng-model="singleorderData.tableSaleOrderScDateTime"
+                                                       id="scdate" required onkeydown="return false"
+                                                       md-min-date="minDateSc" md-max-date="maxDateSc"
+                                                       md-placeholder="Enter date" name="endDate"></md-datepicker>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Shipping Date </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <md-datepicker timezoned-date
+                                                       ng-model="singleorderData.tableSaleOrderLatestShippngDate"
+                                                       required
+                                                       onkeydown="return false" id="spdate"
+                                                       md-min-date="minDateShipping"
+                                                       md-max-date="maxDateShipping" md-placeholder="Enter date"
+                                                       name="shippingdate"
+                                                       ng-change="onShippingDateChange()"></md-datepicker>
+                                    </div>
+
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Delivery Date </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <md-datepicker timezoned-date
+                                                       ng-model="singleorderData.tableSaleOrderLatestDeliveryDate"
+                                                       required onkeydown="return false" md-min-date="minDateDelivery"
+                                                       md-max-date="maxDateDelivery" md-placeholder="Enter date"
+                                                       name="deliverydate"
+                                                       ng-change="onDeliveryDateChange()"></md-datepicker>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top row-margin-bottom-small"
+                                     ng-if="singleorderData.tableSaleOrderRemarkses.length > 0">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <span class="semi-bold-text">Remarks History</span>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="singleorderData.tableSaleOrderRemarkses.length > 0">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <table id="remarkstable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th style="width:20%;">Date-Time</th>
+                                                <th style="text-align: right;">User
+                                                </th>
+                                                <th style="text-align: right;">Remarks
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="remarks in singleorderData.tableSaleOrderRemarkses">
+                                                <td>{{remarks.tableSaleOrderRemarksDateTime | utcToLocalTimeOrHyphen}}
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    {{remarks.tableSaleOrderRemarksUser}}
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    {{remarks.tableSaleOrderRemarksString}}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Remarks</span>
+                                    </div>
+                                    <div class="col-md-8">
+
+                                        <textarea caps class="form-control"
+                                                  ng-model="singleorderData.tableSaleOrderRemarks" ng-trim="false" ng-maxlength="2000"
+                                                  placeholder="Enter Your Remarks"></textarea>
+                                        <h6 style="color:gray;">Maximum character limit:2000, Limit Left:
+                                            {{2000-singleorderData.tableSaleOrderRemarks.length}}</h6>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane container-fluid" id="tab2">
+                            <div
+                                    class="row row-margin-top-large row-margin-bottom-large text-center">
+                                <div class="col-md-4 light-grey-right-border">
+                                    <div id="uploadFileButton" class="uploadFileBulkOrder"
+                                         ng-click="uploadFileBulkOrder($event)"></div>
+                                    <br> <span id="uploadFileText" class="uploadFileLabel"
+                                               ng-click="uploadFileBulkOrder($event)">Upload File</span>
+                                </div>
+                                <div class="col-md-4 light-grey-right-border">
+                                    <div class="mapFileBulkOrder" data-toggle="modal"
+                                         data-target="#myModal2"></div>
+                                    <br> <span class="mapFileLabel" data-toggle="modal"
+                                               ng-click="cleanEv()" data-target="#myModal2">Map File</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="javascript:void(0);" ng-click="downloadOrdertemplate()">
+                                        <div class="downloadFileBulkOrder"></div>
+                                    </a> <br> <span class="downloadFileLabel"> <a
+                                        href="javascript:void(0);" ng-click="downloadOrdertemplate()"> Download File
+                                                Template </a>
+                                        </span>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <a ng-click="closeBulkUploadDialog()"
+                                   style="color: #00ACE4; font-weight: 600; cursor: pointer;">Go to
+                                    "Bulk upload reports" for more details.</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleOrderTab==true && bulkOrderTab==false">
+                    <button type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSingleOrder()">Cancel
+                    </button>
+                    <button type="button" class="action-btn"
+                            ng-if="singleOrderMode != 'edit' && OrderMode != 'EditDraft'"
+                            ng-click="saveSingleOrder()">Save
+                    </button>
+                    <button type="button" class="action-btn"
+                            ng-if="singleOrderMode == 'edit' && OrderMode != 'EditDraft'"
+                            ng-click="updateSingleOrder()">Update
+                    </button>
+                    <button type="button" class="action-btn"
+                            ng-if="singleOrderMode != 'edit' && bulkOrderTab !=true"
+                            ng-click="Drafted(OrderMode)">Save To Draft
+                    </button>
+                    <button type="button" ng-click="SendDraft()"
+                            ng-if="OrderMode == 'EditDraft'" class="action-btn">Confirm
+                        Draft
+                    </button>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;"
+                     ng-if="singleOrderTab==false && bulkOrderTab==true">
+                    <button type="button" class="cancel-btn" data-dismiss="modal"
+                            ng-click="cancelSingleOrder();singleOrderTabMode()">Cancel
+                    </button>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+<style >
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background-color: #E9EEEF;
+    }
+</style >

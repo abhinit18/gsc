@@ -1,0 +1,114 @@
+<script type="text/ng-template" id="STinGRNdata.tmpl.html" >
+    <md-dialog aria-label="Quick GRN" style="width: 1200px; position: relative;" ng-cloak>
+        <form ng-submit="QuickGRN.$valid && SubmitGrn(quickGRNSkuDetails.tableSkuInventoryRecords)" novalidate
+              name="QuickGRN">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Quick GRN</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelSingleOrders()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="full-width">
+                        <div class="col-md-12">
+                            <table id="STinGrnProductTable"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th class="text-center">&nbsp;&nbsp;SKU Code</th>
+                                    <th class="text-center">&nbsp;&nbsp;SKU Name</th>
+                                    <th style="width:90px;" class="text-center">&nbsp;&nbsp;Batch No.</th>
+                                    <th class="text-center">&nbsp;&nbsp;Vendor</th>
+                                    <th class="text-center">&nbsp;&nbsp;MFG. Date</th>
+                                    <th class="text-center">&nbsp;&nbsp;Expiry Date</th>
+                                    <th class="text-center">&nbsp;&nbsp;MRP</th>
+                                    <th class="text-center">&nbsp;&nbsp;MSP</th>
+                                    <th class="text-center">&nbsp;&nbsp;Expected Quantity</th>
+                                    <th class="text-center">&nbsp;&nbsp; Actual Quantity
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data">
+                                <tr ng-repeat="product in quickGRNSkuDetails.tableSkuInventoryRecords">
+                                    <td>
+                                        <span style="color: orangered;" ng-if="product.tableSku.tableSkuClientSkuCode">{{product.tableSku.tableSkuClientSkuCode}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSku.tableSkuClientSkuCode">-</span>
+                                    </td>
+                                    <td>
+                                        <span style="color: orangered;" ng-if="product.tableSku.tableSkuName">{{product.tableSku.tableSkuName}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSku.tableSkuName">-</span>
+                                    </td>
+                                    <td>
+                                        <span style="color: orangered;" ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo">{{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo}}</span>
+                                        <span style="color: orangered;" ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryBatchNo"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName">{{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName}}</span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableVendor.tableVendorName">-</span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate">
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMfgDate">
+                                           -
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span ng-if="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate">
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate | date : 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span ng-if="!product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpiryDate">
+                                            -
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                          {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMaxRetailPrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryMinSalePrice | priceOrHyphen}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryExpectedInwardCount}}
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="text"
+                                               only-integer
+                                               prevent-typing-greater
+                                               max = "999999999"
+                                               class="form-control"
+                                               style="border:1px solid gray; text-align: right"
+                                               ng-model="product.tableSkuInventoryByTableStockXferOrderSkuInventoryMapToInventory.tableSkuInventoryActualInwardCount">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn" data-dismiss="modal" ng-click="cancelQuickGRN()">Cancel
+                </button>
+                <button type="submit" ng-disabled="disableSubmitGrn" class="action-btn">Submit</button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<style>
+    #STinGrnProductTable thead th {
+        text-align: center !important;
+        width: 10% !important;
+    }
+</style>

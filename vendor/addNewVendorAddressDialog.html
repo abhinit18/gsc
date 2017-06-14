@@ -1,0 +1,134 @@
+<div class="modal fade" id="vendorAddressModal" role="dialog" aria-labelledby="vendorAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="cancelAddress();">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="vendorAddressMode=='add'" class="dialog-heading-p" id="vendorAddressModalLabel">Add New Address</p>
+                <p ng-if="vendorAddressMode=='edit'" class="dialog-heading-p" id="vendorAddressModalLabel">Edit Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Contact Person Name <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" ng-class="{submitted: isvendorAddressNameValid}" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="First Name" ng-model="vendorAddress.contactPersonName">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Email Id <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="email" ng-class="{submitted: isvendorAddressEmailValid}" name="custEmail" id="custEmail" class="form-control text-lowercase emailInput darkgrey-bottom-border font input-less-padding" placeholder="Email ID" ng-model="vendorAddress.contactEmail" ng-blur="validateEmail(myForm.custEmail.$valid);">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Phone Number <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" ng-class="{submitted: isvendorAddressPhoneValid}" numbers-only class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Phone no." ng-model="vendorAddress.contactPhone">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Address Line 1 <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" ng-class="{submitted: isvendorAddressAdLine1Valid}" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 1" ng-model="vendorAddress.adLine1"
+                                    ng-blur="callGetLatLong(showResult)">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Address Line 2</div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 2" ng-model="vendorAddress.adLine2"
+                                    ng-blur="callGetLatLong(showResult)">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">Address Line 3</div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Address Line 3" ng-model="vendorAddress.adLine3"
+                                    ng-blur="callGetLatLong(showResult)">
+                                </div>
+                            </div>
+							
+							 <div class="row padding-top-15">
+                                <div class="col-md-5 font">Country <span style="color:red">*</span></div>
+                                <div class="col-md-6 no-padding">
+                                    <select ng-model="vendorAddress.countryData" ng-class="{submitted: isvendorAddressCountryValid}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableCountryLongName for option in countriesArray" ng-change="countriesStatesData(vendorAddress.countryData)">
+									<option value="">Select Country</option>
+									</select>
+                                </div>
+								<div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'Country');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                            </div>
+							
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">State <span style="color:red">*</span></div>
+                                <div class="col-md-6 no-padding">
+                                    <select ng-model="vendorAddress.stateData" ng-class="{submitted: isvendorAddressStateValid}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableStateLongName for option in regionsStatesArray" ng-change="regionsStatesDistrictData(vendorAddress.stateData,vendorId)">
+                                  <option value="">Select State</option>
+                                </select>
+                                </div>
+								<div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'State');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">District <span style="color:red">*</span></div>
+                                <div class="col-md-6 no-padding">
+                                    <select ng-model="vendorAddress.districtData" ng-class="{submitted: isvendorAddressDistrictValid}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray" ng-change="regionsStatesDistrictsCityData(vendorAddress.stateData,vendorAddress.districtData);">
+                                  <option value="">Select District</option>
+                                </select>
+                                </div>
+								<div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'District');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">City <span style="color:red">*</span></div>
+                                <div class="col-md-6 no-padding">
+                                    <select ng-model="vendorAddress.city" ng-class="{submitted: isvendorAddressCityValid}" class="darkgrey-bottom-border full-width" ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray" ng-change="changeCity(vendorAddress.city);">
+                                  <option value="">Select City</option>
+                                </select>
+                                </div>
+								<div class="col-md-1"><button class="addButton" ng-click="showVendorAddressEntityDialog($event, 'City');"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                            </div>
+
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">PIN Code <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input id="pincode1" type="text" ng-class="{submitted: isvendorAddressPinValid}" ng-pattern-restrict="^[0-9]*$" class="form-control darkgrey-bottom-border font input-less-padding" ng-blur="callGetLatLong(showResult)" placeholder="Postal code" ng-model="vendorAddress.pincode">
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-5 font">TIN No <span style="color:red">*</span></div>
+                                <div class="col-md-7 no-padding">
+                                    <input type="text" ng-class="{submitted: isvendorAddressTinValid}" ng-pattern-restrict="^[a-z A-Z 0-9]*$" name="tin" id="tinArray1" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="VAT / TIN" ng-model="vendorAddress.tinNo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding-top-15">
+                            <!-- Map Area -->
+                            <demo-map ng-if="searchLocation!=null" ng-model="searchLocation" class="demo-map">
+                            </demo-map>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="cancel-btn" ng-click="cancelAddress();">Cancel</button>
+                <button ng-if="vendorAddressMode=='add'" type="button" class="action-btn" ng-click="saveShippingAddressData();">Add</button>
+                <button ng-if="vendorAddressMode=='edit'" type="button" class="action-btn" ng-click="editShippingAddressData();">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

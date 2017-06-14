@@ -1,0 +1,232 @@
+<script type="text/ng-template" id="GRNdata.tmpl.html">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form  novalidate name="QuickGRN">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Quick GRN</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelPurchaseOrderGrnModal()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+
+                        <div class="md-dialog-content">
+
+                            <!-- Product Search -->
+                            <div class="row">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">Product</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="" ng-model="SkuDetails.ProductModel" name="skuid"
+                                           ng-disabled="SkuDisabled" class="darkgrey-bottom-border">
+                                </div>
+                                {{skuClientCode=singleorderData.productObj.originalObject.tableSkuClientSkuCode;""}}
+                                {{grnInventory.tableSku=singleorderData.productObj.originalObject;""}}
+                                {{skuShelfType=singleorderData.productObj.originalObject.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId;""}}
+                            </div>
+
+                            <!-- SKU ID -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">SKU ID</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="skuClientCodeid" name="skuid"
+                                           ng-model="SkuDetails.skuClientCode"
+                                           ng-disabled="SkuDisabled" class="darkgrey-bottom-border">
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2 margin-top-5">
+                                    <span class="semi-bold-text">Batch No.</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="skuCBatchCodeid" name="skuid"
+                                           ng-model="grnInventory.tableSkuInventoryBatchNo"
+                                           placeholer="Enter Batch No."
+                                           class="darkgrey-bottom-border">
+                                </div>
+                            </div>
+
+                            <hr/>
+
+                            <!-- Warehouse and Vendor -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Warehouse</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="skuWarehouseid" name="skuid"
+                                           ng-model="grnInventory.tableWarehouseDetails.tableWarehouseDetailsShortname"
+                                           ng-disabled="SkuDisabled" class="darkgrey-bottom-border">
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Vendor</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="skuVendorid" name="skuid"
+                                           ng-model="grnInventory.tableVendor.tableVendorName"
+                                           ng-disabled="SkuDisabled" class="darkgrey-bottom-border">
+                                </div>
+                            </div>
+
+                            <!-- MRP and MSP -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">MRP <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border-number" placeholder="Max. Retail Price"
+                                           type="text"
+                                           price
+                                           id="mrp" name="mrp" required
+                                           ng-model="grnInventory.tableSkuInventoryMaxRetailPrice"
+                                           ng-change="checkMspGrtMrp(grnInventory.tableSkuInventoryMaxRetailPrice,grnInventory.tableSkuInventoryMinSalePrice)"></input>
+
+                                    <div class="error ng-hide" ng-show="QuickGRN.$submitted" aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="QuickGRN.mrp.$error.required && QuickGRN.mrp.$pristine">
+                                            MRP is required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Min Sale Price</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border-number" placeholder="Min. Sale Price"
+                                           type="text"
+                                           price
+                                           id="msp" name="msp"
+                                           ng-model="grnInventory.tableSkuInventoryMinSalePrice"
+                                           ng-change="checkMspGrtMrp(grnInventory.tableSkuInventoryMaxRetailPrice,grnInventory.tableSkuInventoryMinSalePrice)"></input>
+
+                                </div>
+                            </div>
+
+                            <!-- Available and Bad Quantity -->
+                            <div class="row row-margin-top">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Expected Quantity</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border" ng-disabled="SkuDisabled"
+                                           numbers-only type="text" min="0"
+                                           ng-model="grnInventory.tableSkuInventoryExpectedInwardCount">
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Actual Quantity <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border-number" name="availableGoods"
+                                           placeholder="Actual Quantity" required
+                                           only-integer
+                                           type="text"
+                                           prevent-typing-greater
+                                           max = "999999999"
+                                           ng-change = "calcQCFailed()"
+                                           name="badQuality" ng-model="grnInventory.tableSkuInventoryActualInwardCount">
+
+                                    <div class="error ng-hide" ng-show="QuickGRN.$submitted" aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="QuickGRN.availableGoods.$error.required && QuickGRN.availableGoods.$pristine">
+                                            Actual Quantity is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-top">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">QC Passed <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border-number" name="goodQuality" required
+                                           placeholder="Quality Control Passed"
+                                           type="text"
+                                           only-integer
+                                           prevent-typing-greater
+                                           max = "999999999"
+                                           ng-change = "calcQCFailed()"
+                                           ng-model="grnInventory.tableSkuInventoryAvailableCount">
+
+                                    <div class="error ng-hide" ng-show="QuickGRN.$submitted" aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="QuickGRN.goodQuality.$error.required && QuickGRN.goodQuality.$pristine">
+                                            QC passed is required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">QC Failed</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border" placeholder="Quality Control Failed"
+                                           ng-readonly="true"
+                                           type="number" min="0"
+                                           name="badQuality" ng-model="grnInventory.tableSkuInventoryInwardQcFailedCount">
+
+                                </div>
+                            </div>
+                            <div class="row row-margin-top" ng-if= "SkuDetails.GRnData.tableSku.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId == 1">
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Mfg. Date <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <md-datepicker ng-model="grnInventory.tableSkuInventoryMfgDate" required
+                                                   md-max-date="endmaxDate" md-placeholder="Enter date"
+                                                   name="StartDate"></md-datepicker>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Shelflife Timespan <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="darkgrey-bottom-border-number" name="blocked" required
+                                           placeholder="In Days" ng-class="{submitted:validAvblQty}"
+                                           type="text"
+                                           only-integer
+                                           prevent-typing-greater
+                                           max = "999999999"
+                                           ng-model="grnInventory.tableSkuInventoryShelfLifeInDays">
+
+                                    <div class="error ng-hide" ng-show="QuickGRN.$submitted" aria-hidden="true">
+                                        <small class="error-msg text-danger"
+                                               ng-show="QuickGRN.blocked.$error.required && QuickGRN.blocked.$pristine">
+                                            Blocked Quantity is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row row-margin-top" ng-if= "SkuDetails.GRnData.tableSku.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId == 2">
+
+                                <div class="col-md-2">
+                                    <span class="semi-bold-text">Expiry Date <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <md-datepicker ng-model="grnInventory.tableSkuInventoryExpiryDate" required
+                                                   md-min-date="minDateDelivery" md-placeholder="Enter date"
+                                                   name="EndDate"></md-datepicker>
+                                    {{SkuDetails.OrderScheduledEndDatetime}}
+                                    <div class="error ng-hide" ng-show="QuickGRN.$submitted" aria-hidden="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <button type="button" class="cancel-btn" ng-click="cancelPurchaseOrderGrnModal()">Cancel
+                </button>
+                <button type="button" ng-disabled="disableSubmitGrn" ng-click="SubmitGrn()" class="action-btn">Submit</button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

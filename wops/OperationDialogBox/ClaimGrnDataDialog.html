@@ -1,0 +1,71 @@
+<script type="text/ng-template" id="ClaimGrnDataDialog.tmpl.html">
+    <md-dialog aria-label="Cancel Order Item" style="width: 1000px; position: relative;" ng-cloak>
+        <md-toolbar style="background-color: #F2F7F8;">
+            <div class="md-toolbar-tools">
+                <p style="font-size: 20px;font-weight: 600;color: #30373B;text-align:center;">Claim GRN</p>
+                <span flex></span>
+
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="full-width">
+                    <table id="productTable"
+                           class="table boldtable table-responsive table-bordered table-hover claimGrnTable">
+                        <thead class="data-grid-header">
+                        <tr>
+                            <th>&nbsp;&nbsp;SKU Code
+                            </th>
+                            <th style="text-align: right;">
+                                &nbsp;&nbsp;Bad Quantity
+                            </th>
+
+                            <th style="text-align: right;">
+                                &nbsp;&nbsp;Claim Quantity
+                            </th>
+                            <th style="text-align: center;">
+                                &nbsp;&nbsp;Claim
+                                Entity
+                            </th>
+                            <th>Claim Reason</th>
+                        </tr>
+                        </thead>
+                        <tbody class="data-grid-data">
+                        <tr>
+                            <td>{{SkuDetails.GRnData.tableSku.tableSkuName}}</td>
+                            <td>{{SaleReturnGrnInventory.tableSkuInventoryInwardQcFailedCount}}</td>
+                            <td style="text-align: right;">
+                                <input type="text" only-integer
+                                       prevent-typing-greater
+                                       ng-model="claimObj.tableSaleReturnClaimQuantity"
+                                       max="{{SaleReturnGrnInventory.tableSkuInventoryInwardQcFailedCount}}"
+                                       class="darkgrey-bottom-border-number">
+                            </td>
+                            <td style="text-align: center; padding: 0;">
+                                <select class="form-control add-single-order-select"
+                                        ng-model="genericData.claimEntity">
+                                    <option value="" disabled="" selected="selected" style="display: none;"
+                                            class="" >Select Claim Entity</option>
+                                    <option value="customer">Customer</option>
+                                    <option value="saleschannel">Sales Channel</option>
+                                </select>
+                            </td>
+                            <td><textarea ng-model="claimObj.tableSaleReturnClaimRemarks" class="form-control"></textarea></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+            <span flex></span>
+            <button type="button" class="cancel-btn" ng-click="cancelSingleOrdersReturnClaimDialog()">Cancel
+            </button>
+            <button type="button" ng-click="ClaimSku(SkuDetails.GRnData,SaleReturnGrnInventory,genericData.claimEntity)" class="action-btn">
+                Claim
+            </button>
+        </md-dialog-actions>
+
+    </md-dialog>
+</script>

@@ -1,0 +1,70 @@
+
+<!--=============================================== bootstrap dialog box for master sku list details==================-->
+
+<div class="modal fade" id="dialogmastersku" role="dialog"
+     style="overflow:hidden;max-width:940px;margin:0 auto;width:100%;left:50px;z-index:9999;"
+     aria-labelledby="myModalLabelleded" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width:100% !important;">
+        <form
+                name="QuickGRN">
+            <div class="modal-content">
+                <!-- Modal Header -->
+
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelmastersDialog()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">List of SKUs</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                    <div class="md-dialog-content">
+                        <div class="full-width" style = "padding-top: 20px">
+                            <div class="tab-content">
+                                <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+                                    <table id="productTable"
+                                           class="table boldtable table-responsive table-bordered table-hover">
+                                        <thead class="data-grid-header">
+                                        <tr>
+                                            <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;SKU Name
+                                            </th>
+                                            <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;SKU Code
+                                            </th>
+                                            <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="data-grid-data" data-ng-repeat="sku in genericData.skusListFiltered">
+                                        <tr>
+                                            <td>{{sku.tableSkuName}}</td>
+                                            <td style="text-align: right;">
+                                                {{sku.tableSkuClientSkuCode}}
+                                            </td>
+                                            <td style="text-align: center; padding: 0;">
+                                                <button type="button" style="margin-top:7px;" class="btn btn-sm btn-search-all" md-no-ink="false"
+                                                        ng-click="selectSku(sku.idtableSkuId, $event)" placeholder="Select"
+                                                        >
+                                                    Select
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button type="button" class="cancel-btn" ng-click="cancelmastersDialog()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--========================================= ends here =======================================-->

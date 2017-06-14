@@ -1,0 +1,327 @@
+<link href="Discount/Discount.css" rel="stylesheet">
+<div class="container-fluid">
+    <div class="container-fluid">
+        <div class="col-md-12 row-margin-top-medium" style="padding: 0px;">
+            <p class="screen-heading">Discount</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="screen-heading"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; margin-left: 10px;"
+                    ng-click="showExportDiscountDialog($event);"><span class="fa fa-download"/>
+                &nbsp;&nbsp;Export
+            </button>
+
+
+
+            <button type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px; " ng-if="access.createAccess"
+                    ng-click="showAddDiscountRuleModal($event);"><img src="images/svg/add.svg" style="height:20px;">
+                &nbsp;&nbsp;Add Discount Rule
+            </button>
+        </div>
+    </div>
+    <div class="row main-list">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-inv">
+            <!-- table header -->
+            <tr>
+                <td style="text-align: center; width:12% !important;">
+                    <a href="">
+                        Discount Rule Name &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+
+                    <a href="">
+                        Creation Date &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+
+                    <a href="">
+                        Start Date &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+
+                    <a href="">
+                        End Date &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+
+                    <a href="">
+                        Discount % &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+                    <a href="">
+                        Status &nbsp;
+                    </a>
+                </td>
+                <td style="text-align: center; width:12% !important;">
+                    <a href="">
+                        Action
+                    </a>
+                </td>
+
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            </thead>
+            <!--data-ng-repeat="Data in inventoryLists"-->
+            <tbody data-ng-repeat="discountRule in discountRules" data-ng-switch on="dayDataCollapse[$index]">
+            <tr class="clickable-row-inv">
+                <td style="text-align: center; width:12% !important;">
+                    {{discountRule.tableDiscountRuleName}}
+                </td>
+                <td style="text-align: center; width:12% !important;">
+                    {{discountRule.tableDiscountRuleCreatedOn | utcToLocalOrHyphen}}
+                </td>
+                <td style="text-align: center; width:12%; !important;">
+                    {{discountRule.tableDiscountRuleStartDate | utcToLocalOrHyphen}}
+                </td>
+                <td style="text-align: center; width:12%; !important;">
+                    {{discountRule.tableDiscountRuleEndDate | utcToLocalOrHyphen}}
+                </td>
+                <td style="text-align: center; width:12%; !important;">
+                    {{discountRule.tableDiscountRuleDiscount}}
+                </td>
+                <td>
+                    <div class="tool-tip">
+                        <a title = "Click to deactivate" class="active-status" ng-if="discountRule.tableDiscountRuleIsActivated == true" href=""
+                           data-ng-click="access.editAccess && deactivateRule(discountRule,$event)">Active&nbsp;<img
+                                src="images/svg/rule_deactivate.svg" title="Click to deactivate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                        <a title = "Click to activate" class="deactive-status" ng-if="discountRule.tableDiscountRuleIsActivated == false" href=""
+                           data-ng-click="access.editAccess && activateRule(discountRule,$event)">Inactive&nbsp;<img
+                                src="images/svg/rule_activate.svg" title="Click to activate Rule" class="status-img"
+                                alt="" width="25px"></a>
+                    </div>
+                </td>
+                <td style="text-align: center; width:12%; !important;">
+                    <div class="tool-tip">
+                        <img ng-src="{{imgsrc1}}" title="Edit" width="20px" height="20px"
+                             ng-click="access.editAccess && editDiscountRule(discountRule, $event)"
+                             ng-init="imgsrc1='images/svg/edit.svg'" ng-mouseover="access.editAccess && (imgsrc1='images/svg/edit_hover.svg')"
+                             ng-attr-title="{{!access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"
+                             ng-class="{disableAccess: !access.editAccess || discountRule.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                             ng-mouseout="imgsrc1='images/svg/edit.svg'">
+                    </div>
+                </td>
+                <td style="text-align: center; width:12%; !important;"
+                    ng-show="dayDataCollapse == null || dayDataCollapse == undefined || dayDataCollapse == []">
+                    <img src="images/svg/expand_icon.svg" height="20"
+                         data-ng-click="selectTableRow($index)"/>
+                </td>
+                <td style="text-align: center; width:3%; !important;" data-ng-switch-when="false"
+                    data-ng-click="selectTableRow($index)">
+                    <img src="images/svg/expand_icon.svg" height="20"/></td>
+                <td style="text-align: center; width:3%; !important;" data-ng-switch-when="true"
+                    data-ng-click="selectTableRow($index)">
+                    <img src="images/svg/collaps_icon.svg" height="20"/></td>
+            </tr>
+            <tr data-ng-switch-when="true"
+                style="border: 1px solid #C0C0C0; background-color: #FEFFFF !important;min-height: 100px;">
+                <td colspan="2" style="border-right: 1px solid #ddd !important;padding: 20px;">
+                    <div class="full-width" >
+                        <div class="full-width">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h4 style="color:orangered;">
+                                    <b>{{discountRule.tableDiscountRuleName}}</b>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                Discount % :
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <b>{{discountRule.tableDiscountRuleDiscount}}</b>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                Start Date :
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <b>{{discountRule.tableDiscountRuleStartDate | utcToLocalOrHyphen}}</b>
+                            </div>
+
+                        </div>
+                        <div class="full-width">
+                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                End Date :
+                            </div>
+                            <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                <b>{{discountRule.tableDiscountRuleEndDate | utcToLocalOrHyphen}}</b>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="6">
+                    <div class="full-width">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <br>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSalesChannelExclusion == false && discountRule.tableDiscountRuleAllScSelected == false">
+                                Selected Sales Channel
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSalesChannelExclusion == true && discountRule.tableDiscountRuleAllScSelected == false">
+                                Excluded Sales Channel
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleAllScSelected == true">
+                                All selected Sales Channel
+                            </h4>
+
+                            <table id="channelTable"
+                                   ng-if="discountRule.tableDiscountRuleAllScSelected == false"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th class="text-center">&nbsp;&nbsp;Sale Channel</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data"
+                                       ng-if="discountRule.tableDiscountSalesChannelExclusions != null && discountRule.tableDiscountSalesChannelExclusions != undefined"
+                                       ng-repeat="salesChannelList in discountRule.tableDiscountSalesChannelExclusions"
+                                        >
+                                <tr>
+                                    <td>
+                                        {{salesChannelList.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="min-height: 90px;border-left:1px solid #d3d3d3;">
+                            <br>
+                            <h4 style="color:#006cad;" ng-if="discountRule.tableDiscountRuleAllCategorySelected == true">
+                                All Selected Categories
+                            </h4>
+                            <h4 style="color:#006cad;" ng-if="discountRule.tableDiscountRuleAllSkuSelected == true">
+                                All Selected SKU's
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSelectedEntity == 'Category' && discountRule.tableDiscountRuleSkuCategoryExclusion == true && discountRule.tableDiscountRuleAllCategorySelected == false">
+                                Excluded Categories
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSelectedEntity == 'Category' && discountRule.tableDiscountRuleSkuCategoryExclusion == false && discountRule.tableDiscountRuleAllCategorySelected == false">
+                                Selected Categories
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSelectedEntity == 'SKU' && discountRule.tableDiscountRuleSkuExclusion == true && discountRule.tableDiscountRuleAllSkuSelected == false">
+                                Excluded SKU's
+                            </h4>
+                            <h4 style="color:#006cad;"
+                                ng-if="discountRule.tableDiscountRuleSelectedEntity == 'SKU' && discountRule.tableDiscountRuleSkuExclusion == false && discountRule.tableDiscountRuleAllSkuSelected == false">
+                                Selected SKU's
+                            </h4>
+                            <table id="categoryListTable"
+                                   ng-if="discountRule.tableDiscountRuleAllCategorySelected == false && discountRule.tableDiscountRuleAllSkuSelected == false"
+                                   class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                <tr>
+                                    <th class="text-center">&nbsp;&nbsp;{{discountRule.tableDiscountRuleSelectedEntity}}</th>
+                                </tr>
+                                </thead>
+                                <tbody class="data-grid-data"
+                                       ng-if="discountRule.tableDiscountSkuExclusions != null && discountRule.tableDiscountSkuExclusions != undefined"
+                                       ng-repeat="SkuList in discountRule.tableDiscountSkuExclusions">
+                                <tr>
+                                    <td>
+                                        {{SkuList.tableSku.tableSkuName}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tbody class="data-grid-data"
+                                       ng-if="discountRule.tableDiscountSkuCategoryExclusions != null && discountRule.tableDiscountSkuCategoryExclusions != undefined"
+                                       ng-repeat="categoryList in discountRule.tableDiscountSkuCategoryExclusions">
+                                <tr>
+                                    <td>
+                                        {{categoryList.tableSkuNode.skuNodeName}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="discountRulesSize < discountRulesCount">Showing discount rules
+                    {{start + 1}} to
+                    {{discountRulesSize}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesSize >= discountRulesCount && discountRulesCount!=0">
+                    Showing discount rules
+                    {{start + 1}} to {{discountRulesCount}} of {{discountRulesCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="discountRulesCount==0">No discount rules available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="getDiscountRulesCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="getDiscountRulesCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="getDiscountRulesCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div ng-include src="'Discount/activateRule.html'"></div>
+<div ng-include src="'Discount/deactivateRule.html'"></div>
+<div ng-include src="'Discount/addDiscountDialog.html'"></div>
+<div ng-include src="'Discount/exportDiscountDialog.html'"></div>
+<div ng-include src="'services/masterSkuDialog.html'"></div>

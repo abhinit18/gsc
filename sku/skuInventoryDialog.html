@@ -1,0 +1,94 @@
+<div class="modal fade" id="showskuinventory" role="dialog" aria-labelledby="showskuinventory" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                 height="100px">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p class="dialog-heading-p" id="myModalLabel">Inventory Details</p>
+
+            </div>
+
+
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px;margin-top:15px;">
+                <table id="productTable"
+                       class="table boldtable table-responsive table-bordered table-hover">
+                    <thead class="data-grid-header">
+                    <tr>
+                        <th style="text-align: center; width:11.5% !important;">
+                            SKU ID
+                        </th>
+                        <th style="text-align: center; width:11.5% !important;">
+                            SKU Name
+                        </th>
+                        <th style="text-align: center; width:9% !important;">
+                            Available
+                        </th>
+                        <th style="text-align: center; width:9% !important;">
+                            Allocated
+                        </th>
+                        <th style="text-align: center; width:9% !important;">
+                            Bad
+                        </th>
+                        <th style="text-align: center; width:9% !important;">
+                            Blocked
+                        </th>
+
+                        <th style="text-align: center; width:9% !important;">
+                            Stock In Transit
+                        </th>
+                        <th style="text-align: center; width:9% !important;">
+                            Total
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody class="data-grid-data">
+                    <tr>
+                        <td style="text-align: center; width:11.5% !important;">
+                            {{skuInventories.skuCode}}
+                        </td>
+                        <td style="text-align: center; width:11.5% !important;">
+                            {{skuInventories.skuName}}
+                        </td>
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.available}}
+                        </td>
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.allocated}}
+                        </td>
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.bad}}
+                        </td>
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.blocked}}
+                        </td>
+
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.intransit}}
+                        </td>
+                        <td style="text-align: center; width:9% !important;">
+                            {{skuInventories.total}}
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                <button type="button" class="cancel-btn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .data-grid-header {
+        background-color: #30373B;
+        color: #fff;
+    }
+</style>

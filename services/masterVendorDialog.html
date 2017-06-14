@@ -1,0 +1,59 @@
+<script type="text/ng-template" id="dialogmastervendor.tmpl.html">
+    <md-dialog aria-label="Show Vendors" style="width: 800px;" ng-cloak>
+        <form name="vendForm">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p">List of Vendors</p>
+                <span flex></span>
+				<md-button class="md-icon-button" ng-click="cancelmastersDialog()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+                </div>
+				
+            </md-toolbar>
+          
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+							<table id="productTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                <thead class="data-grid-header">
+                                    <tr>
+                                        <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Vendor Name
+                                        </th>
+										<th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Vendor Code
+                                        </th>
+										<th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                        </th>
+                                        </tr>
+                                </thead>
+                                <tbody class="data-grid-data" data-ng-repeat="vendor in genericData.vendorsListFiltered">
+                                    <tr>
+                                        <td>{{vendor.tableVendorName}}</td>                                               
+                                        <td style="text-align: right;">
+                                                    {{vendor.tableVendorClientVendorCode}}
+                                        </td>
+                                        <td style="text-align: center; padding: 0;">
+                                            <button type="button" style="margin-top:7px;" class="btn btn-sm btn-search-all" md-no-ink="false"
+                                                        ng-click="selectVendor(vendor.idtableVendorId)" placeholder="Select"
+                                                        >
+                                                Select
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+						</div>
+					</div>
+				</div>
+            </md-dialog-content>
+            <!-- {{vendorsData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >
+                    <span flex></span>
+                    <button type="button" class="cancel-btn" ng-click="cancelmastersDialog()">Cancel
+                    </button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

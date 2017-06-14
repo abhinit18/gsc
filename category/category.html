@@ -1,0 +1,412 @@
+<link href="vendor/vendor.css" rel="stylesheet">
+<link href="category/category.css" rel="stylesheet">
+<link rel="stylesheet" href="css/multiple-select.css">
+
+<div class="container-fluid vendors-listheading" style="padding-top: 10px;">
+    <div class="row-margin-top-medium" style="padding-left: 25px;padding-right: 15px;"><h4 class="screen-heading">
+        Categories</h4></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row orderscreen-channel row-margin-top-x-medium" style="padding-top: 20px !important;">
+            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12" style="margin-left: 39px;">
+                <span class="font">Search category</span>
+            </div>
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding-left:0px; margin-left: -60px;">
+                <angucomplete-alt-long id="category" placeholder="Search category" pause="400" selected-object="searchedCategorySelected"
+                                  remote-url="{{categorySearchUrl}}" title-field="skuNodePathNameFormatted"
+                                  input-class="main-bottom-border font input-less-padding"></angucomplete-alt-long>
+            </div>
+            <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12" style="margin-left: 39px;">
+                <button  id="addtolist" type="button" class="btn btn-default mybut" ng-if="access.editAccess"
+                         ng-click="SelectThirdChildNode(searchedCategory.originalObject, 'select')"
+                         style="margin-left: 0px !important;">Add to list
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="full-width">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h5>{{activeMenu.skuNodePathName}}</h5>
+            <ul class="breadcrumb" ng-if="activeMenu !='' && activeMenu != null">
+                <li ng-repeat="page in activeMenu track by $index">{{page}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="full-width">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 category-item-element" id="level1">
+                <ul class="list-inline product-category-list">
+                    <li ng-class="{activeList : parentMenu === items}" ng-repeat="items in menuItems">
+                        <span ng-click="setActive(items,'parent');ActiveParentNode(items);" title="{{items.skuNodeName}}">
+                            <span class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <h5 class="truncate" >{{items.skuNodeName}} </h5>
+                            </span>
+                            <span class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <span class="fa fa-angle-right pull-right"></span>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 category-item-element" id="level2">
+                <ul class="list-inline product-category-list">
+                    <li ng-class="{FirstActiveList : firstMenu === items}" ng-repeat="items in ChildMenuItems">
+                        <span ng-click="setActive(items,'first');firstChildNode(items)" title="{{items.skuNodeName}}">
+                            <span class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <h5 class="truncate" >{{items.skuNodeName}}</h5>
+                            </span>
+                            <span class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <span class="fa fa-angle-right pull-right"></span>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 category-item-element" id="level3">
+                <ul class="list-inline product-category-list">
+                    <li ng-class="{SecondActiveList : secondMenu === items}" ng-repeat="items in FirstChildMenuItems">
+                        <span ng-click="setActive(items,'second');secondChildNode(items)" title="{{items.skuNodeName}}">
+                            <span class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                                <h5 class="truncate" >{{items.skuNodeName}}</h5>
+                            </span>
+                            <span class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <span class="fa fa-angle-right pull-right"></span>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 category-item-element" id="level4">
+                <ul class="list-inline product-category-list">
+                    <li ng-class="{ThirdActiveList : thirdMenu === items}" ng-repeat="items in SecondChildMenuItems">
+                        <span ng-click="setActive(items,'third')" title="{{items.skuNodeName}}">
+                            <span class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <h5 class="truncate-last-node" >{{items.skuNodeName}}</h5>
+                            </span>
+                            <span class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right"
+                                  style="padding: 0px;margin-top: 5px;margin-bottom: 5px;">
+                                <a title = "Manage attributes" href="javascript:void(0)" class="btn btn-default btn-sm"
+                                   ng-click="manageAttr(items)">
+                                    <span class="fa fa-edit"></span>
+                                </a>
+                            </span>
+                            <span class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right"
+                                  style="padding-top: 5px;padding-bottom: 5px;">
+                                <a title = "Click to add to your category list" href="javascript:void(0);" class="btn btn-default btn-sm"
+                                   ng-click="SelectThirdChildNode(items,'select')">Select</a>
+                            </span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="full-width">
+                    <a id="addcategory1" href="javascript:void(0);" class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                       ng-click="addCategories('parent')">+ Add Category</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="full-width">
+                    <a id="addcategory2 href="javascript:void(0);" class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                       ng-if="firstChildAddCategory" ng-click="addCategories('first')">+ Add Category</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="full-width">
+                    <a id="addcategory3" href="javascript:void(0);" class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                       ng-if="secondChildAddCategory" ng-click="addCategories('second')">+ Add Category</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="full-width">
+                    <a id="addcategory4" href="javascript:void(0);" class="btn btn-default btn-add-category full-width" ng-if="access.createAccess"
+                       ng-if="thirdChildAddCategory" ng-click="addCategories('third')">+ Add Category</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="full-width" ng-if="FinalList != '' && FinalList != null">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <br>
+
+            <div class="full-width">
+                <table class="table classified-table">
+                    <thead>
+                    <tr>
+                        <td id="hselectedcateogory" style="width:90%;text-align: left;">Selected Categories</td>
+                        <td id="heditattrib" style="width:10%;"><span style="color:#333;">Edit Attributes</span></td>
+                        <td id="hremove"  style="width:10%;"><span style="color:#333;">Remove</span></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="selected in FinalList" ng-class="{categorySelected: selected.idskuNodeId === genericData.selectedCategory.idskuNodeId}">
+                        <td style="text-align: left;">
+                            <ul class="breadcrumb table-selected-category"
+                                style="margin-bottom: 0px;padding-left: 0px; background: transparent" >
+                                <li id="selected{{$index}}" ng-click="setSelected(selected)"  ng-repeat="pathName in selected.skuNodePathName track by $index">{{pathName}}</li>
+                            </ul>
+                        </td>
+                        <td><a id="manageattr{{$index}}" href="javascript:void(0);" ng-if="access.editAccess"
+                               ng-click="manageAttr(selected)"><span
+                                class="fa fa-edit fa-lg"></span></a></td>
+                        <td><a id="delete{{$index}}" href="javascript:void(0);" ng-if="access.editAccess"
+                               ng-click="CategoryDeleteConfirmation(selected,$index)"><span
+                                class="fa fa-trash fa-lg"></span></a>
+                            <!--SelectThirdChildNode-->
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="full-width">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                        <a id="generatetemplate" href="javascript:void(0);" class="btn addsharpbutton font pull-right"
+                           ng-click="GenerateTemplate(FinalList)" style="height:auto;">Generate Template</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <!-- Add New Vendor Dialog -->
+    <div ng-include src="'vendor/addNewVendorDialog.html'"></div>
+    <!-- Add New Vendor Address Dialog -->
+    <div ng-include src="'vendor/addNewVendorAddressDialog.html'"></div>
+    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html'"></div>
+
+
+    <!--============================================= Add Attribute =========================================-->
+
+    <div class="modal fade" id="AttributeTemp" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="manageattrcross" type="button" class="close" data-dismiss="modal" ng-click="cancelManageAttributes()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myModalLabel">Manage Attribute</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                    <div class="full-width">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h4 id="managenodeattr">{{selecteNodeToManageAttributes.skuNodeName}}</h4>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="full-width">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <input capitalize-first id="attrname" type="text" class="form-control main-bottom-border padding-top-3"
+                                       ng-model = "newAttributeType.attributeTypeString"
+                                       placeholder="Attribute Name"
+                                        >
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                                     style="margin-bottom: 15px;"
+                                     ng-repeat="attributeValue in attributeValues track by $index">
+                                    <input capitalize-first id="attrvalinput{{$index}}" type="text" ng-model="attributeValues[$index].nodeAttributePossibleValuesValue"
+                                           class="form-control main-bottom-border padding-top-3"
+                                            placeholder="Attribute Value"
+                                            >
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pull-right" >
+                                    <a id="addnewattr" title = "Add one more value" href="javascript:void(0);" style="margin-top: -10px;" class="btn btn-default btn-sm"
+                                       ng-click="addElement()">+</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="full-width" style="margin-top:10px;margin-bottom:10px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                            <a id="addattrs" ng-if = "manageAttributeMode == 'add'" title ="Click to save attribute and possible values" href="javascript:void(0)" class="btn btn-default action-btn add-attr-btn" ng-click="saveNewAttributeAndValues()">Add
+                            </a>
+                            <a id="updateattrs" ng-if = "manageAttributeMode == 'edit'" title ="Click to save attribute and possible values" href="javascript:void(0)" class="btn btn-default action-btn add-attr-btn" ng-click="saveNewAttributeAndValues()">Update
+                            </a>
+                        </div>
+                    </div>
+                    <div class="full-width">
+                        <hr>
+                    </div>
+                    <div class="full-width">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <table class="table classified-table">
+                                <thead>
+                                <tr>
+                                    <td id="hattrname" style="width:70%;text-align: left;" class="font">Attribute Name</td>
+                                    <td id="hattrval" style="width: 30%;padding-left: 25px;" class="font text-left">Possible Values</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="attributes in attrDetails track by $index">
+                                    <td id="attrname{{$index}}" style="text-align: left;color: orangered;">{{attributes.attributeTypeString}}</td>
+                                    <td>
+                                        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                                            <select ng-if = "attributes.attributeType == 'select'" class="form-control">
+                                                <option id="attrval{{$index}}{{option.idnodeAttributePossibleValuesId}}"  ng-repeat="option in attributes.tableSkuNodeAttributePossibleValueses track by option.idnodeAttributePossibleValuesId"
+                                                        value="option">
+                                                    {{option.nodeAttributePossibleValuesValue}}
+                                                </option>
+                                            </select>
+                                            <span id="attrnametxt{{$index}}" ng-if = "attributes.attributeType == 'text'">
+                                                Text value
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                            <a id="editskuattribute{{$index}}" href="javascript:void(0);" class="btn btn-default btn-sm" ng-click="editSkuNodeAttribute($index)">
+                                                <span class="fa fa-edit"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="done" type="button" class="action-btn" ng-click="cancelManageAttributes();hideManageAttributeDialog()">Done</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--============================================= Add categories ========================================-->
+
+    <div class="modal fade" id="AddCategoryTemp" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="addcategorycross" type="button" class="close" data-dismiss="modal" ng-click="cancelSingleOrder()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p">Add Category</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                    <div class="full-width">
+                        <div class="row row-margin-top">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                <div class="col-md-4 margin-top-5">
+                                    <span class="semi-bold-text">Category Name <span style="color:red">*</span> </span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div>
+                                        <input capitalize-first id="categoryname" type="text" autofocus class="form-control darkgrey-bottom-border"
+                                               name="Categoryname" id="ponumberId" placeholder="Category Name" required
+                                               ng-model="categoryName">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="addcatbutton" type="button" class="action-btn" ng-click="SendCategoryName()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--==================Ask category master=====================-->
+    <div class="modal fade" id="askCateogryMaster" role="dialog" aria-labelledby="askCateogryMaster" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <p class="dialog-heading-p" id="askCateogryMasterHeading">Select category master</p>
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                    <div class="full-width">
+                        <div class="row row-margin-top">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                <div class="col-md-12 margin-top-5">
+                                    <span class="semi-bold-text">Choose the category master</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-margin-top">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;margin-left:10px;">
+                                <md-radio-group ng-model="genericData.selectedCategoryMaster">
+                                    <md-radio-button id="mastertype{{$index}}" required ng-repeat="categoryMasterType in categoryMasterTypes track by $index" ng-value="categoryMasterType.tableCategoryMasterTypeString" class="md-primary" ng-style="{'display':'inline'}">
+                                        {{categoryMasterType.tableCategoryMasterTypeString}}&nbsp;&nbsp;
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                    <button id="mastersubmitbutton" type="button" class="action-btn" ng-click="onCategoryMasterSelected()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--========================================== confirmation for delete category ===============================-->
+
+    <div class="modal fade" id="DeleteCategoryModal" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button id="deletecross" type="button" class="close" data-dismiss="modal" ng-click="cancelDeleteCategoryModal()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myDeleteCategoryModalLabelling">Delete Confirmation</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;padding:0px">
+                    <div class="full-width">
+                        <div class="row row-margin-top" style="margin-top:15px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                <h4 id="nodenametodelete" style="padding-left:15px;padding-right:15px;color:#F0592B;">{{CategoryDeleteObj.categoryItemData.skuNodeName}}</h4>
+                                <br>
+                                <h4 class="text-center">Are you sure to delete this category ?</h4>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                    <button id="yesdelete" type="button" class="action-btn"
+                            ng-click="DeleteSelectedItemFromCategoryList()">
+                        Yes
+                    </button>
+                    <button id="nodelete" type="button" class="cancel-btn" ng-click="cancelDeleteCategoryModal()">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====================== delete category modal ends here only========================-->
+
+
+</div>
+<style>
+    .table-selected-category li {
+        color: darkgray;
+    }
+
+    .table-selected-category li:nth-child(4) {
+        color: #006cad;
+    }
+</style>

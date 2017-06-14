@@ -1,0 +1,109 @@
+<div class="modal fade" id="billingAddressModal" role="dialog" aria-labelledby="billingAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px;">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;" height="100px">
+                <button type="button" class="close" ng-click="cancelBillingAddress()">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <p ng-if="billAddressMode=='add'" class="dialog-heading-p" id="billingAddressModalLabel1">Add New Billing Address</p>
+                <p ng-if="billAddressMode=='edit'" class="dialog-heading-p" id="billingAddressModalLabel2">Edit Billing Address</p>
+
+            </div>
+            <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Information Area -->
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Contact Person Name <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="First Name" ng-model="billingAddress.tableAddressContactPerson1">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Email Id <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <input type="email" name="custEmail" id="custEmail" class="form-control text-lowercase emailInput darkgrey-bottom-border font input-less-padding" placeholder="Email ID" ng-model="billingAddress.tableAddressEmail1" ng-blur="validateEmail(myForm.custEmail.$valid);">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Phone Number <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <input type="text" ng-class="{submitted: isCustomerAddressPhoneValid}" numbers-only class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter phone number" ng-model="billingAddress.tableAddressPhone1">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Address Line 1 <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <input type="text" ng-class="{submitted: isCustomerAddressAdLine1Valid}" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="billingAddress.tableAddress1">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Address Line 2</div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="billingAddress.tableAddress2">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">Address Line 3</div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control darkgrey-bottom-border font input-less-padding" placeholder="Enter address" ng-model="billingAddress.tableAddress3">
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">State <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <select  ng-model="customerAddress.stateData" class="form-control" ng-options="option as option.tableStateLongName for option in regionsStatesArray" ng-change="regionsStatesDistrictData(customerAddress.stateData);">
+                                  <option value="">Select State</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">District <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <select ng-model="customerAddress.districtData" class="form-control" ng-options="option as option.tableDistrictLongName for option in regionsStatesDistrictArray" ng-change="regionsStatesDistrictsCityData(customerAddress.stateData,customerAddress.districtData);">
+                                  <option value="">Select District</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">City <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <select ng-model="billingAddress.tableCity" class="form-control" ng-options="option as option.tableCityLongName for option in regionsStatesDistrictsCityArray" ng-change="changeCity(customerAddress.city);">
+                                  <option value="">Select City</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="row padding-top-15">
+                                <div class="col-md-6 font">PIN Code <span style="color:red">*</span></div>
+                                <div class="col-md-6">
+                                    <input type="text" ng-pattern-restrict="^[0-9]*$" min="0" class="form-control darkgrey-bottom-border font input-less-padding"  placeholder="Enter postal code" ng-model="billingAddress.tableAddressPin">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer modal-dialog-footer">
+                <button type="button" class="cancel-btn" ng-click="cancelBillingAddress()">Cancel</button>
+                <button ng-if="billAddressMode=='add'" type="button" class="action-btn" ng-click="saveBillingAddressData();">
+                  Add
+                </button>
+                <button ng-if="billAddressMode=='edit'" type="button" class="action-btn" ng-click="editBillingAddressData();">
+                  Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

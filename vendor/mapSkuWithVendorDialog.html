@@ -1,0 +1,112 @@
+<script type="text/ng-template" id="dialog3.tmpl.html">
+    <md-dialog aria-label="Map SKUs with vendors" style="width: 800px;" ng-cloak>
+        <form name="mapForm">
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p class="dialog-heading-p" ng-if="vendorMode == 'add'">Map SKUs</p>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancelvendorData()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+							<form name="mapSkuForm">								
+								<br>                   
+								<div class="row row-margin-top">
+									<div class="col-md-2 margin-top-5">
+										<span class="semi-bold-text">Map SKU <span style="color:red">*</span></span>
+									</div>
+								<div class="col-md-4">
+									<angucomplete-alt ng-class="{submitted: isProductSelected}" id="products"
+									placeholder="Search product" pause="400"
+									selected-object="productObject" remote-url="{{baseSkuUrl}}"
+									title-field="tableSkuName"
+									description-field="tableSkuDescription"
+									input-class="form-control darkgrey-bottom-border"
+									image-field="tableSkuImageUrl"
+									code-field="tableSkuClientSkuCode"
+									></angucomplete-alt>
+								</div>
+                                    <div class="col-md-1">
+                                    <button type="button" title="Click here to see all SKUs."
+                                            style="position: absolute; top: 10px; left:1px;"
+                                            class="btn btn-sm truncate-text"
+                                            ng-click="masterSkuDialog($event, true);">. . .</button>
+                                    </div>
+								<div class="col-md-3">
+									<input ng-class="{submitted: isVendorSkuCodeEntered}"                                               
+									type="text" 
+									ng-model="genericData.vendorSkuCode" name="vendorSkuCode" placeholder="Vendor SKU Code"
+									
+									class="form-control darkgrey-bottom-border"
+									style="text-align: left;"/></span>
+								</div>
+								<div class="col-md-2">
+									<button type="button" class="btn small-actn-btn"
+										ng-click="createMap(productObject,genericData.vendorSkuCode)">Add to List</button>
+								</div>
+								</div>
+								<br>
+								<div class="row" ng-if="mapList.length > 0">
+									<table id="productTable"
+                                               class="table boldtable table-responsive table-bordered table-hover">
+                                            <thead class="data-grid-header">
+                                            <tr>
+                                                <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product Name
+                                                </th>
+												<th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Vendor SKU Code
+                                                </th>
+												<th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="data-grid-data">
+                                            <tr ng-repeat="product in mapList">
+                                                <td>{{product.tableSku.tableSkuName}}</td>                                               
+                                                <td style="text-align: right;">
+                                                    {{product.tableVendorSystemSkuMapVendorSkuCode}}
+                                                </td>
+                                                <td style="text-align: center; padding: 0;">
+                                                    <md-button class="md-icon-button" md-no-ink="true"
+                                                               ng-click="removeMap($index)" placeholder="Delete"
+                                                               style="padding: 0px !important; margin: 0 !important; height: 0px;">
+                                                        <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
+                                                                 ng-init="imgsrc1='images/svg/delete.svg'"
+                                                                 ng-mouseover="imgsrc1='images/svg/delete_hover.svg'"
+                                                                 ng-mouseout="imgsrc1='images/svg/delete.svg'"
+                                                                 style="width: 20px;"></md-icon>
+                                                    </md-button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                    </table>
+								</div>	
+									<br>	<br>	<br>	<br>	<br>								
+							</form>
+					</div>
+
+                        </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{vendorsData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row" >
+                <div ng-if="singleVendorTab==true && bulkVendorTab==false">
+                <div ng-if="vendorMode == 'add'">
+                    <span flex></span>
+                    <md-button class="cancel-btn" ng-click="cancelvendorData()">
+                        Cancel
+                    </md-button>
+                    <button class="action-btn" ng-click="makeSkusMapWithVendor2(genericData.vendorId, mapList, genericData.index)">
+                        Add
+                    </button>
+                </div>
+                </div>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+ <!-- Bulk Upload customers File Dialog -->

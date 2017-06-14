@@ -1,0 +1,665 @@
+<link href="settings/useradmin/useradmin.css" rel="stylesheet">
+    <div class="container-fluid">
+        <div class="row" style="margin-left: auto; margin-right: auto;">
+            <div class="row-margin-top-medium">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <p class="screen-heading">User Admin</p>
+                </div>
+                <div class="col-md-6 button-col" style="margin-bottom: 10px;padding-top:0px !important;">
+                    <button type="button" class="btn addsharpbutton font pull-right" ng-click="showAddNewUserModal()" ng-if="access.createAccess">
+                        <img width="20px" height="20px" color="white" src="images/svg/add.svg">
+                        &nbsp;&nbsp;Add New User
+                    </button>
+                </div>
+            </div>
+
+    </div>
+    <div class="row user-search">
+        <img width="20px" height="20px" src="images/svg/header_search.svg"/>
+        <span class="font-big">&nbsp;&nbsp;Search User</span>
+        <img width="20px" height="20px" ng-if="searchUserClicked==false" class="pull-right"
+             src="images/svg/expand_icon.svg" ng-click="toggleSearchRow()"/>
+        <img width="20px" height="20px" ng-if="searchUserClicked==true" class="pull-right"
+             src="images/svg/collaps_icon.svg" ng-click="toggleSearchRow()"/>
+    </div>
+
+    <div ng-if="searchUserClicked==true" class="row user-search-row search-row-content search-row-top-border">
+
+            <div class="col-xs-2 font margin-top-10 col-xs-offset-1">Search User</div>
+
+            <div class="col-xs-5 margin-top-5">
+                <div class="">
+
+                </div>
+                <input type="text" ng-model="SearchUseradmin.UserName" name="useradminSearch" placeholder="Search user"
+                       class="form-control darkgrey-bottom-border font input-less-padding" required="required">
+
+            </div>
+            <div class="col-xs-3">
+                <button type="button" ng-disabled="SearchUseradmin.UserName == null || SearchUseradmin.UserName == ''" ng-click="listOfUsers(0,SearchUseradmin.UserName)" class="btn btn-default mybut">Submit</button>
+                <button  ng-disabled="SearchUseradmin.UserName == null || SearchUseradmin.UserName == ''" title="Clear Applied Filters" class="btn clearFilter"
+                        ng-click="clearAction(SearchUseradmin)">
+                </button>
+            </div>
+
+    </div>
+    <div class="row border-top user-search">
+        <div class="col-xs-2" style="padding-top: 5px;">
+            <span class="total-count-heading">Total Users</span>
+        </div>
+        <div class="col-xs-3">
+            <div class="circle-oval circle-orange" style="margin-left: -45px;">
+                    <span>
+                      <!--{{usersCount}}-->
+                      {{userDataCount.Count}}
+                    </span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row main-list" style="padding-left: 0px !important; padding-right: 0px !important;">
+        <table class="table table-striped-custom table-condensed table-responsive table-hover">
+            <thead class="main-list-header-user">
+            <tr>
+                <td style="width:16.6%;">Name</td>
+                <td style="width:16.6%;">Role</td>
+                <td style="width:16.6%;">Email Id</td>
+                <td style="width:16.6%;">Phone Number</td>
+				<td style="width:16.6%;">Status</td>
+                <td style="width:16.6%;text-align:center;">Action</td>
+            </tr>
+            </thead>
+            <!-- repeat on tbody -->
+            <tbody>
+            <tr class="clickable-row-user" ng-repeat="user in usersData">
+                <td>{{user.tableOmsUserFirstName}} {{user.tableOmsUserLastName}}</td>
+                <td>{{user.tableOmsUserGroup.tableOmsUserGroupName}}</td>
+                <td>{{user.tableOmsUserEmail}}</td>
+                <td>{{user.tableOmsUserPhoneNo}}</td>
+				<td style="text-align:center;">
+				<span ng-if="user.tableOmsUserStatusType != 'Active'">Blocked</span>
+				<span ng-if="user.tableOmsUserStatusType == 'Active'">Active</span>
+				
+				
+				</td>
+				
+                <td>
+
+                    <span>
+                    <ul class="list-inline" ng-if="user.isSelf == false && user.tableOmsUserSuperAdmin == false">
+                        <li style="border-right:1px solid gray;">
+                            <a href="javascript:void(0);"
+                               ng-if="user.tableOmsUserStatusType != 'Active'"
+                               ng-click="access.editAccess && activationLink(user,'active');"><img ng-attr-title="{{!access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"  ng-class="{disableAccess: !access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"  ng-src="images/svg/black_list.svg"
+                                                                              title="Activate user" style="width:20px;"></a>
+                            <a href="javascript:void(0);"
+                               ng-if="user.tableOmsUserStatusType == 'Active'"
+                               ng-click="access.editAccess && activationLink(user,'deactive')"><img ng-attr-title="{{!access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"  ng-class="{disableAccess: !access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"  ng-src="images/svg/white_list.svg"
+                                                                               title="Block user" style="width:20px;"></a>
+                        </li>
+                        <li>
+                            <!--images/svg/edit.svg-->
+                            <a href="javascript:void(0);" ng-click="access.editAccess && EditUserAdmin(user)"><img ng-src="images/svg/edit.svg" style="width: 20px;"></a>
+                        </li>
+                    </ul>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- END TABLE -->
+    </div>
+
+
+        <div class="row" style="margin-top: 0px;">
+            <div class="col-md-6">
+                <p class="showingOrderLabel" ng-show="inventorySize<invCount">Showing Inventories {{start + 1}} to
+                    {{inventorySize}} of {{invCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="inventorySize>=invCount && invCount!=0">Showing Inventories
+                    {{start + 1}} to {{invCount}} of {{invCount}}
+                </p>
+
+                <p class="showingOrderLabel" ng-show="invCount==0">No User Available
+                </p>
+            </div>
+            <div class="col-md-6">
+                    <span class="pull-right">
+                        <!-- pager -->
+                        <ul ng-if="vmPager.pages.length" class="pagination">
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a ng-click="listOfUserAdminCount(1)">&lt;&lt; First</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == 1" ng-class="{disabled:vmPager.currentPage == 1}">
+                                <a>&lt; Previous</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage > 1" ng-class="{enabled:vmPager.currentPage > 1}">
+                                <a ng-click="listOfUserAdminCount(vmPager.currentPage - 1)">&lt; Previous</a>
+                            </li>
+                            <li ng-repeat="page in vmPager.pages" ng-class="{active:vmPager.currentPage == page}">
+                                <a ng-click="listOfUserAdminCount(page)">{{page}}</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{enabled:vmPager.currentPage > vmPager.totalPages}">
+                                <a ng-click="listOfUserAdminCount(vmPager.currentPage + 1)">Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Next &gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage < vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a ng-click="listOfUserAdminCount(vmPager.totalPages)">Last &gt;&gt;</a>
+                            </li>
+                            <li ng-show="vmPager.currentPage == vmPager.totalPages"
+                                ng-class="{disabled:vmPager.currentPage == vmPager.totalPages}">
+                                <a>Last &gt;&gt;</a>
+                            </li>
+                        </ul>
+                    </span>
+            </div>
+        </div>
+
+    <div class="modal fade" id="addNewUserModal" role="dialog" aria-labelledby="addNewUserModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width: 800px;">
+            <form ng-submit="RoleSubmission.$valid && addNewUser()" novalidate name="RoleSubmission">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                         height="100px">
+                        <button type="button" class="close" ng-click="cancelAddNewUserModal()">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <p class="dialog-heading-p" id="addNewUserModalLabel" ng-if="!EditUser">Add New User</p>
+                        <p class="dialog-heading-p" id="editUserModalLabel" ng-if="EditUser">Edit User</p>
+
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                        <div class="container-fluid">
+
+                            <div class="row row-margin-top-medium">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <span class="font">Role <span style="color:red;">*</span></span>
+                                        </div>
+                                        <div class="col-md-4" style="left: 5px;padding: 0px;">
+                                            <div class="select-style"
+                                                 style="max-width: 225px;width: 100%;margin:0px 15px 0px 10px;">
+
+
+                                                <select ng-model="RoleType" id="UserRole" name="URole" required ng-change="checkRole(option.tableOmsUserGroupName)"
+                                                        ng-options="option.tableOmsUserGroupName for option in selectRole track by option.idtableOmsUserGroupId" >
+                                                    <!--ng-change="userChange()"-->
+
+                                                    <option value="" disabled selected style="display: none;">Select role</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="error ng-hide" ng-show="RoleSubmission.$submitted"
+                                                 aria-hidden="true">
+                                                <small class="error-msg text-danger"
+                                                       ng-show="RoleSubmission.URole.$error.required">
+                                                    Role is required.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-left"
+                                             style="margin-top:-5px;padding: 0px;">
+                                            <a data-toggle="modal" ng-click="EditRole()"
+                                               class="btn btn-default btn-sm">Edit Role</a>
+                                            <a href="javascript:void(0);" ng-click="addRole()"
+                                               class="btn btn-danger btn-sm" data-target="#AddUserNewRole" data-toggle="modal" style="background-color: #EA512D;">+ Add
+                                                Role</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div ng-if="showadduserform">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 margin-top-5">
+                                        <span class="font">First Name <span style="color:red;">*</span></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input capitalize-first type="text" ng-model="UserAdmin.tableOmsUserFirstName" name="Fname"
+                                               class="form-control darkgrey-bottom-border font input-less-padding" required
+                                               placeholder="Enter First Name" trim-space/>
+
+                                        <div class="error" ng-show="RoleSubmission.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.Fname.$error.required">
+                                                First Name is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top">
+                                    <div class="col-md-3 margin-top-5">
+                                        <span class="font"> Last Name <span style="color:red;">*</span></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input capitalize-first type="text" ng-model="UserAdmin.tableOmsUserLastName" name="Lname"
+                                               class="form-control darkgrey-bottom-border font input-less-padding" required
+                                               placeholder="Enter Last Name" trim-space/>
+                                        <div class="error" ng-show="RoleSubmission.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.Lname.$error.required">
+                                                Last Name is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-medium">
+                                    <div class="col-md-3 margin-top-5">
+                                        <span class="font">Email Id <span class="label-red">*</span></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input  type="email" ng-model="UserAdmin.tableOmsUserEmail" ng-pattern="EmailRegex" name="UserEmail" ng-disabled="EditUser"
+                                               class="form-control text-lowercase emailInput darkgrey-bottom-border font input-less-padding" required
+                                               placeholder="Email ID" trim-space/>
+
+                                        <div class="error" ng-show="RoleSubmission.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.UserEmail.$error.required">
+                                                Email ID is required.
+                                            </small>
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.UserEmail.$error.pattern">
+                                                Email ID is invalid.
+                                            </small>
+                                        </div>
+                                        <!--<div class="error ng-hide" ng-show="RoleSubmission.$touched && RoleSubmission.$invalid" aria-hidden="true">-->
+                                            <!---->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-medium">
+                                    <div class="col-md-3 margin-top-5">
+                                        <span class="font">Phone Number <span style="color:red;">*</span></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" ng-model="UserAdmin.tableOmsUserPhoneNo" numbers-only minlength="10" maxlength="12" name="Pnumber"
+                                               class="form-control darkgrey-bottom-border font input-less-padding" required
+                                               placeholder="Enter Phone Number" trim-space/>
+
+                                        <div class="error " ng-show="RoleSubmission.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.Pnumber.$error.required">
+                                                Phone Number is required.
+                                            </small>
+                                        </div>
+                                        <div class="error " ng-show="RoleSubmission.Pnumber.$touched && RoleSubmission.Pnumber.$invalid" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.Pnumber.$error.minlength">
+                                               Minimum 10 digit Phone Number is required.
+                                            </small>
+                                        </div>
+                                        <div class="error " ng-show="RoleSubmission.Pnumber.$touched && RoleSubmission.Pnumber.$invalid" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.Pnumber.$error.maxLength">
+                                                Maximum 12 digit Phone Number is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row row-margin-top-medium">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <span class="font">Sales Channel <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4" style="left: 5px;padding: 0px;">
+                                                <div class="select-style"
+                                                     style="max-width: 225px;width: 100%;margin:0px 15px 0px 10px;">
+
+
+                                                    <select ng-model="sales.channel" id="saleschannel" name="SalesChannel"
+                                                            ng-options="option.tableSalesChannelValueInfoName for option in channelLists track by option.idtableSalesChannelValueInfoId" >
+                                                        <option value="" selected>All Channel</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-left"
+                                                 style="margin-top:-5px;padding: 0px;">
+                                                <a data-toggle="modal" ng-click="addChannel()"
+                                                   class="btn btn-default btn-sm">Add Channel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-medium" ng-if="selectedchannels.length >0">
+
+                                    <div class="col-md-3"><b>Assigned Channels</b></div>
+                                    <div class="col-md-9">
+                                        <div class="col-md-4" ng-repeat="channel in selectedchannels">{{channel.tableSalesChannelValueInfo.tableSalesChannelValueInfoName}}
+                                        <span><a class="table-btn" ng-click="removeSalesChannel($index)"><span class="fa fa-trash fa-lg"></span></a></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row row-margin-top-medium">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <span class="font">Warehouse <span style="color:red;">*</span></span>
+                                            </div>
+                                            <div class="col-md-4" style="left: 5px;padding: 0px;">
+                                                <div class="select-style"
+                                                     style="max-width: 225px;width: 100%;margin:0px 15px 0px 10px;">
+
+
+                                                    <select ng-model="warehouse.details" id="warehouse" name="Warehouse"
+                                                            ng-options="option.tableWarehouseDetailsLongname for option in wareHousesData track by option.idtableWarehouseDetailsId" >
+                                                        <option value="" selected>All Warehouse</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-left"
+                                                 style="margin-top:-5px;padding: 0px;">
+                                                <a data-toggle="modal" ng-click="addWarehouse()"
+                                                   class="btn btn-default btn-sm">Add Warehouse</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-margin-top-medium" ng-if="selectedwarehouses.length >0">
+
+                                    <div class="col-md-3"><b>Assigned Warehouses</b></div>
+                                    <div class="col-md-9">
+                                        <div class="col-md-6" ng-repeat="warehouse in selectedwarehouses">{{warehouse.tableWarehouseDetails.tableWarehouseDetailsLongname}}
+                                            <span><a class="table-btn" ng-click="removeWarehouse($index)"><span class="fa fa-trash fa-lg"></span></a></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div ng-if="!showadduserform">
+                                <div class="row row-margin-top">
+                                    <div class="col-md-2 margin-top-5">
+                                        <span class="semi-bold-text">Vendor <span style="color:red">*</span> </span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select id="VenDor" class="form-control add-single-order-select"
+                                                name="vendor" required
+                                                ng-options="option.tableVendorName for option in vendorsData track by option.idtableVendorId"
+                                                ng-model="selected.vendor"
+                                                >
+                                            <option value="" disabled selected style="display: none;">Select
+                                                Vendor
+                                            </option>
+
+                                        </select>
+
+                                        <div class="error ng-hide" ng-show="RoleSubmission.$submitted" aria-hidden="true">
+                                            <small class="error-msg text-danger"
+                                                   ng-show="RoleSubmission.vendor.$error.required && RoleSubmission.vendor.$pristine">
+                                                Vendor is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer modal-dialog-footer">
+                        <button type="button" class="cancel-btn" ng-click="cancelAddNewUserModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="action-btn" ng-if="AddUserBtn">
+                            Add User
+                        </button>
+                        <button type="button" class="action-btn" ng-if="EditUser" ng-click="addNewUser()">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+        <div class="modal fade" id="AddUserNewRole" role="dialog" aria-labelledby="addNewUserRoleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" style="width: 800px;">
+
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                             height="100px">
+                            <button type="button" class="close" ng-click="cancelAddNewRoleUserModal()">
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <p class="dialog-heading-p" id="addUserRoleModal" ng-if="createPermission">Add New Role</p>
+                            <p class="dialog-heading-p" id="editUserRoleModal" ng-if="editPermission">Edit Role</p>
+
+                        </div>
+                        <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+
+                            <div class="container-fluid">
+
+                                <div class="row row-margin-top">
+                                    <!--<md-toolbar class="md-small accordion-color">-->
+                                    <!--<div class="md-toolbar-tools">-->
+                                    <!--<span class="font-big">Create New Role</span>-->
+                                    <!--<span flex=""></span>-->
+                                    <!--<md-button class="md-icon-button" aria-label="Favorite">-->
+                                    <!--<md-icon ng-if="newRoleClicked==false" md-svg-icon="images/svg/expand_icon.svg" ng-click="toggleNewRole()"></md-icon>-->
+                                    <!--<md-icon ng-if="newRoleClicked==true" md-svg-icon="images/svg/collaps_icon.svg" ng-click="toggleNewRole()"></md-icon>-->
+                                    <!--</md-button>-->
+                                    <!--</div>-->
+                                    <!--</md-toolbar>-->
+                                    <div class="col-md-12" style="padding-left: 25px !important;">
+                                        <form ng-submit="editRole.$valid && updateRoles()" novalidate name="editRole">
+
+                                            <div class="row row-margin-top-x-medium">
+                                                <div class="col-md-3 margin-top-5">
+                                                    <span class="font">Name of Role</span>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input capitalize-first type="text" ng-model="RoleType.tableOmsUserGroupName" name="EditRoleName"
+                                                           ng-disabled="RoleType.idtableOmsUserGroupId == 1"
+                                                           class="form-control darkgrey-bottom-border font input-less-padding"/>
+
+                                                </div>
+                                            </div>
+                                            <div class="row row-margin-top">
+                                                <div class="col-md-6">
+                                                    <span class="font">Assign Tasks</span>
+                                                </div>
+                                            </div>
+                                            <div class="row main-list row-margin-bottom-small"
+                                                 style="padding-left: 0px !important; padding-right: 0px !important;">
+                                                <div class="col-md-3">
+                                                    <span class="col-lg-12"><b>Role Name</b></span>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Create</b>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Edit</b>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Read</b>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <span class="col-lg-12"><b>Role Name</b></span>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Create</b>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Edit</b>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b>Read</b>
+                                                </div>
+                                                <br><br>
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>Orders</b></div>
+                                                    <br>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'Orders')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                            ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                            aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                            ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                            style="margin-left:7px;"
+                                                                                            aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                            ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                            aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>Masters</b></div>
+                                                    <br>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'Masters')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     style="margin-left:7px;"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>WOPS</b></div>
+                                                    <br>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'WOPS')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     style="margin-left:7px;"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>Settings</b></div>
+                                                    <br>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'Settings')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     style="margin-left:7px;"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>Inventory</b></div>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'Inventory')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     style="margin-left:7px;"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6 col-md-6 bucket-height">
+                                                    <div class="col-lg-12 col-md-12"><b>Analytics</b></div>
+                                                    <div class="col-lg-12 col-md-12" ng-repeat="role in userRoleData track by $index" ng-if="bucketElement(role,'Analytics')">
+                                                        <div class="col-lg-6 col-md-6">{{role.tableOmsUserRole.tableOmsUserRoleName}}</div>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolecreateaccessid{{$index}}" ng-change="createAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapCreateAccess" style="margin-left:14px;" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="roleeditaccessid{{$index}}" ng-change="editAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapEditAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     style="margin-left:7px;"
+                                                                                                     aria-label="Enable">
+                                                        </md-checkbox> </span>
+                                                        <span class="col-lg-2 col-md-2"><md-checkbox id="rolereadaccessid{{$index}}" ng-change="readAccessClicked($index)"
+                                                                                                     ng-model="role.tableGroupRoleMapReadAccess" ng-disabled="isSystemDefinedRole()"
+                                                                                                     aria-label="Enable" style="margin-left:7px;">
+                                                        </md-checkbox> </span>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!--=================== role selection on the basis of created one ============-->
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer modal-dialog-footer">
+                            <button type="button" class="cancel-btn"  ng-click="cancelAddNewRoleUserModal()">
+                                Cancel
+                            </button>
+                            <button type="submit" class="action-btn" ng-if="editPermission && RoleType.idtableOmsUserGroupId != 1" ng-click="createRoles()">
+                                Update Roles
+                            </button>
+                            <button type="button" class="action-btn" ng-if="createPermission" ng-click="createRoles()">Submit</button>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+
+</div>
+

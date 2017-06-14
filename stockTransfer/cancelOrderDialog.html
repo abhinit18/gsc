@@ -1,0 +1,57 @@
+<script type="text/ng-template" id="dialog333.tmpl.html" ng-controller="stockTransfer">
+    <md-dialog aria-label="Cancel Order Item" style="width: 800px; position: relative;" ng-cloak>
+        <form>
+            <md-toolbar style="background-color: #F2F7F8;">
+                <div class="md-toolbar-tools">
+                    <p style="font-size: 20px;font-weight: 600;color: #30373B;">Cancel Order Item</p>
+                    <span flex></span>
+                    <md-button id="cross" class="md-icon-button" ng-click="cancelWarehouseSelection()">
+                        <md-icon md-svg-src="images/svg/cancel.svg" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <div class="row row-margin-top-small">
+                        <div class="col-md-3">
+                            <span class="font">ST No.</span>
+                        </div>
+                        <div class="col-md-5">
+                            <input id="cancelstorderno" type="text" style="color: #F0592B;font-size: 16px; font-weight: 700; padding-top: 0px;" ng-model="orderNo" ng-readonly="true"></input>
+                        </div>
+                    </div>
+                    <div class="row row-margin-top-medium">
+                        <div class="col-md-3">
+                            <span class="font">Cancel Reason</span>
+                        </div>
+                        <div class="col-md-5">
+                            <select id="cancelstselect" ng-model="remarks" class="form-control">
+                                <option value="">
+                                    Select Reason
+                                </option>
+                                <option ng-repeat="option in cancelReasonArray"
+                                        value={{option.tableStockXferCancelReasonString}}>
+                                    {{option.tableStockXferCancelReasonString}}
+                                </option>
+                                <option value="other">Other Reason </option>
+                            </select>
+                            <div class="full-width" ng-if="remarks == 'other'">
+                                <textarea caps id="cancelsttext" class="form-control" style="margin-top: 15px;" ng-model="LoadNewRason.reasonData" placeholder="Enter your reason"></textarea>
+                                <md-checkbox id="cancelstcheckbox" role="checkbox" ng-model="LoadNewRason.ReasonCheckBox" style="margin-top:10px;font-size: 13px;">Add this reason to the cancel reason list</md-checkbox>
+
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </md-dialog-content>
+            <!-- {{customersData}} -->
+            <md-dialog-actions style="background-color: #30373B; min-height: 60px;" layout="row">
+                <span flex></span>
+                <md-button class="action-btn" ng-click="selectCancelAction(orderNo,tableSaleOrderId,remarks,LoadNewRason.reasonData);">
+                    Confirm
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
