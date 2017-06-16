@@ -87,7 +87,6 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
     $scope.returnParamsClicked = false;
     $scope.shipAddrClicked = false;
 
-    //$scope.genericData = {};
     $scope.genericData.returnType = "";
 
     $scope.skuMapClickedRow = function(){

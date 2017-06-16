@@ -469,14 +469,7 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
     $scope.showReturnableGoodsOrderModal = function () {
         $scope.initSingleOrderReturnData();
         $scope.genericData.singleReturnableGoodsOrderMode = "add";
-        $mdDialog.show({
-            templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            scope: $scope.$new()
-        })
-
-
+        $('#addReturnableGoodsOrderDialog').modal('show');
     }
 
 //    ====================================== add quick ship details ======================================== //
@@ -1141,19 +1134,14 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 //    ====================================== add purchase order return dialog box ========================== /
 
     $scope.showAddReturnableGoodsOrderModal = function(){
-        $mdDialog.show({
-            templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            scope: $scope.$new()
-        });
+        $('#addReturnableGoodsOrderDialog').modal('show');
     };
 
     //============================= close purchase order return dialog ===================== //
 
     $scope.cancelSingleReturnableGoodsOrder = function(){
 
-        $mdDialog.hide();
+        $('#addReturnableGoodsOrderDialog').modal('hide');
         $scope.initSingleOrderReturnData();
     };
 
@@ -1475,9 +1463,17 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 
     //remove the product
     $scope.removeProduct = function(index) {
-        $scope.singleorderReturnData.tableReturnableGoodsOrderSkus.splice(index, 1);
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
     };
-
+    $scope.deleteSelectedItem = function(){
+        $scope.singleorderReturnData.tableReturnableGoodsOrderSkus.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
+    };
     $scope.totalQuantity = function(allSkus){
         var total = 0;
         for (var i = 0; i < allSkus.length; i++) {
@@ -1991,12 +1987,7 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 
         $scope.getVendorAddress($scope.singleorderReturnData.tableVendor);
 
-        $mdDialog.show({
-            templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            scope: $scope.$new()
-        });
+        $('#addReturnableGoodsOrderDialog').modal('show');
     }
 
     $scope.getTotal = function(tableSkuData)
@@ -2104,16 +2095,22 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
             )
         }
 
-        $scope.singleorderReturnData.tableReturnableGoodsOrderPickupDate = new Date($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderPickupDate);
-        $scope.singleorderReturnData.tableReturnableGoodsOrderDropDate = new Date($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderDropDate);
+        if($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderPickupDate != null) {
+            $scope.singleorderReturnData.tableReturnableGoodsOrderPickupDate = new Date($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderPickupDate);
+        }
+        else
+        {
+            $scope.singleorderReturnData.tableReturnableGoodsOrderPickupDate = null;
+        }
+        if($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderDropDate) {
+            $scope.singleorderReturnData.tableReturnableGoodsOrderDropDate = new Date($scope.singleorderReturnDataCopy.tableReturnableGoodsOrderDropDate);
+        }
+        else {
+            $scope.singleorderReturnDataCopy.tableReturnableGoodsOrderDropDate = null;
+        }
 
         $scope.getVendorAddress($scope.singleorderReturnData.tableVendor);
-        $mdDialog.show({
-            templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            scope: $scope.$new()
-        });
+        $('#addReturnableGoodsOrderDialog').modal('show');
     }
 
     //clear filter for clearing applied filters
@@ -2234,7 +2231,7 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
                             growl.success("Order copied successfully");
                         }
                         $scope.cancelSingleReturnableGoodsOrder();
-                        $scope.listOfReturnableGoodsOrderStatesCount($scope.defaultTab, $scope.vmPager.currentPage);
+                        $scope.listOfReturnableGoodsOrderStatesCount($scope.defaultTab, 1);
 
                     }
                 }).error(function(error, status) {
@@ -2338,6 +2335,9 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
                         }
                         else if ($scope.genericData.singleReturnableGoodsOrderMode == "copy") {
                             growl.success("Order copied successfully");
+                        }
+                        else if ($scope.genericData.singleReturnableGoodsOrderMode == "edit") {
+                            growl.success("Order updated successfully");
                         }
                         $scope.cancelSingleReturnableGoodsOrder();
                         $scope.listOfReturnableGoodsOrderStatesCount($scope.defaultTab, $scope.vmPager.currentPage);
@@ -2578,11 +2578,9 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 
         $scope.genericData.check = check;
 
-        if(check == true){
-            $mdDialog.hide({
-                templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html'
-            });
-            console.log($scope.singleorderData);
+        if(check == true)
+        {
+            $('#addReturnableGoodsOrderDialog').modal('hide');
         }
 		
 	}
@@ -2621,13 +2619,7 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 
     $scope.showAddOrderModalWithValues = function(ev)
     {
-        $mdDialog.show({
-            templateUrl: 'addReturnableGoodsOrderDialog.tmpl.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose: false,
-            scope: $scope.$new()
-        });
+        $('#addReturnableGoodsOrderDialog').modal('show');
     }
 
 	
@@ -2636,14 +2628,15 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 		$http.get(baseUrl + '/omsservices/webapi/skus/'+id).success(function(data) {
         console.log(data);
 		 
-		$scope.filterObj.tableSku = data;
-
         if($scope.genericData.check == false)
         {
+            $scope.filterObj.tableSku = data;
             $scope.$broadcast("angucomplete-alt:changeInput", "productsfilter", data);
         }
         else
         {
+            $scope.searchedSku = data;
+            $scope.cancelmastersDialog(ev);
             $scope.$broadcast("angucomplete-alt:changeInput", "products", data);
         }
         }).error(function(error, status) {
@@ -2651,7 +2644,7 @@ function returnableGoodsOrderController($scope, $http, $location, $filter, baseU
 			
         });	
 		
-		$scope.cancelmastersDialog(ev);
+
 	}
 	
 	$scope.selectVendor = function(id,ev){

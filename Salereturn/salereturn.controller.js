@@ -14,7 +14,8 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
     $scope.claimObj = {};
     $scope.genericData.saleOrderRefNo = "";
     $scope.saleReturnFormData = {};
-
+    $scope.singleorderReturnData = {};
+    $scope.endminDateDelivery = new Date();
     $scope.cancelInfoBox = function() {
         $mdDialog.hide();
     };
@@ -206,14 +207,6 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         });
     }
 
-    $scope.getSaleOrderSku = function (sku) {
-        for (var i = 0; i < $scope.genericData.saleOrderSkus.length; i++) {
-            if ($scope.genericData.saleOrderSkus[i].tableSku.idtableSkuId == sku.idtableSkuId) {
-                return $scope.genericData.saleOrderSkus[i];
-            }
-        }
-    }
-
     $scope.hideeditbutton = function(orderdata){
         for(var j=0; j< orderdata.tableSaleReturnSkus.length ; j += 1){
             var ordersku = orderdata.tableSaleReturnSkus[j];
@@ -235,7 +228,6 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         $scope.singleorderReturnData.tableCustomer = response.tableCustomer ;
         $scope.singleorderReturnData.tableSaleOrder = response ;
         $scope.singleorderReturnData.tableSalesChannelValueInfo = response.tableSalesChannelValueInfo ;
-        $scope.singleorderReturnData.tableSaleReturnRemarkses = response.tableSaleReturnRemarkses;
         $scope.singleorderReturnData.tableSaleReturnSkus = [];
 
         $scope.genericData.returnedQuantity = [];
@@ -283,14 +275,18 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                         }
                     )
 
-                    if(response.tableSaleOrderSkuses[orderSkuCounter].tableSaleOrderSkusSkuQuantity - returnedQuantity > 0)
+                    if(response.tableSaleOrderSkuses[orderSkuCounter].tableSaleOrderSkusSkuQuantity - returnedQuantity > 0 && $scope.singleOrderReturnMode != "edit")
+                    {
+                        $scope.genericData.foundReturnable = true;
+                    }
+                    if($scope.singleOrderReturnMode == "edit")
                     {
                         $scope.genericData.foundReturnable = true;
                     }
                 }
             }
 
-            if($scope.genericData.foundReturnable == false)
+            if($scope.genericData.foundReturnable == false && $scope.singleOrderReturnMode != "edit")
             {
                 growl.error('There is no quantity left in this order that can be returned. Provide another reference');
                 $scope.initSingleOrderReturnData();
@@ -372,13 +368,17 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
             $scope.startDateData.getDate());
     }
 
-    $scope.sendEndDate = function()
+    $scope.sendEndDate = function(date)
     {
         $scope.endDateData = new Date($scope.filter.end1Date);
         $scope.startmaxDate = new Date(
             $scope.endDateData.getFullYear(),
             $scope.endDateData.getMonth(),
             $scope.endDateData.getDate());
+        if(date){
+            $scope.endminDateDelivery = new Date(date);
+        }
+
     }
 
     $scope.clearStartDate = function()
@@ -505,7 +505,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
     $scope.showSaleReturnGRNDialog = function(ev,file,soData)
     {
         $scope.disableSubmitGrn = false;
-
+        $scope.SaleReturnGrnInventory = {};
         console.log(file);
         console.log(soData);
         $mdDialog.show({
@@ -651,6 +651,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
             }else{
                 $mdDialog.hide();
                 growl.success('GRN successful');
+                $scope.SaleReturnGrnInventory ={};
                 $scope.listOfStatesCount($scope.defaultTab);
 
                 for (var i = 0; i < $scope.orderLists.length; i += 1) {
@@ -665,6 +666,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
     $scope.showRaiseClaimDialog = function (tableSaleReturnSku , mode)
     {
+        $scope.claimObj = {};
         $scope.genericData.skuForClaim = tableSaleReturnSku;
         $scope.genericData.claimMode = mode;
         $scope.SkuDetails.GRnData = {};
@@ -709,6 +711,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
     $scope.cancelSingleOrdersReturnClaimDialog = function(){
         $mdDialog.hide();
+        $scope.claimObj = {};
     };
 
     $scope.ViewDownloadBtn = 'success';
@@ -1196,10 +1199,10 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         var orderListUrl = baseUrl + "/omsservices/webapi/salereturn?uipagename="+$scope.pagename;
 
         if ($scope.defaultTab == 'all')
-            orderListUrl += "?start=" + start + "&size=5&sort=" + $scope.sortType + "&direction=" + $scope.directionType;
+            orderListUrl += "&start=" + start + "&size=5&sort=" + $scope.sortType + "&direction=" + $scope.directionType;
 
         if ($scope.defaultTab != 'all')
-            orderListUrl += "?start=" + start + "&size=5&sort=" + $scope.sortType + "&direction=" + $scope.directionType + "&state=" + tabsValue;
+            orderListUrl += "&start=" + start + "&size=5&sort=" + $scope.sortType + "&direction=" + $scope.directionType + "&state=" + tabsValue;
 
         if (!$scope.filter.saleChannel) {
             orderListUrl += "&saleschannelid=0";
@@ -1459,18 +1462,6 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         });
     };*/
 
-    $scope.totalCostPerProduct = function(tableSkuData) {
-        var total = 0;
-        var totalCost = 0;
-        for (var i = 0; i < tableSkuData.tableSaleOrderSkusChargeses.length; i++) {
-            var product = tableSkuData.tableSaleOrderSkusChargeses[i].tableSaleOrderSkusChargesValue;
-            total += product;
-        }
-
-        var totalCost = total * tableSkuData.tableSaleOrderSkusSkuQuantity;
-
-        return totalCost;
-    }
 
     $scope.totalQuantity = function(allSkus){
         var total = 0;
@@ -1653,7 +1644,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
             if($scope.orderRefExists == false)
             {
                 if ($scope.singleorderReturnData.tableSalesChannelValueInfo == null
-                    || $scope.singleorderReturnData.tableSalesChannelValueInfo == undefined)
+                    || $scope.singleorderReturnData.tableSalesChannelValueInfo == undefined && $scope.genericData.saleRefKnown == false)
                 {
                     growl.error("Please choose a sales channel!");
                     return;
@@ -1701,7 +1692,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                     if (res)
                     {
                         $scope.singleOrderReturnMsg = 'Submitted successfully';
-                        $scope.listOfStatesCount($scope.defaultTab, $scope.vmPager.currentPage);
+                        $scope.listOfStatesCount($scope.defaultTab, 1);
                         if ($scope.singleOrderReturnMode == "add") {
                             growl.success("Order Added Successfully");
                         } else if ($scope.singleOrderReturnMode == "copy") {
@@ -1709,15 +1700,14 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                         }
                         $scope.cancelSingleOrderReturn();
                     }
-                }).error(function(error, status)
-                {
-                    if(status == 400)
-                    {
+                }).error(function(error, status) {
+                    console.log(error);
+                    console.log(status);
+                    if (status == 400) {
                         growl.error(error.errorMessage);
                     }
-                    else
-                    {
-                        growl.error("Failed to sale return.");
+                    else {
+                        growl.error("Failed to add return order");
                     }
                 });
 
@@ -1825,6 +1815,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         }
         if($scope.genericData.saleRefKnown == false)
         {
+            $scope.$broadcast('angucomplete-alt:clearInput', 'products');
             $('#addSaleReturnDialogRefUnknown').modal('show');
 
         }
@@ -1871,7 +1862,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                 $scope.customer = '';
                 $scope.popupChannel = '';
                 $scope.payment = '';
-                $scope.singleorderReturnData = null;
+                $scope.singleorderReturnData = {};
                 postData = null;
                 $scope.products = [];
                 // $scope.listOfOrderReturn($scope.defaultTab, 0);
@@ -1935,24 +1926,11 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
         var total = 0;
         for (var i = 0; i < tableSkuData.tableSaleReturnSkuCharges.length; i++) {
-            var product = tableSkuData.tableSaleReturnSkuCharges[i].tableSaleReturnSkusChargesValue;
+            var product = tableSkuData.tableSaleReturnSkuCharges[i].tableSaleReturnSkuChargeValue;
             total += product;
         }
         return total;
     };
-
-    $scope.getTotalForSaleOrder = function(tableSkuData) {
-
-        var total = 0;
-        for (var i = 0; i < tableSkuData.tableSaleOrderSkusChargeses.length; i++) {
-            var product = tableSkuData.tableSaleOrderSkusChargeses[i].tableSaleOrderSkusChargesValue;
-            total += product;
-        }
-        return total;
-    };
-
-    //================================================================== //
-
 
     //============================ get total cost per Product ================== //
 
@@ -1961,21 +1939,16 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         var total = 0;
         var totalCost = 0;
         for (var i = 0; i < tableSkuData.tableSaleReturnSkuCharges.length; i++) {
-            var product = tableSkuData.tableSaleReturnSkuCharges[i].tableSaleReturnSkusChargesValue;
+            var product = tableSkuData.tableSaleReturnSkuCharges[i].tableSaleReturnSkuChargeValue;
             total += product;
         }
 
-        var totalCost = total * tableSkuData.tableSaleReturnSkuQuantity;
+        var totalCost = total * tableSkuData.tableSaleReturnSkuQuantity.toFixed(2);
 
         return totalCost;
     }
 
     //================================= ends here ==================================== //
-
-
-
-
-    //=========================================================================================== //
 
 
     $scope.changeIndex = function(index) {
@@ -2073,7 +2046,16 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
     //remove the product
     $scope.removeProduct = function(index) {
-        $scope.singleorderReturnData.tableSaleReturnSkus.splice(index, 1);
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
+    };
+    $scope.deleteSelectedItem = function(){
+        $scope.singleorderReturnData.tableSaleReturnSkus.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
     };
 
     //load the return warehouses from backend for select return warehouse in timeline feature.
@@ -2152,15 +2134,16 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
 
     $scope.loadCancelReasons = function() {
-        var cancelReasonsUrl = baseUrl + '/omsservices/webapi/salereturncancelreasons';
+        var cancelReasonsUrl = baseUrl + '/omsservices/webapi/salereturncancelreason';
         $http.get(cancelReasonsUrl).success(function(data) {
             console.log(data);
             $scope.cancelReasonArray = data;
             console.log($scope.cancelReasonArray);
+            $scope.LoadNewRason = {};
         }).error(function(error, status) {
             console.log(error);
             console.log(status);
-
+            $scope.LoadNewRason = {};
         });
     }
 
@@ -2345,11 +2328,11 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                             console.log($scope.LoadNewRason.reasonData);
                             var postDataReason;
                             postDataReason = {
-                                "tableSaleOrderCancelReasonString": $scope.LoadNewRason.reasonData
+                                "tableSaleReturnReasonString": $scope.LoadNewRason.reasonData
                             };
                             $http({
                                 method: 'POST',
-                                url: baseUrl + '/omsservices/webapi/saleordercancelreasons',
+                                url: baseUrl + '/omsservices/webapi/salereturncancelreason',
                                 data: postDataReason,
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -2362,7 +2345,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                             });
                         }
                     }
-                    var cancelUrl = baseUrl + '/omsservices/webapi/orders/' + orderId + '/orderskus/' + tableSaleOrderId + '/cancel/?remarks=' + otherReasonRemarks;
+                    var cancelUrl = baseUrl + '/omsservices/webapi/salereturn/' + orderId + '/cancel/?remarks=' + otherReasonRemarks;
                     $http.put(cancelUrl).success(function(data) {
                         console.log(data);
                         $mdDialog.hide();
@@ -2386,7 +2369,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                 }
             }
             if (remarks != undefined && remarks!='other') {
-                var cancelUrl = baseUrl + '/omsservices/webapi/orders/' + orderId + '/orderskus/' + tableSaleOrderId + '/cancel/?remarks=' + remarks;
+                var cancelUrl = baseUrl + '/omsservices/webapi/salereturn/' + orderId + '/cancel/?remarks=' + remarks;
                 $http.put(cancelUrl).success(function(data) {
                     console.log(data);
                     $mdDialog.hide();
@@ -2738,7 +2721,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
     }
 
     //dialog box to open cancel order dialog box
-    $scope.cancelSaleOrderBox = function(ev, orderId, tableSaleOrderId, orderNo) {
+    $scope.cancelSaleOrderReturnBox = function(ev, orderId, tableSaleOrderId, orderNo) {
         $scope.orderId = orderId;
         $scope.tableSaleOrderId = tableSaleOrderId;
         $scope.orderNo = orderNo;
@@ -2976,13 +2959,13 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
     $scope.editOrder = function(orderData,mode, ev) {
 
 
+        $scope.singleOrderReturnMode = mode;
         if(orderData.tableSaleOrder == null)
         {
             console.log(orderData);
-            $scope.singleOrderReturnMode = mode;
             $scope.singleorderReturnDataCopy = angular.copy(orderData);
             $scope.singleorderReturnData = $scope.singleorderReturnDataCopy;
-            $scope.singleorderReturnData.tableSaleReturnScRefNo = null;
+
             if ($scope.singleorderReturnDataCopy.tableSaleReturnPickUpDateTime != null) {
                 $scope.singleorderReturnData.tableSaleReturnPickUpDateTime = new Date($scope.singleorderReturnDataCopy.tableSaleReturnPickUpDateTime);
             }
@@ -2992,6 +2975,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 
             if($scope.singleOrderReturnMode == 'copy')
             {
+                $scope.singleorderReturnData.tableSaleReturnScRefNo = null;
                 $scope.singleorderReturnData.tableSaleReturnRemarks = "";
                 $scope.singleorderReturnData.tableSaleReturnRemarkses = [];
             }
@@ -3007,6 +2991,14 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                 $scope.singleorderReturnData.tableSaleReturnRemarks = "";
                 $scope.singleorderReturnData.tableSaleReturnRemarkses = [];
             }
+
+            $scope.singleorderReturnData.tableSaleReturnScRefNo = orderData.tableSaleReturnScRefNo;
+            $scope.singleorderReturnData.tableShippingOwnership = orderData.tableShippingOwnership;
+            $scope.singleorderReturnData.tableSaleReturnPickUpDateTime = orderData.tableSaleReturnPickUpDateTime;
+            $scope.singleorderReturnData.tableSaleReturnDropDateTime = orderData.tableSaleReturnDropDateTime;
+            $scope.singleorderReturnData.tableSaleReturnReason = orderData.tableSaleReturnReason;
+            $scope.singleorderReturnData.tableSaleReturnRemarkses = orderData.tableSaleReturnRemarkses;
+            $scope.singleorderReturnData.idtableSaleReturnId = orderData.idtableSaleReturnId;
 
             $scope.populateReturnOrderFromSaleOrder(orderData.tableSaleOrder);
             $('#addSaleReturnDialogRefKnown').modal('show');
@@ -3065,7 +3057,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
         $http.get(checkOrderNo).success(function(data)
         {
             console.log(data);
-            if (data != "")
+            if (data == true)
             {
                 growl.error("Order ref. no. already exists");
                 $('#ordernumberId').val('');
@@ -3074,7 +3066,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
                 q.resolve(false);
                 $scope.orderRefExists = true;
             }
-            if (data == "")
+            if (data == false)
             {
                 $scope.isOrderNoValid = false;
                 $scope.orderNumberEntered = false;
@@ -3489,7 +3481,7 @@ function salereturnController($rootScope,$scope, $http, $location, $filter , bas
 	}
 	
 	$scope.showAddOrderModalWithValues = function(ev){
-		$('#addSaleReturnDialogRefKnown').modal('show');
+		$('#addSaleReturnDialogRefUnknown').modal('show');
 
 	}
 

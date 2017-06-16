@@ -405,6 +405,12 @@ function useradminController($scope, $http, $location, baseUrl, growl,PagerServi
     }
 
     $scope.addNewUser = function(){
+        var roletype = $scope.RoleType;
+
+        if(!roletype || angular.equals({}, roletype)){
+            growl.error("Select Role");
+            return;
+        }
     console.log($scope.selected.vendor);
         if($scope.showadduserform == false)
         {

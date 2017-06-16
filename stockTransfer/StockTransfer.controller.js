@@ -634,10 +634,18 @@ function stockTransfer($rootScope, $scope, $http,  $location,$filter, fileUpload
         $scope.WareHouseMatch = false;
     };
     //remove the product
-    $scope.removeProduct = function (index) {
-        $scope.products.splice(index, 1);
+    $scope.removeProduct = function(index) {
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
     };
-
+    $scope.deleteSelectedItem = function(){
+        $scope.products.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
+    };
     $scope.validateFormData = function() {
 
         if($scope.singleorderData.FromwareHousesData == null || $scope.singleorderData.FromwareHousesData == undefined)

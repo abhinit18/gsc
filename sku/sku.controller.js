@@ -1227,8 +1227,18 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             $scope.originalupcCode = response.tableSkuPrimaryUpcEan;
             $scope.skuData.tableSkuNode = initializeDropdowns($scope.categoryTypeLists, 'idskuNodeId', response.tableSkuNode.idskuNodeId);
             $scope.skuData.tableSkuBrandCode = initializeDropdowns($scope.brandTypeLists, 'idtableSkuBrandCodeId', response.tableSkuBrandCode.idtableSkuBrandCodeId);
-            $scope.skuData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.tableSkuUodmType.idtableSkuUodmTypeId);
-            $scope.skuData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.tableSkuUowmType.idtableSkuUowmTypeId);
+            if(response.tableSkuUodmType){
+                $scope.skuData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.tableSkuUodmType.idtableSkuUodmTypeId);
+            }
+            else{
+                $scope.skuData.tableSkuUodmType = null;
+            }
+            if(response.tableSkuUowmType){
+                $scope.skuData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.tableSkuUowmType.idtableSkuUowmTypeId);
+            }
+            else{
+                $scope.skuData.tableSkuUowmType = null;
+            }
             $scope.skuData.tableSkuShelfLifeType = initializeDropdowns($scope.shelfTypeLists, 'idtableSkuShelfLifeTypeId', response.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId);
             $scope.skuData.tableSkuAbcClassification = response.tableSkuAbcClassification;
             $scope.attributeListArray = [];
@@ -1278,7 +1288,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
 
                     for(var superCount = 0; superCount < $scope.attributeListArray.length ; superCount++)
                     {
-                        $scope.attributeListSelectedValuesArray[$scope.attributeListArray[superCount].tableSkuNodeAttributeType.attributeTypeString] = null;
+                        $scope.attributeListSelectedValuesArray[!$scope.attributeListArray[superCount].tableSkuNodeAttributeType ? 0 : $scope.attributeListArray[superCount].tableSkuNodeAttributeType.attributeTypeString] = null;
 
                     }
                 }
@@ -1388,8 +1398,18 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             $scope.originalupcCode = response.parentSku.tableSkuPrimaryUpcEan;
             $scope.kitData.tableSkuNode = initializeDropdowns($scope.categoryTypeLists, 'idskuNodeId', response.parentSku.tableSkuNode.idskuNodeId);
             $scope.kitData.tableSkuBrandCode = initializeDropdowns($scope.brandTypeLists, 'idtableSkuBrandCodeId', response.parentSku.tableSkuBrandCode.idtableSkuBrandCodeId);
-            $scope.kitData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.parentSku.tableSkuUodmType.idtableSkuUodmTypeId);
-            $scope.kitData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.parentSku.tableSkuUowmType.idtableSkuUowmTypeId);
+            if(response.parentSku.tableSkuUodmType){
+                $scope.kitData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.parentSku.tableSkuUodmType.idtableSkuUodmTypeId);
+            }
+            else{
+                $scope.kitData.tableSkuUodmType = null;
+            }
+            if(response.parentSku.tableSkuUowmType){
+                $scope.kitData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.parentSku.tableSkuUowmType.idtableSkuUowmTypeId);
+            }
+            else{
+                $scope.kitData.tableSkuUowmType = null;
+            }
             $scope.kitData.tableSkuShelfLifeType = initializeDropdowns($scope.shelfTypeLists, 'idtableSkuShelfLifeTypeId', response.parentSku.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId);
             $scope.kitData.tableSkuAbcClassification = response.parentSku.tableSkuAbcClassification;
             $scope.attributeListArray = [];
@@ -1518,8 +1538,18 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             $scope.originalupcCode = response.parentSku.tableSkuPrimaryUpcEan;
             $scope.virtualkitData.tableSkuNode = initializeDropdowns($scope.categoryTypeLists, 'idskuNodeId', response.parentSku.tableSkuNode.idskuNodeId);
             $scope.virtualkitData.tableSkuBrandCode = initializeDropdowns($scope.brandTypeLists, 'idtableSkuBrandCodeId', response.parentSku.tableSkuBrandCode.idtableSkuBrandCodeId);
-            $scope.virtualkitData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.parentSku.tableSkuUodmType.idtableSkuUodmTypeId);
-            $scope.virtualkitData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.parentSku.tableSkuUowmType.idtableSkuUowmTypeId);
+            if($scope.virtualkitData.tableSkuUodmType){
+                $scope.virtualkitData.tableSkuUodmType = initializeDropdowns($scope.dimLists, 'idtableSkuUodmTypeId', response.parentSku.tableSkuUodmType.idtableSkuUodmTypeId);
+            }
+            else{
+                $scope.virtualkitData.tableSkuUodmType = null;
+            }
+            if($scope.virtualkitData.tableSkuUowmType){
+                $scope.virtualkitData.tableSkuUowmType = initializeDropdowns($scope.weightLists, 'idtableSkuUowmTypeId', response.parentSku.tableSkuUowmType.idtableSkuUowmTypeId);
+            }
+            else{
+                $scope.virtualkitData.tableSkuUowmType = null;
+            }
             $scope.virtualkitData.tableSkuShelfLifeType = initializeDropdowns($scope.shelfTypeLists, 'idtableSkuShelfLifeTypeId', response.parentSku.tableSkuShelfLifeType.idtableSkuShelfLifeTypeId);
             $scope.virtualkitData.tableSkuAbcClassification  = response.parentSku.tableSkuAbcClassification;
             $scope.attributeListArray = [];
@@ -1560,7 +1590,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                 if (response.parentSku.tableSkuAttributeses == null || (response.parentSku.tableSkuAttributeses != null && response.parentSku.tableSkuAttributeses.length == 0)) {
 
                     for (var superCount = 0; superCount < $scope.attributeListArray.length; superCount++) {
-                        $scope.attributeListSelectedValuesArray[$scope.attributeListArray[superCount].tableSkuNodeAttributeType.attributeTypeString] = null;
+                        $scope.attributeListSelectedValuesArray[!$scope.attributeListArray[superCount].tableSkuNodeAttributeType ? 0 : $scope.attributeListArray[superCount].tableSkuNodeAttributeType.attributeTypeString] = null;
 
                     }
                 }
@@ -2049,6 +2079,15 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
        $scope.bindProperties();
 
         var postSkuData = skuData;
+        if(!postSkuData.tableSkuUodmType){
+            postSkuData.tableSkuLength = null ;
+            postSkuData.tableSkuWidth = null;
+            postSkuData.tableSkuHeight = null;
+        }
+        if(!postSkuData.tableSkuUowmType){
+            postSkuData.tableSkuWeight = null ;
+        }
+
         postSkuData.tableSkuIsPoisonous = $scope.tableSkuIsPoisonous;
         postSkuData.tableSkuIsStackable = $scope.tableSkuIsStackable;
         postSkuData.tableSkuIsFragile = $scope.tableSkuIsFragile;
@@ -2197,87 +2236,71 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                                 growl.error("Please select a Category");
                                                 $scope.isSkuCategorySelected = true;
                                             } else {
-                                                if (!kitData.tableSkuBrandCode) {
+                                                if (kitData.tableSkuUodmType) {
+                                                    if (!kitData.tableSkuLength) {
+                                                        $scope.productDimClicked = true;
+                                                        $scope.shelfLifeClicked = false;
+                                                        $scope.attributesClicked = false;
+                                                        $scope.propertiesClicked = false;
+                                                        growl.error("Please enter the SKU Length");
+                                                        $scope.isSkuLengthEntered = true;
+                                                        return;
+                                                    }
+                                                    else if (!kitData.tableSkuWidth) {
+                                                        $scope.productDimClicked = true;
+                                                        $scope.shelfLifeClicked = false;
+                                                        $scope.attributesClicked = false;
+                                                        $scope.propertiesClicked = false;
+                                                        growl.error("Please enter the SKU Width");
+                                                        $scope.isSkuWidthEntered = true;
+                                                        return;
+                                                    }
+                                                    else if (!kitData.tableSkuHeight) {
+                                                        $scope.productDimClicked = true;
+                                                        $scope.shelfLifeClicked = false;
+                                                        $scope.attributesClicked = false;
+                                                        $scope.propertiesClicked = false;
+                                                        growl.error("Please enter the SKU Height");
+                                                        $scope.isSkuHeightEntered = true;
+                                                        return;
+                                                    }
+                                                }
+                                                if (kitData.tableSkuUowmType) {
+                                                    if (!kitData.tableSkuWeight) {
+                                                        $scope.productDimClicked = true;
+                                                        $scope.shelfLifeClicked = false;
+                                                        $scope.attributesClicked = false;
+                                                        $scope.propertiesClicked = false;
+                                                        $scope.kitDetailsClicked = false;
+                                                        growl.error("Please enter the SKU Weight");
+                                                        $scope.isSkuWeightEntered = true;
+                                                        return;
+                                                    }
+                                                }
+                                                if (!kitData.tableSkuShelfLifeType) {
+                                                    $scope.productDimClicked = false;
+                                                    $scope.shelfLifeClicked = true;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    growl.error("Please select the Shelf Type");
+                                                    $scope.isShelfTypeSelected = true;
+                                                }
+                                                else if (!kitData.tableSkuBrandCode) {
                                                     growl.error("Please select a Brand");
                                                     $scope.isSkuBrandSelected = true;
-                                                } else {
-                                                    if (!kitData.tableSkuDescription) {
-                                                        growl.error("Please enter the Description");
-                                                        $scope.isSkuDescEntered = true;
-                                                    } /*else {
-                                                        if (!kitData.tableSkuLength) {
-                                                            $scope.productDimClicked = true;
-                                                            $scope.shelfLifeClicked = false;
-                                                            $scope.attributesClicked = false;
-                                                            $scope.propertiesClicked = false;
-                                                            document.skuForm.tableSkuLength.focus();
-                                                            growl.error("Please enter the SKU Length");
-                                                            $scope.isSkuLengthEntered = true;
-                                                        } else {
-                                                            if (!kitData.tableSkuWidth) {
-                                                                $scope.productDimClicked = true;
-                                                                $scope.shelfLifeClicked = false;
-                                                                $scope.attributesClicked = false;
-                                                                $scope.propertiesClicked = false;
-                                                                document.skuForm.tableSkuWidth.focus();
-                                                                growl.error("Please enter the SKU Width");
-                                                                $scope.isSkuWidthEntered = true;
-                                                            } else {
-                                                                if (!kitData.tableSkuHeight) {
-                                                                    $scope.productDimClicked = true;
-                                                                    $scope.shelfLifeClicked = false;
-                                                                    $scope.attributesClicked = false;
-                                                                    $scope.propertiesClicked = false;
-                                                                    document.skuForm.tableSkuHeight.focus();
-                                                                    growl.error("Please enter the SKU Height");
-                                                                    $scope.isSkuHeightEntered = true;
-                                                                } else {
-                                                                    if (!kitData.tableSkuWeight) {
-                                                                        $scope.productDimClicked = true;
-                                                                        $scope.shelfLifeClicked = false;
-                                                                        $scope.attributesClicked = false;
-                                                                        $scope.propertiesClicked = false;
-                                                                        $scope.kitDetailsClicked = false;
-                                                                        growl.error("Please enter the SKU Weight");
-                                                                        $scope.isSkuWeightEntered = true;
-                                                                    } else {
-                                                                        if (!kitData.tableSkuUodmType) {
-                                                                            $scope.productDimClicked = true;
-                                                                            $scope.shelfLifeClicked = false;
-                                                                            $scope.attributesClicked = false;
-                                                                            $scope.propertiesClicked = false;
-                                                                            document.skuForm.tableSkuUodmType.focus();
-                                                                            growl.error("Please select the Dimention Unit");
-                                                                            $scope.isDimUnitSelected = true;
-                                                                        } else {
-                                                                            if (!kitData.tableSkuUowmType) {
-                                                                                $scope.productDimClicked = true;
-                                                                                $scope.shelfLifeClicked = false;
-                                                                                $scope.attributesClicked = false;
-                                                                                $scope.propertiesClicked = false;
-                                                                                document.skuForm.tableSkuUowmType.focus();
-                                                                                growl.error("Please select the Weight Unit");
-                                                                                $scope.isWeightUnitSelected = true;
-                                                                            }*/ else {
-                                                                                if (!kitData.tableSkuShelfLifeType) {
-                                                                                    $scope.productDimClicked = false;
-                                                                                    $scope.shelfLifeClicked = true;
-                                                                                    $scope.attributesClicked = false;
-                                                                                    $scope.propertiesClicked = false;
-                                                                                    growl.error("Please select the Shelf Type");
-                                                                                    $scope.isShelfTypeSelected = true;
-                                                                                    if (document.skuForm.tableSkuShelfLifeType) {
-                                                                                        document.skuForm.tableSkuShelfLifeType.focus();
-                                                                                    }
-                                                                                } else {
-                                                                                    if ($scope.dialogBoxKitMode == "add") {
-                                                                                        $scope.saveKitDataInDb(kitData);
-                                                                                    } else if ($scope.dialogBoxKitMode == "edit") {
-                                                                                        $scope.updateKitData(kitData, $scope.skuClientCode);
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
+                                                }
+                                                else if (!kitData.tableSkuDescription) {
+                                                    growl.error("Please enter the Description");
+                                                    $scope.isSkuDescEntered = true;
+                                                }
+                                                else {
+                                                    if ($scope.dialogBoxKitMode == "add") {
+                                                        $scope.saveKitDataInDb(kitData);
+                                                    } else if ($scope.dialogBoxKitMode == "edit") {
+                                                        $scope.updateKitData(kitData, $scope.skuClientCode);
+                                                    }
+                                                }
+
                                                                     }
                                                                 }
 
@@ -2314,6 +2337,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
 
         var postKitData = {};
         postKitData.parentSku = kitData;
+        if(!postKitData.parentSku.tableSkuUodmType){
+            postKitData.parentSku.tableSkuLength = null ;
+            postKitData.parentSku.tableSkuWidth = null;
+            postKitData.parentSku.tableSkuHeight = null;
+        }
+        if(!postKitData.parentSku.tableSkuUowmType){
+            postKitData.parentSku.tableSkuWeight = null ;
+        }
         postKitData.parentSku.tableSkuIsPoisonous =$scope.tableSkuIsPoisonous;
         postKitData.parentSku.tableSkuIsStackable =$scope.tableSkuIsStackable;
         postKitData.parentSku.tableSkuIsFragile =$scope.tableSkuIsFragile;
@@ -2420,6 +2451,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
 
         var postvirtualKitData = {};
         postvirtualKitData.parentSku = virtualkitData;
+        if(!postvirtualKitData.parentSku.tableSkuUodmType){
+            postvirtualKitData.parentSku.tableSkuLength = null ;
+            postvirtualKitData.parentSku.tableSkuWidth = null;
+            postvirtualKitData.parentSku.tableSkuHeight = null;
+        }
+        if(!postvirtualKitData.parentSku.tableSkuUowmType){
+            postvirtualKitData.parentSku.tableSkuWeight = null ;
+        }
 
         postvirtualKitData.parentSku.tableSkuIsPoisonous =$scope.tableSkuIsPoisonous;
         postvirtualKitData.parentSku.tableSkuIsStackable =$scope.tableSkuIsStackable;
@@ -2504,218 +2543,179 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                 $scope.checkUpcCode(virtualkitData.tableSkuPrimaryUpcEan, "virtual").then(
                                     function(v) {
                                         if (v) {
+                                            if (virtualkitData.tableSkuUodmType) {
+                                                if (!virtualkitData.tableSkuLength) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    $scope.virtualkitDetailsClicked = false;
+                                                    $scope.inventoryDetailsClicked = false;
+                                                    growl.error("Please enter the SKU Length");
+                                                    $scope.isSkuLengthEntered = true;
+                                                    return;
+                                                }
+                                                else if (!virtualkitData.tableSkuWidth) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    $scope.virtualkitDetailsClicked = false;
+                                                    $scope.inventoryDetailsClicked = false;
+                                                    growl.error("Please enter the SKU Width");
+                                                    $scope.isSkuWidthEntered = true;
+                                                    return;
+                                                }
+                                                else if (!virtualkitData.tableSkuHeight) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    $scope.virtualkitDetailsClicked = false;
+                                                    $scope.inventoryDetailsClicked = false;
+                                                    growl.error("Please enter the SKU Height");
+                                                    $scope.isSkuHeightEntered = true;
+                                                    return;
+                                                }
+                                            }
+                                            if (virtualkitData.tableSkuUowmType) {
+                                                if (!virtualkitData.tableSkuWeight) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    $scope.virtualkitDetailsClicked = false;
+                                                    $scope.inventoryDetailsClicked = false;
+                                                    growl.error("Please enter the SKU Weight");
+                                                    $scope.isSkuWeightEntered = true;
+                                                    return;
+                                                }
+                                            }
                                             if (!virtualkitData.tableSkuNode) {
                                                 growl.error("Please select a Category");
                                                 $scope.isSkuCategorySelected = true;
-                                            } else {
-                                                if (!virtualkitData.tableSkuBrandCode) {
-                                                    growl.error("Please select a Brand");
-                                                    $scope.isSkuBrandSelected = true;
-                                                } else {
-                                                    if (!virtualkitData.tableSkuDescription) {
-                                                        growl.error("Please enter the Description");
-                                                        $scope.isSkuDescEntered = true;
-                                                    } /*else {
-                                                        if (!virtualkitData.tableSkuLength) {
-                                                            $scope.productDimClicked = true;
+                                            }
+                                            else if (!virtualkitData.tableSkuShelfLifeType) {
+                                                $scope.productDimClicked = false;
+                                                $scope.shelfLifeClicked = true;
+                                                $scope.attributesClicked = false;
+                                                $scope.propertiesClicked = false;
+                                                $scope.kitDetailsClicked = false;
+                                                $scope.virtualkitDetailsClicked = false;
+                                                $scope.inventoryDetailsClicked = false;
+                                                growl.error("Please select the Shelf Type");
+                                                $scope.isShelfTypeSelected = true;
+                                            }
+                                            else if (!virtualkitData.tableSkuBrandCode) {
+                                                growl.error("Please select a Brand");
+                                                $scope.isSkuBrandSelected = true;
+                                            }
+                                            else if (!virtualkitData.tableSkuDescription) {
+                                                growl.error("Please enter the Description");
+                                                $scope.isSkuDescEntered = true;
+                                            }
+                                            else {
+                                                if (virtualkitData.tableSkuInventory || $scope.dialogBoxVirtualKitMode == "edit") {
+                                                    if (virtualkitData.tableSkuInventory && !virtualkitData.tableSkuInventory.tableSkuInventoryMaxRetailPrice && $scope.dialogBoxVirtualKitMode == "add") {
+                                                        $scope.productDimClicked = false;
+                                                        $scope.shelfLifeClicked = false;
+                                                        $scope.attributesClicked = false;
+                                                        $scope.propertiesClicked = false;
+                                                        $scope.kitDetailsClicked = false;
+                                                        $scope.virtualkitDetailsClicked = false;
+                                                        $scope.inventoryDetailsClicked = true;
+                                                        growl.error("Please enter the MRP");
+                                                        $scope.isSkuMrpEntered = true;
+
+                                                    } else {
+                                                        if (!virtualkitData.tableSkuInventory.tableSkuInventoryMinSalePrice && $scope.dialogBoxVirtualKitMode == "add") {
+                                                            $scope.productDimClicked = false;
                                                             $scope.shelfLifeClicked = false;
                                                             $scope.attributesClicked = false;
                                                             $scope.propertiesClicked = false;
                                                             $scope.kitDetailsClicked = false;
                                                             $scope.virtualkitDetailsClicked = false;
-                                                            $scope.inventoryDetailsClicked = false;
-                                                            document.skuForm.tableSkuLength.focus();
-                                                            growl.error("Please enter the SKU Length");
-                                                            $scope.isSkuLengthEntered = true;
+                                                            $scope.inventoryDetailsClicked = true;
+                                                            growl.error("Please enter the MSP");
+                                                            $scope.isSkuMspEntered = true;
+
                                                         } else {
-                                                            if (!virtualkitData.tableSkuWidth) {
-                                                                $scope.productDimClicked = true;
+                                                            if (!virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo && $scope.dialogBoxVirtualKitMode == "add") {
+                                                                $scope.productDimClicked = false;
                                                                 $scope.shelfLifeClicked = false;
                                                                 $scope.attributesClicked = false;
                                                                 $scope.propertiesClicked = false;
                                                                 $scope.kitDetailsClicked = false;
                                                                 $scope.virtualkitDetailsClicked = false;
-                                                                $scope.inventoryDetailsClicked = false;
-                                                                document.skuForm.tableSkuWidth.focus();
-                                                                growl.error("Please enter the SKU Width");
-                                                                $scope.isSkuWidthEntered = true;
+                                                                $scope.inventoryDetailsClicked = true;
+                                                                growl.error("Please enter the Batch No.");
+                                                                $scope.isBatchNoEntered = true;
+
                                                             } else {
-                                                                if (!virtualkitData.tableSkuHeight) {
-                                                                    $scope.productDimClicked = true;
+                                                                if ($scope.shelfTypeID == 1 && !virtualkitData.tableSkuInventory.tableSkuInventoryMfgDate && $scope.dialogBoxVirtualKitMode == "add") {
+                                                                    $scope.productDimClicked = false;
                                                                     $scope.shelfLifeClicked = false;
                                                                     $scope.attributesClicked = false;
                                                                     $scope.propertiesClicked = false;
                                                                     $scope.kitDetailsClicked = false;
                                                                     $scope.virtualkitDetailsClicked = false;
-                                                                    $scope.inventoryDetailsClicked = false;
-                                                                    document.skuForm.tableSkuHeight.focus();
-                                                                    growl.error("Please enter the SKU Height");
-                                                                    $scope.isSkuHeightEntered = true;
+                                                                    $scope.inventoryDetailsClicked = true;
+                                                                    growl.error("Please select the Mfg Date.");
+                                                                    $scope.isMfgDateSelected = true;
+
                                                                 } else {
-                                                                    if (!virtualkitData.tableSkuWeight) {
-                                                                        $scope.productDimClicked = true;
+                                                                    if ($scope.shelfTypeID == 2 && !virtualkitData.tableSkuInventory.tableSkuInventoryExpiryDate && $scope.dialogBoxVirtualKitMode == "add") {
+                                                                        $scope.productDimClicked = false;
                                                                         $scope.shelfLifeClicked = false;
                                                                         $scope.attributesClicked = false;
                                                                         $scope.propertiesClicked = false;
                                                                         $scope.kitDetailsClicked = false;
                                                                         $scope.virtualkitDetailsClicked = false;
-                                                                        $scope.inventoryDetailsClicked = false;
-                                                                        document.skuForm.tableSkuWeight.focus();
-                                                                        growl.error("Please enter the SKU Weight");
-                                                                        $scope.isSkuWeightEntered = true;
+                                                                        $scope.inventoryDetailsClicked = true;
+                                                                        growl.error("Please select the Exp Date.");
+                                                                        $scope.isExpDateSelected = true;
+
                                                                     } else {
-                                                                        if (!virtualkitData.tableSkuUodmType) {
-                                                                            $scope.productDimClicked = true;
+                                                                        if ($scope.shelfTypeID == 1 && !virtualkitData.tableSkuInventory.tableSkuInventoryShelfLifeInDays && $scope.dialogBoxVirtualKitMode == "add") {
+                                                                            $scope.productDimClicked = false;
                                                                             $scope.shelfLifeClicked = false;
                                                                             $scope.attributesClicked = false;
                                                                             $scope.propertiesClicked = false;
                                                                             $scope.kitDetailsClicked = false;
                                                                             $scope.virtualkitDetailsClicked = false;
-                                                                            $scope.inventoryDetailsClicked = false;
-                                                                            document.skuForm.tableSkuUodmType.focus();
-                                                                            growl.error("Please select the Dimention Unit");
-                                                                            $scope.isDimUnitSelected = true;
+                                                                            $scope.inventoryDetailsClicked = true;
+                                                                            growl.error("Please enter the Shelf Life");
+                                                                            $scope.isShelfLifeEntered = true;
+
                                                                         } else {
-                                                                            if (!virtualkitData.tableSkuUowmType) {
-                                                                                $scope.productDimClicked = true;
-                                                                                $scope.shelfLifeClicked = false;
-                                                                                $scope.attributesClicked = false;
-                                                                                $scope.propertiesClicked = false;
-                                                                                $scope.kitDetailsClicked = false;
-                                                                                $scope.virtualkitDetailsClicked = false;
-                                                                                $scope.inventoryDetailsClicked = false;
-                                                                                document.skuForm.tableSkuUowmType.focus();
-                                                                                growl.error("Please select the Weight Unit");
-                                                                                $scope.isWeightUnitSelected = true;
-                                                                            }*/ else {
-                                                                                if (!virtualkitData.tableSkuShelfLifeType) {
-                                                                                    $scope.productDimClicked = false;
-                                                                                    $scope.shelfLifeClicked = true;
-                                                                                    $scope.attributesClicked = false;
-                                                                                    $scope.propertiesClicked = false;
-                                                                                    $scope.kitDetailsClicked = false;
-                                                                                    $scope.virtualkitDetailsClicked = false;
-                                                                                    $scope.inventoryDetailsClicked = false;
-                                                                                    growl.error("Please select the Shelf Type");
-                                                                                    $scope.isShelfTypeSelected = true;
-                                                                                    if (document.skuForm.tableSkuShelfLifeType) {
-                                                                                        document.skuForm.tableSkuShelfLifeType.focus();
-                                                                                    }
-                                                                                } else {
-                                                                                    if (virtualkitData.tableSkuInventory || $scope.dialogBoxVirtualKitMode == "edit") {
-                                                                                        if (!virtualkitData.tableSkuInventory.tableSkuInventoryMaxRetailPrice && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                            $scope.productDimClicked = false;
-                                                                                            $scope.shelfLifeClicked = false;
-                                                                                            $scope.attributesClicked = false;
-                                                                                            $scope.propertiesClicked = false;
-                                                                                            $scope.kitDetailsClicked = false;
-                                                                                            $scope.virtualkitDetailsClicked = false;
-                                                                                            $scope.inventoryDetailsClicked = true;
-                                                                                            growl.error("Please enter the MRP");
-                                                                                            $scope.isSkuMrpEntered = true;
-                                                                                            if (document.skuForm.tableSkuInventoryMaxRetailPrice) {
-                                                                                                document.skuForm.tableSkuInventoryMaxRetailPrice.focus();
-                                                                                            }
-                                                                                        } else {
-                                                                                            if (!virtualkitData.tableSkuInventory.tableSkuInventoryMinSalePrice && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                $scope.productDimClicked = false;
-                                                                                                $scope.shelfLifeClicked = false;
-                                                                                                $scope.attributesClicked = false;
-                                                                                                $scope.propertiesClicked = false;
-                                                                                                $scope.kitDetailsClicked = false;
-                                                                                                $scope.virtualkitDetailsClicked = false;
-                                                                                                $scope.inventoryDetailsClicked = true;
-                                                                                                growl.error("Please enter the MSP");
-                                                                                                $scope.isSkuMspEntered = true;
-                                                                                                if (document.skuForm.tableSkuInventoryMinSalePrice) {
-                                                                                                    document.skuForm.tableSkuInventoryMinSalePrice.focus();
-                                                                                                }
-                                                                                            } else {
-                                                                                                if (!virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                    $scope.productDimClicked = false;
-                                                                                                    $scope.shelfLifeClicked = false;
-                                                                                                    $scope.attributesClicked = false;
-                                                                                                    $scope.propertiesClicked = false;
-                                                                                                    $scope.kitDetailsClicked = false;
-                                                                                                    $scope.virtualkitDetailsClicked = false;
-                                                                                                    $scope.inventoryDetailsClicked = true;
-                                                                                                    growl.error("Please enter the Batch No.");
-                                                                                                    $scope.isBatchNoEntered = true;
-                                                                                                    if (document.skuForm.tableSkuInventoryBatchNo) {
-                                                                                                        document.skuForm.tableSkuInventoryBatchNo.focus();
-                                                                                                    }
-                                                                                                } else {
-                                                                                                    if ($scope.shelfTypeID == 1 && !virtualkitData.tableSkuInventory.tableSkuInventoryMfgDate && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                        $scope.productDimClicked = false;
-                                                                                                        $scope.shelfLifeClicked = false;
-                                                                                                        $scope.attributesClicked = false;
-                                                                                                        $scope.propertiesClicked = false;
-                                                                                                        $scope.kitDetailsClicked = false;
-                                                                                                        $scope.virtualkitDetailsClicked = false;
-                                                                                                        $scope.inventoryDetailsClicked = true;
-                                                                                                        growl.error("Please select the Mfg Date.");
-                                                                                                        $scope.isMfgDateSelected = true;
-                                                                                                        if (document.skuForm.tableSkuInventoryMfgDate) {
-                                                                                                            document.skuForm.tableSkuInventoryMfgDate.focus();
-                                                                                                        }
-                                                                                                    } else {
-                                                                                                        if ($scope.shelfTypeID == 2 && !virtualkitData.tableSkuInventory.tableSkuInventoryExpiryDate && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                            $scope.productDimClicked = false;
-                                                                                                            $scope.shelfLifeClicked = false;
-                                                                                                            $scope.attributesClicked = false;
-                                                                                                            $scope.propertiesClicked = false;
-                                                                                                            $scope.kitDetailsClicked = false;
-                                                                                                            $scope.virtualkitDetailsClicked = false;
-                                                                                                            $scope.inventoryDetailsClicked = true;
-                                                                                                            growl.error("Please select the Exp Date.");
-                                                                                                            $scope.isExpDateSelected = true;
-                                                                                                            if (document.skuForm.tableSkuInventoryExpiryDate) {
-                                                                                                                document.skuForm.tableSkuInventoryExpiryDate.focus();
-                                                                                                            }
-                                                                                                        } else {
-                                                                                                            if ($scope.shelfTypeID == 1 && !virtualkitData.tableSkuInventory.tableSkuInventoryShelfLifeInDays && $scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                                $scope.productDimClicked = false;
-                                                                                                                $scope.shelfLifeClicked = false;
-                                                                                                                $scope.attributesClicked = false;
-                                                                                                                $scope.propertiesClicked = false;
-                                                                                                                $scope.kitDetailsClicked = false;
-                                                                                                                $scope.virtualkitDetailsClicked = false;
-                                                                                                                $scope.inventoryDetailsClicked = true;
-                                                                                                                growl.error("Please enter the Shelf Life");
-                                                                                                                $scope.isShelfLifeEntered = true;
-                                                                                                                if (document.skuForm.tableSkuInventoryShelfLifeInDays) {
-                                                                                                                    document.skuForm.tableSkuInventoryShelfLifeInDays.focus();
-                                                                                                                }
-                                                                                                            } else {
-                                                                                                                if ($scope.dialogBoxVirtualKitMode == "add") {
-                                                                                                                    $scope.addVirtualKitToDb(virtualkitData);
-                                                                                                                } else if ($scope.dialogBoxVirtualKitMode == "edit") {
-                                                                                                                    $scope.updatevirtualKitData(virtualkitData, $scope.skuClientCode);
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    } else {
-                                                                                        $scope.productDimClicked = false;
-                                                                                        $scope.shelfLifeClicked = false;
-                                                                                        $scope.attributesClicked = false;
-                                                                                        $scope.propertiesClicked = false;
-                                                                                        $scope.kitDetailsClicked = false;
-                                                                                        $scope.virtualkitDetailsClicked = false;
-                                                                                        $scope.inventoryDetailsClicked = true;
-                                                                                        growl.error("Please enter the MRP");
-                                                                                        $scope.isSkuMrpEntered = true;
-                                                                                        if (document.skuForm.tableSkuInventoryMaxRetailPrice) {
-                                                                                            document.skuForm.tableSkuInventoryMaxRetailPrice.focus();
-                                                                                        }
-                                                                                    }
-                                                                                }
+                                                                            if ($scope.dialogBoxVirtualKitMode == "add") {
+                                                                                $scope.addVirtualKitToDb(virtualkitData);
+                                                                            } else if ($scope.dialogBoxVirtualKitMode == "edit") {
+                                                                                $scope.updatevirtualKitData(virtualkitData, $scope.skuClientCode);
                                                                             }
                                                                         }
                                                                     }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else {
+                                                    $scope.productDimClicked = false;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    $scope.virtualkitDetailsClicked = false;
+                                                    $scope.inventoryDetailsClicked = true;
+                                                    growl.error("Please enter the MRP");
+                                                    $scope.isSkuMrpEntered = true;
+                                                }
+                                            }
 
                                         }
                                     },
@@ -2751,92 +2751,76 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                 $scope.checkUpcCode(skuData.tableSkuPrimaryUpcEan, "normal").then(
                                     function(v) {
                                         if (v) {
+
+                                            if (skuData.tableSkuUodmType) {
+                                                if (!skuData.tableSkuLength) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    growl.error("Please enter the SKU Length");
+                                                    $scope.isSkuLengthEntered = true;
+                                                    return;
+                                                }
+                                                else if (!skuData.tableSkuWidth) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    growl.error("Please enter the SKU Width");
+                                                    $scope.isSkuWidthEntered = true;
+                                                    return;
+                                                }
+                                                else if (!skuData.tableSkuHeight) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    growl.error("Please enter the SKU Height");
+                                                    $scope.isSkuHeightEntered = true;
+                                                    return;
+                                                }
+                                            }
+                                            if (skuData.tableSkuUowmType) {
+                                                if (!skuData.tableSkuWeight) {
+                                                    $scope.productDimClicked = true;
+                                                    $scope.shelfLifeClicked = false;
+                                                    $scope.attributesClicked = false;
+                                                    $scope.propertiesClicked = false;
+                                                    $scope.kitDetailsClicked = false;
+                                                    growl.error("Please enter the SKU Weight");
+                                                    $scope.isSkuWeightEntered = true;
+                                                    return;
+                                                }
+                                            }
                                             if (!skuData.tableSkuNode) {
                                                 growl.error("Please select a Category");
                                                 $scope.isSkuCategorySelected = true;
-                                            } else {
-                                                if (!skuData.tableSkuBrandCode) {
-                                                    growl.error("Please select a Brand");
-                                                    $scope.isSkuBrandSelected = true;
-                                                } else {
-                                                    if (!skuData.tableSkuDescription) {
-                                                        growl.error("Please enter the Description");
-                                                        $scope.isSkuDescEntered = true;
-                                                    } /*else {
-                                                        if (!skuData.tableSkuLength) {
-                                                            $scope.productDimClicked = true;
-                                                            $scope.shelfLifeClicked = false;
-                                                            $scope.attributesClicked = false;
-                                                            $scope.propertiesClicked = false;
-                                                            document.skuForm.tableSkuLength.focus();
-                                                            growl.error("Please enter the SKU Length");
-                                                            $scope.isSkuLengthEntered = true;
-                                                        } else {
-                                                            if (!skuData.tableSkuWidth) {
-                                                                $scope.productDimClicked = true;
-                                                                $scope.shelfLifeClicked = false;
-                                                                $scope.attributesClicked = false;
-                                                                $scope.propertiesClicked = false;
-                                                                document.skuForm.tableSkuWidth.focus();
-                                                                growl.error("Please enter the SKU Width");
-                                                                $scope.isSkuWidthEntered = true;
-                                                            } else {
-                                                                if (!skuData.tableSkuHeight) {
-                                                                    $scope.productDimClicked = true;
-                                                                    $scope.shelfLifeClicked = false;
-                                                                    $scope.attributesClicked = false;
-                                                                    $scope.propertiesClicked = false;
-                                                                    document.skuForm.tableSkuHeight.focus();
-                                                                    growl.error("Please enter the SKU Height");
-                                                                    $scope.isSkuHeightEntered = true;
-                                                                } else {
-                                                                    if (!skuData.tableSkuWeight) {
-                                                                        $scope.productDimClicked = true;
-                                                                        $scope.shelfLifeClicked = false;
-                                                                        $scope.attributesClicked = false;
-                                                                        $scope.propertiesClicked = false;
-                                                                        $scope.kitDetailsClicked = false;
-                                                                        growl.error("Please enter the SKU Weight");
-                                                                        $scope.isSkuWeightEntered = true;
-                                                                    } else {
-                                                                        if (!skuData.tableSkuUodmType) {
-                                                                            $scope.productDimClicked = true;
-                                                                            $scope.shelfLifeClicked = false;
-                                                                            $scope.attributesClicked = false;
-                                                                            $scope.propertiesClicked = false;
-                                                                            document.skuForm.tableSkuUodmType.focus();
-                                                                            growl.error("Please select the Dimention Unit");
-                                                                            $scope.isDimUnitSelected = true;
-                                                                        } else {
-                                                                            if (!skuData.tableSkuUowmType) {
-                                                                                $scope.productDimClicked = true;
-                                                                                $scope.shelfLifeClicked = false;
-                                                                                $scope.attributesClicked = false;
-                                                                                $scope.propertiesClicked = false;
-                                                                                document.skuForm.tableSkuUowmType.focus();
-                                                                                growl.error("Please select the Weight Unit");
-                                                                                $scope.isWeightUnitSelected = true;
-                                                                            } */else {
-                                                                                if (!skuData.tableSkuShelfLifeType) {
-                                                                                    $scope.productDimClicked = false;
-                                                                                    $scope.shelfLifeClicked = true;
-                                                                                    $scope.attributesClicked = false;
-                                                                                    $scope.propertiesClicked = false;
-                                                                                    growl.error("Please select the Shelf Type");
-                                                                                    $scope.isShelfTypeSelected = true;
-                                                                                    if (document.skuForm.tableSkuShelfLifeType) {
-                                                                                        document.skuForm.tableSkuShelfLifeType.focus();
-                                                                                    }
-                                                                                } else {
-                                                                                    if ($scope.dialogBoxSkuMode == "add") {
-                                                                                        $scope.saveSkuDataInDb(skuData);
-                                                                                    } else if ($scope.dialogBoxSkuMode == "edit") {
-                                                                                        $scope.updateSkuData(skuData, $scope.skuClientCode);
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
+                                            }
+                                            else if (!skuData.tableSkuShelfLifeType) {
+                                                $scope.productDimClicked = false;
+                                                $scope.shelfLifeClicked = true;
+                                                $scope.attributesClicked = false;
+                                                $scope.propertiesClicked = false;
+                                                growl.error("Please select the Shelf Type");
+                                                $scope.isShelfTypeSelected = true;
+                                            }
+                                            else if(!skuData.tableSkuBrandCode) {
+                                                growl.error("Please select a Brand");
+                                                $scope.isSkuBrandSelected = true;
+                                            }
+                                            else if(!skuData.tableSkuDescription) {
+                                                growl.error("Please enter the Description");
+                                                $scope.isSkuDescEntered = true;
+                                            }
+                                            else{
+                                                if ($scope.dialogBoxSkuMode == "add") {
+                                                    $scope.saveSkuDataInDb(skuData);
+                                                }
+                                                else if($scope.dialogBoxSkuMode == "edit") {
+                                                    $scope.updateSkuData(skuData, $scope.skuClientCode);
+                                                }
+                                            }
                                                                 }
 
                                     },
@@ -3552,6 +3536,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.bindProperties();
 
         var putSkuData = skuData;
+        if(!putSkuData.tableSkuUodmType){
+            putSkuData.tableSkuLength = null ;
+            putSkuData.tableSkuWidth = null;
+            putSkuData.tableSkuHeight = null;
+        }
+        if(!putSkuData.tableSkuUowmType){
+            putSkuData.tableSkuWeight = null ;
+        }
         putSkuData.tableSkuIsPoisonous = $scope.tableSkuIsPoisonous;
         putSkuData.tableSkuIsStackable = $scope.tableSkuIsStackable;
         putSkuData.tableSkuIsFragile = $scope.tableSkuIsFragile;
@@ -3630,6 +3622,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.bindProperties();
         var putKitData = {};
         putKitData.parentSku = kitData;
+        if(!putKitData.parentSku.tableSkuUodmType){
+            putKitData.parentSku.tableSkuLength = null ;
+            putKitData.parentSku.tableSkuWidth = null;
+            putKitData.parentSku.tableSkuHeight = null;
+        }
+        if(!putKitData.parentSku.tableSkuUowmType){
+            putKitData.parentSku.tableSkuWeight = null ;
+        }
         putKitData.parentSku.tableSkuIsPoisonous =$scope.tableSkuIsPoisonous;
         putKitData.parentSku.tableSkuIsStackable =$scope.tableSkuIsStackable;
         putKitData.parentSku.tableSkuIsFragile =$scope.tableSkuIsFragile;
@@ -3764,6 +3764,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.bindProperties();
         var putKitData = {};
         putKitData.parentSku = kitData;
+        if(!putKitData.parentSku.tableSkuUodmType){
+            putKitData.parentSku.tableSkuLength = null ;
+            putKitData.parentSku.tableSkuWidth = null;
+            putKitData.parentSku.tableSkuHeight = null;
+        }
+        if(!putKitData.parentSku.tableSkuUowmType){
+            putKitData.parentSku.tableSkuWeight = null ;
+        }
         putKitData.parentSku.tableSkuIsPoisonous =$scope.tableSkuIsPoisonous;
         putKitData.parentSku.tableSkuIsStackable =$scope.tableSkuIsStackable;
         putKitData.parentSku.tableSkuIsFragile =$scope.tableSkuIsFragile;

@@ -28,8 +28,8 @@
             <div class="col-md-6" style="padding-left:0px;">
                 <angucomplete-alt id="vendorsMain" placeholder="Search Vendor" pause="400"
                                   selected-object="searchedVendor" remote-url="{{baseVendorUrl}}"
-                                  title-field="tableVendorClientVendorCode"
-                                  description-field="tableVendorName"
+                                  title-field="tableVendorName"
+                                  description-field="tableVendorClientVendorCode"
                                   input-class="form-control main-bottom-border"></angucomplete-alt>
 				<button type="button" title="Click to see all vendors." style="position: absolute;top: 0px; right: -40px;" class="btn btn-sm truncate-text" ng-click="masterVendorDialog($event);">. . .</button>
             </div>
@@ -647,8 +647,6 @@
                                                     ng-options="option for option in quantityTypes track by option"
                                                     ng-change = "getAvailableQuantitys();"
                                                     ng-model="singleorderReturnData.tablePurchaseReturnQuantityType" name="quantityType">
-                                                <option value="" disabled selected style="display: none;">Select Quantity Type
-                                                </option>
                                             </select>
 
                                             <div class="error ng-hide" ng-show="addOrderFormWithoutRef.$submitted" aria-hidden="true">
@@ -676,6 +674,9 @@
                                                     <th><span class="fa fa-barcode fa-md"></span>&nbsp;&nbsp;Product Name
                                                     </th>
                                                     <th style="text-align: right;"><span
+                                                            class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Ordered Quantity
+                                                    </th>
+                                                    <th style="text-align: right;"><span
                                                             class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Available Quantity
                                                     </th>
 
@@ -689,6 +690,7 @@
                                                 <tbody class="data-grid-data">
                                                 <tr ng-repeat="tablePurchaseReturnSku in singleorderReturnData.tablePurchaseReturnSkus track by $index">
                                                     <td>{{tablePurchaseReturnSku.tableSku.tableSkuName}}</td>
+                                                    <td>{{genericData.OrderedQuantitys[$index].tablePurchaseReturnSkuQuantity}}</td>
                                                     <td>{{genericData.availableQuantitys[$index].tablePurchaseReturnSkuQuantity}}</td>
                                                     <td style="text-align: right;">
                                                         <input type="text"
@@ -858,6 +860,11 @@
                                         <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
                                         <span ng-if="fileName == null">No file selected</span>
                                     </span>
+                                    <br>
+                                    <span ng-if="progressOfUpload">
+                                        <span><b>Uploading</b></span>
+                                        <span>{{progressOfUpload}}</span>
+                                    </span>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
@@ -1011,6 +1018,7 @@
                                         <select id="quantityType2"
                                                 class="form-control add-single-order-select" required
                                                 ng-options="option for option in quantityTypes track by option"
+                                                ng-change="clearProductList()"
                                                 ng-model="singleorderReturnData.tablePurchaseReturnQuantityType" name="quantityType">
                                             <option value="" disabled selected style="display: none;">Select Quantity Type
                                             </option>
@@ -1029,7 +1037,7 @@
                                     <div class="col-md-2 margin-top-5">
                                         <span class="semi-bold-text">Add Product <span style="color:red">*</span></span>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <angucomplete-alt  id="products" placeholder="Search product" pause="400" selected-object="searchedProduct"
                                                            local-data="vendorSkus" title-field="tableSkuName"
                                                            search-fields="tableSkuClientSkuCode,tableSkuName,tableSkuDescription,tableSkuPrimaryUpcEan"
@@ -1043,13 +1051,19 @@
                                                 class="btn btn-sm truncate-text"
                                                 ng-click="showCommonMasterSkuDialog(true);">. . .</button>
                                     </div>
-                                    <div class="col-md-3">
+
+                                    <div class="col-md-2">
+                                        <input disabled class="col-md-6 col-lg-6" type="text" ng-value="availableQuantityOfSkuAndVendor" />
+                                        <span class="col-md-6 col-lg-6">(Avl. Qty.)</span>
+                                    </div>
+
+                                    <div class="col-md-2">
                                         <input
                                                 type="text" min="1"
                                                 ng-model="genericData.returnQuantity" id="returnqtrywithoutref"
                                                 only-integer
                                                 prevent-typing-greater
-                                                max = "999999999"
+                                                max = "{{availableQuantityOfSkuAndVendor}}"
                                                 placeholder="Quantity"
                                                 class="form-control darkgrey-bottom-border textRightOnFocus"/>
                                     </div>
@@ -1264,6 +1278,11 @@
                                         <span ng-if="fileName != null" style="width:100%;word-wrap:break-word;">{{fileName}}</span>
                                         <span ng-if="fileName == null">No file selected</span>
                                     </span>
+                                    <br>
+                                    <span ng-if="progressOfUpload">
+                                        <span><b>Uploading</b></span>
+                                        <span>{{progressOfUpload}}</span>
+                                    </span>
                                 </div>
                                 <div class="col-md-6">
                                     <a href="javascript:void(0);" ng-click="downloadPurchaseReturnTemplateWithID()">
@@ -1358,6 +1377,7 @@
 <div ng-include src="'services/masterVendorDialog.html'"></div>
 <div ng-include src="'services/CommonMasterSkuDialog.html'"></div>
 <div ng-include src="'services/CommonMasterVendorDialog.html'"></div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html'"></div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
 <style>

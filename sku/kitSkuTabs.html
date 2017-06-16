@@ -34,7 +34,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <button type="button" class="btn addsharpbutton font pull-right btn-top-margin" style="min-width: 160px;" ng-click="showkitAddBox($event)"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Add New Kit</button>
+                <button type="button" ng-if="access.createAccess" class="btn addsharpbutton font pull-right btn-top-margin" style="min-width: 160px;" ng-click="showkitAddBox($event)"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Add New Kit</button>
             </div>
         </div>
         <div class="row main-list">
@@ -125,7 +125,17 @@
                         <td>{{kitData.tableSkuPrimaryUpcEan}}</td>
                         <td>{{kitData.tableSkuNode.skuNodeName}}</td>
                         <td>{{kitData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
-                        <td>{{kitData.tableSkuLength}}&nbsp;<strong>x</strong>&nbsp;{{kitData.tableSkuWidth}}&nbsp;<strong>x</strong>&nbsp;{{kitData.tableSkuHeight}}&nbsp;{{kitData.tableSkuUodmType.tableSkuUodmTypeString.toLowerCase()}}&nbsp;<strong>/</strong>&nbsp;{{kitData.tableSkuWeight}}&nbsp;{{kitData.tableSkuUowmType.tableSkuUowmTypeString}}</td>
+                        <td>
+                            <span ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">{{kitData.tableSkuLength}}</span>
+                            <strong ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
+                            <span ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">{{kitData.tableSkuWidth}}</span>
+                            <strong ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
+                            <span ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">{{kitData.tableSkuHeight}}</span>
+                            <span ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">{{kitData.tableSkuUodmType.tableSkuUodmTypeString.toLowerCase()}}</span>
+                            <strong ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString && kitData.tableSkuUowmType.tableSkuUowmTypeString">/</strong>
+                            <span ng-if="kitData.tableSkuUowmType.tableSkuUowmTypeString">{{kitData.tableSkuWeight}}</span>
+                            <span ng-if="kitData.tableSkuUowmType.tableSkuUowmTypeString">{{kitData.tableSkuUowmType.tableSkuUowmTypeString}}</span>
+                        </td>
                         <td>
                             <a class="active-status" ng-if="kitData.tableSkuStatusType.idtableSkuStatusTypeId == 1" href="" data-ng-click="access.editAccess && deactivateSku(kitData.idtableSkuId, kitData,kitData.tableSkuType.tableSkuTypeString,$event)">{{kitData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Deactivate-70.svg" title="Click to deactivate SKU" class="status-img" alt=""></a>
                             <a class="deactive-status" ng-if="kitData.tableSkuStatusType.idtableSkuStatusTypeId == 2" href="" data-ng-click="access.editAccess && activateSku(kitData.idtableSkuId, kitData,kitData.tableSkuType.tableSkuTypeString,$event)">{{kitData.tableSkuStatusType.tableSkuStatusTypeString}}&nbsp;<img src="images/svg/SKU_Activate.svg" title="Click to activate SKU" class="status-img" alt=""></a>

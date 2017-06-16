@@ -2,7 +2,7 @@
         <div class="row search-row-heading">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right" style="padding-right:0px;margin-bottom: 15px;">
                 <button type="button" class="btn btn-default mybut"
-                        ng-click="DownloadInventoryFileExport()" ng-if="access.editaccess"
+                        ng-click="DownloadInventoryFileExport()" ng-if="access.editAccess"
                         style="margin-top: -5px;background-color: #F0592B;color:#fff; margin-right: 5px; margin-left: 10px !important;"><span class="fa fa-download"></span> Export
                 </button>
                 <button type="button" class="btn btn-default mybut" style="margin-top:-8px;" ng-click="navigatePassbook()" ng-if="inventorypassbook">
@@ -191,6 +191,7 @@
                                     <th style="width:9% !important;">Available</th>
                                     <th style="width:9% !important;">Allocated</th>
                                     <th style="width:9% !important;">Bad</th>
+                                    <th style="width:9% !important;">Bad Allocated</th>
                                     <th style="width:9% !important;">Blocked</th>
                                     <th style="width:9% !important;">Stock In Transit</th>
                                     <th style="width:9% !important;">Total</th>
@@ -231,6 +232,15 @@
                                         {{SkuInventory.bad }}
                                     </span>
                                         <span ng-if="SkuInventory.bad == null">
+                                        N/A
+                                    </span>
+                                    </td>
+
+                                    <td style="width:10%;text-align: right;">
+                                     <span ng-if="SkuInventory.badAllocated != null">
+                                        {{SkuInventory.badAllocated }}
+                                    </span>
+                                        <span ng-if="SkuInventory.badAllocated == null">
                                         N/A
                                     </span>
                                     </td>

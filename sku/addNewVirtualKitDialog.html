@@ -158,13 +158,14 @@
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="row row-margin-top-small">
                             <div class="col-md-6">
                                 <div class="row row-margin-top-small">
                                     <div class="col-md-4">
                                         <span class="font">Classification</span>
                                     </div>
-                                    <div class="col-md-6 select-style">
+                                    <div class="col-md-7 select-style">
 
                                         <select ng-model="virtualkitData.tableSkuAbcClassification"
                                                 ng-options="option as option for option in skuClassificationArray">
@@ -174,7 +175,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="row row-margin-top-small">
                             <div class="col-md-2 margin-top-9">
@@ -229,8 +229,8 @@
                                             <div class="col-md-5">
                                                 <span class="font">Width</span>
                                             </div>
-                                            <div class="col-md-7" style="margin-left:-30px;">
-                                                <input style="padding:0px !important;width:217px;" floating precision="2" type="text" min="0" ng-model="virtualkitData.tableSkuWidth" id="tableSkuWidth" placeholder="Enter Width" ng-class="{submitted: isSkuWidthEntered}" ng-change="skuWidthChanged(virtualkitData.tableSkuWidth)"
+                                            <div class="col-md-7 no-padding" style="margin-left:-15px;">
+                                                <input style="padding:0px !important;width:100%;" floating precision="2" type="text" min="0" ng-model="virtualkitData.tableSkuWidth" id="tableSkuWidth" placeholder="Enter Width" ng-class="{submitted: isSkuWidthEntered}" ng-change="skuWidthChanged(virtualkitData.tableSkuWidth)"
                                                        class="form-control darkgrey-bottom-border-number font input-less-padding">
                                             </div>
                                         </div>
@@ -266,14 +266,14 @@
                                             <span class="font">Weight</span>
                                         </div>
                                         <div class="col-md-7">
-                                            <input style="padding: 0px !important;width:183px;left:-2px;" type="text" floating precision="3" id="tableSkuWeight" placeholder="Enter Weight" ng-class="{submitted: isSkuWeightEntered}" ng-change="skuWeightChanged(virtualkitData.tableSkuWeight)" ng-model="virtualkitData.tableSkuWeight"
+                                            <input style="padding: 0px !important;width:100%;left:-2px;" type="text" floating precision="3" id="tableSkuWeight" placeholder="Enter Weight" ng-class="{submitted: isSkuWeightEntered}" ng-change="skuWeightChanged(virtualkitData.tableSkuWeight)" ng-model="virtualkitData.tableSkuWeight"
                                                    class="form-control darkgrey-bottom-border-number font input-less-padding">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row row-margin-top-x-small">
+                        <div ng-show="attributeListArray.length > 0" class="row row-margin-top-x-small">
                             <md-toolbar class="md-small accordion-color">
                                 <div class="md-toolbar-tools">
                                     <span class="font-big">Attributes Details</span>
@@ -441,7 +441,7 @@
                             <div class="col-md-12" style="padding-left: 25px !important;">
                                 <div class="row row-margin-top-small">
                                     <div class="col-md-2 margin-top-5">
-                                        <span class="font">MRP</span>
+                                        <span class="font">MRP <span style="color:red">*</span></span>
                                     </div>
                                     <div class="col-md-3">
                                         <input id="tableSkuInventoryMaxRetailPrice"
@@ -461,7 +461,7 @@
                                                style="border-bottom: none !important;">
                                     </div>
                                     <div class="col-md-2 margin-top-5">
-                                        <span class="font">MSP</span>
+                                        <span class="font">MSP <span style="color:red">*</span></span>
                                     </div>
                                     <div class="col-md-3">
                                         <input id="tableSkuInventoryMinSalePrice" placeholder="Enter MSP" ng-class="{submitted: isSkuMspEntered}"
@@ -482,7 +482,7 @@
                                 </div>
                                 <div class="row row-margin-top-medium">
                                     <div class="col-md-2 margin-top-5">
-                                        <span class="font">Batch No.</span>
+                                        <span class="font">Batch No. <span style="color:red">*</span></span>
                                     </div>
                                     <div class="col-md-3">
                                         <input id="tableSkuInventoryBatchNo" placeholder="Enter Batch No." ng-class="{submitted: isBatchNoEntered}" ng-change="batchNoChanged(virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo)" ng-show="dialogBoxVirtualKitMode=='add' || (virtualKitEditable == true && dialogBoxVirtualKitMode=='edit')" type="text" ng-model="virtualkitData.tableSkuInventory.tableSkuInventoryBatchNo"

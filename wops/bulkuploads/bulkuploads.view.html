@@ -6,92 +6,92 @@
         </div>
         <div class="row row-margin-top-medium" style="margin-left: auto; margin-right: auto;">
             <!--<div class="row">-->
-                <div class="col-md-12" ng-if="access.createAccess">
-                    <button type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="showBulkUploadDialog()" ng-show="activeTab!='Cancel'"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Bulk Upload {{activeTab}}</button>
+                <div class="col-md-12">
+                    <button ng-if="hasUploadAccess()" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="showBulkUploadDialog()" ng-show="activeTab!='Cancel'"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Bulk Upload {{activeTab}}</button>
                     <button type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="showBulkUploadDialog()" ng-show="activeTab=='Cancel'"><img src="images/svg/add.svg" style="height:20px;">&nbsp;Bulk Cancel Orders</button>
                 </div>
             <!--</div>-->
             <!--<div class="row row-margin-top-medium">-->
                 <div class="col-md-12 no-padding row-margin-top-medium">
                     <ul class="nav navbar-nav screen-tabs">
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Masters')}" ng-click="activeTab='Masters';loadBulkReporting('master');selectedTab=0;">
+                        <li ng-show="mastersAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Masters')}" ng-click="activeTab='Masters';loadBulkReporting('master');selectedTab=0;">
                                 <span>Masters</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('SKU')}"
+                        <li ng-show="skuAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('SKU')}"
                                     ng-click="activeTab='SKU';loadBulkReporting('sku');selectedTab=0;">
                                 <span>SKU</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Inventory')}"
+                        <li ng-show="inventoryAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Inventory')}"
                                     ng-click="activeTab='Inventory';loadBulkReporting('inventory');selectedTab=0;">
                                 <span>Inventory</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Stocktransfer')}"
+                        <li ng-show="stockTransferAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Stocktransfer')}"
                                     ng-click="activeTab='Stocktransfer';loadBulkReporting('stocktransfer');selectedTab=0;">
                                 <span>Stock Transfer</span>
                             </button>
                         </li>
-                        <li>
+                        <li ng-show="customerAccess.readAccess" >
                             <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Customers')}" ng-click="activeTab='Customers';loadBulkReporting('customer');selectedTab=0;">
                                 <span>Customers</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Vendors')}" ng-click="activeTab='Vendors';loadBulkReporting('vendor');selectedTab=0;">
+                        <li ng-show="vendorAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Vendors')}" ng-click="activeTab='Vendors';loadBulkReporting('vendor');selectedTab=0;">
                                 <span>Vendors</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Orders')}" ng-click="activeTab='Orders';loadBulkReporting('orders');selectedTab=0;">
+                        <li ng-show="saleOrderAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Orders')}" ng-click="activeTab='Orders';loadBulkReporting('orders');selectedTab=0;">
                                 <span>Orders</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('PO')}" ng-click="activeTab='PO';loadBulkReporting('po');selectedTab=0;">
+                        <li ng-show="poAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('PO')}" ng-click="activeTab='PO';loadBulkReporting('po');selectedTab=0;">
                                 <span>PO</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Salereturn')}" ng-click="activeTab='Salereturn';loadBulkReporting('salereturn');selectedTab=0;">
+                        <li ng-show="saleReturnAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Salereturn')}" ng-click="activeTab='Salereturn';loadBulkReporting('salereturn');selectedTab=0;">
                                 <span>Sale Return</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('SalereturnWithoutId')}" ng-click="activeTab='SalereturnWithoutId';loadBulkReporting('salereturnwithoutorderid');selectedTab=0;">
+                        <li ng-show="saleReturnAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('SalereturnWithoutId')}" ng-click="activeTab='SalereturnWithoutId';loadBulkReporting('salereturnwithoutorderid');selectedTab=0;">
                                 <span>Sale Return Without OrderID</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Cancel')}" ng-click="activeTab='Cancel';loadBulkReporting('cancel');selectedTab=0;">
+                        <li ng-show="saleOrderAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Cancel')}" ng-click="activeTab='Cancel';loadBulkReporting('cancelsaleorders');selectedTab=0;">
                                 <span>Cancelled Orders</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('skuMap')}" ng-click="activeTab='skuMap';loadBulkReporting('skusaleschannelmap');selectedTab=0;">
+                        <li ng-show="skuAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('skuMap')}" ng-click="activeTab='skuMap';loadBulkReporting('skusaleschannelmap');selectedTab=0;">
                                 <span>SKU Sale Channel Maps</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('vendorSkuMap')}" ng-click="activeTab='vendorSkuMap';loadBulkReporting('vendorskumap');selectedTab=0;">
+                        <li ng-show="vendorAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('vendorSkuMap')}" ng-click="activeTab='vendorSkuMap';loadBulkReporting('vendorskumap');selectedTab=0;">
                                 <span>Vendor SKU Maps</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return With ID')}" ng-click="activeTab='Purchase Return With ID';loadBulkReporting('purchasereturnwithid');selectedTab=0;">
+                        <li ng-show="purchaseReturnAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return With ID')}" ng-click="activeTab='Purchase Return With ID';loadBulkReporting('purchasereturnwithid');selectedTab=0;">
                                 <span>Purchase Return With PO</span>
                             </button>
                         </li>
-                        <li>
-                            <button type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return Without ID')}" ng-click="activeTab='Purchase Return Without ID';loadBulkReporting('purchasereturnwitoutid');selectedTab=0;">
+                        <li ng-show="purchaseReturnAccess.readAccess">
+                            <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return Without ID')}" ng-click="activeTab='Purchase Return Without ID';loadBulkReporting('purchasereturnwitoutid');selectedTab=0;">
                                 <span>Purchase Return Without PO</span>
                             </button>
-                        </li
+                        </li>
                     </ul>
                 </div>
             </div>

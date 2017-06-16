@@ -89,26 +89,11 @@ function bulkuploadsController($rootScope, downloadSkuSalesChannelMapTemplateUrl
 
 
 
-    if ($cookies.get('BulkUploadData'))
-    {
-        $scope.defaultState = $cookies.get('BulkUploadData');
-        $scope.activeTab = $cookies.get('ActiveTab');
-        if($rootScope.growlmessage) {
-            $rootScope.growlmessage.destroy();
-        }
-    }
-    else
-    {
-        $scope.defaultState = "master";
-        $scope.activeTab = "Masters";
-        if($rootScope.growlmessage) {
-            $rootScope.growlmessage.destroy();
-        }
-    }
+
 
     $scope.$on('$routeChangeSuccess', function() {
+        $scope.checkAccess();
         $scope.loadBulkReporting($scope.defaultState);
-        // $scope.loadBulkCounting(0,'sku');
     });
 
     $scope.isActive = function(tab) {
@@ -676,4 +661,192 @@ function bulkuploadsController($rootScope, downloadSkuSalesChannelMapTemplateUrl
             });
         }
     };
+
+    $scope.menubar = JSON.parse(localStorage.getItem("menu"));
+    $scope.mastersAccess = {};
+    $scope.skuAccess = {};
+    $scope.inventoryAccess = {};
+    $scope.stockTransferAccess = {};
+    $scope.customerAccess = {};
+    $scope.vendorAccess = {};
+    $scope.saleOrderAccess = {};
+    $scope.poAccess = {};
+    $scope.saleReturnAccess = {};
+    $scope.vendorsAccess = {};
+    $scope.purchaseReturnAccess = {};
+
+    $scope.checkAccess = function(page)
+    {
+        $scope.skuAccess = $scope.getSubMenuAccess('Masters','SKU');
+        $scope.inventoryAccess = $scope.getMenuAccess('Inventory');
+        $scope.stockTransferAccess = $scope.getMenuAccess('Stock Transfer');
+        $scope.customerAccess = $scope.getSubMenuAccess('Masters','Customers');
+        $scope.vendorAccess = $scope.getSubMenuAccess('Masters','Vendors');
+        $scope.saleOrderAccess = $scope.getSubMenuAccess('Orders','Sale Order');
+        $scope.poAccess = $scope.getMenuAccess('P.O.');
+        $scope.saleReturnAccess = $scope.getSubMenuAccess('Orders','Sale Return')
+        $scope.purchaseReturnAccess = $scope.getSubMenuAccess('Orders','Purchase Return');
+
+        if($scope.customerAccess  != null && $scope.vendorAccess != null)
+        {
+            if($scope.customerAccess.createAccess == true && $scope.vendorAccess.createAccess == true)
+            {
+                $scope.mastersAccess = $scope.customerAccess;
+            }
+        }
+
+        if ($cookies.get('BulkUploadData'))
+        {
+            $scope.defaultState = $cookies.get('BulkUploadData');
+            $scope.activeTab = $cookies.get('ActiveTab');
+            if($rootScope.growlmessage) {
+                $rootScope.growlmessage.destroy();
+            }
+        }
+        else
+        {
+
+            if($scope.mastersAccess.readAccess)
+            {
+                $scope.defaultState = "master";
+                $scope.activeTab = "Masters";
+                /*  $cookies.put('BulkUploadData','master');
+                 $cookies.put('ActiveTab','Masters');*/
+            }
+            else if($scope.skuAccess.readAccess)
+            {
+                $scope.defaultState = "sku";
+                $scope.activeTab = "SKU";
+                /* $cookies.put('BulkUploadData','sku');
+                 $cookies.put('ActiveTab','SKU');*/
+            }
+            else if($scope.inventoryAccess.readAccess)
+            {
+                $scope.defaultState = "inventory";
+                $scope.activeTab = "Inventory";
+                /*$cookies.put('BulkUploadData','inventory');
+                 $cookies.put('ActiveTab','Inventory');*/
+            }
+            else if($scope.stockTransferAccess.readAccess)
+            {
+                $scope.defaultState = "stocktransfer";
+                $scope.activeTab = "Stocktransfer";
+                /* $cookies.put('BulkUploadData','stocktransfer');
+                 $cookies.put('ActiveTab','Stocktransfer');*/
+            }
+            else if($scope.customerAccess.readAccess)
+            {
+                $scope.defaultState = "customer";
+                $scope.activeTab = "Customers";
+                /* $cookies.put('BulkUploadData','customer');
+                 $cookies.put('ActiveTab','Customers');*/
+            }
+            else if($scope.vendorAccess.readAccess)
+            {
+                $scope.defaultState = "vendor";
+                $scope.activeTab = "Vendors";
+                /*$cookies.put('BulkUploadData','vendor');
+                 $cookies.put('ActiveTab','Vendors');*/
+            }
+            else if($scope.saleOrderAccess.readAccess)
+            {
+                $scope.defaultState = "orders";
+                $scope.activeTab = "Orders";
+                /* $cookies.put('BulkUploadData','orders');
+                 $cookies.put('ActiveTab','Orders');*/
+            }
+            else if($scope.poAccess.readAccess)
+            {
+                $scope.defaultState = "po";
+                $scope.activeTab = "PO";
+                /*$cookies.put('BulkUploadData','po');
+                 $cookies.put('ActiveTab','PO');*/
+            }
+            else if($scope.saleReturnAccess.readAccess)
+            {
+                $scope.defaultState = "salereturn";
+                $scope.activeTab = "Salereturn";
+                /* $cookies.put('BulkUploadData','salereturn');
+                 $cookies.put('ActiveTab','Salereturn');*/
+            }
+            else if($scope.purchaseReturnAccess.readAccess)
+            {
+                $scope.defaultState = "purchasereturnwithid";
+                $scope.activeTab = "Purchase Return With ID";
+                /* $cookies.put('BulkUploadData','purchasereturnwithid');
+                 $cookies.put('ActiveTab','Purchase Return With ID');*/
+            }
+        }
+
+    }
+
+    $scope.getMenuAccess = function(menu){
+        var response = {};
+        angular.forEach($scope.menubar, function (value) {
+            if(value.name == menu){
+                response = value;
+            }
+        });
+        return response;
+    }
+
+    $scope.getSubMenuAccess = function(menu,submenu){
+        var response = {};
+        angular.forEach($scope.menubar, function (value) {
+            if(value.name == menu){
+                angular.forEach(value.subMenu, function (sub) {
+                    if(sub.name == submenu) {
+                        response = sub;
+                    }
+                });
+            }
+        });
+    return response;
+    }
+
+    $scope.hasUploadAccess = function() {
+
+        var activeTab = $scope.activeTab;
+
+        if (activeTab == 'Masters') {
+            return $scope.mastersAccess.createAccess;
+        }
+        else if (activeTab == 'SKU' || activeTab == 'skuMap')
+        {
+            return $scope.skuAccess.createAccess;
+        }
+        else if (activeTab == 'Inventory')
+        {
+            return $scope.inventoryAccess.createAccess;
+        }
+        else if (activeTab == 'Stocktransfer')
+        {
+            return $scope.stockTransferAccess.createAccess;
+        }
+        else if (activeTab == 'Customers')
+        {
+            return $scope.customerAccess.createAccess;
+        }
+        else if (activeTab == 'Vendors')
+        {
+            return $scope.vendorAccess.createAccess;
+        }
+        else if (activeTab == 'Orders' || activeTab == 'Cancel')
+        {
+            return $scope.saleOrderAccess.createAccess;
+        }
+        else if (activeTab == 'PO')
+        {
+            return $scope.poAccess.createAccess;
+        }
+        else if (activeTab == 'Salereturn' || activeTab == 'SalereturnWithoutId')
+        {
+            return $scope.saleReturnAccess.createAccess;
+        }
+        else if (activeTab == 'Purchase Return With ID' || activeTab == 'Purchase Return Without ID')
+        {
+            return $scope.purchaseReturnAccess.createAccess;
+        }
+    }
+
 }

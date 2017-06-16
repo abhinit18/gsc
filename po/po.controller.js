@@ -242,8 +242,8 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
 
         orderListUrl += "&uipagename="+$scope.pagename;
 
-        if ($scope.singleorderData.skuId) {
-            orderListUrl += "&skuid=" + $scope.singleorderData.skuId;
+        if ($scope.skuId) {
+            orderListUrl += "&skuid=" + $scope.skuId;
         }
         if ($scope.vendorId) {
             orderListUrl += "&vendorid=" + $scope.vendorId;
@@ -957,9 +957,17 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
 
     //remove the product
     $scope.removeProduct = function(index) {
-        $scope.products.splice(index, 1);
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
     };
-
+    $scope.deleteSelectedItem = function(){
+        $scope.products.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
+    };
     $scope.validateFormData = function() {
 
         if($scope.singleorderData.wareHouses == null || $scope.singleorderData.wareHouses == undefined)
@@ -1566,11 +1574,31 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
             console.log(dayDatacollapse);
         }
     }
-        //console.log($scope.orderLists);
+
+    $scope.setShowInvoiceFlag = function (index) {
+
+        $scope.showinvoice = false;
+	    var tablePurchaseOrderSkus = $scope.orderLists[index].tablePurchaseOrderSkuses;
+	    if(tablePurchaseOrderSkus != null && tablePurchaseOrderSkus.length > 0)
+        {
+            for(var poskucounter=0; poskucounter<tablePurchaseOrderSkus.length;poskucounter++)
+            {
+                var tableSkuData = tablePurchaseOrderSkus[poskucounter];
+                if(tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6 )
+                {
+                    $scope.showinvoice = true;
+                }
+            }
+        }
+
+
+    }
+
 //    ================================== table row expnsion ================================= //
 
     $scope.selectTableRow = function(index, storeId) {
 
+	    $scope.setShowInvoiceFlag(index);
         console.log(index);
         console.log(storeId);
         if (typeof $scope.dayDataCollapse === 'undefined') {
@@ -1921,14 +1949,14 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
             //shippingCountUrl += "&warehouseid=" + $scope.channels;
             //deliveredCountUrl += "&warehouseid=" + $scope.channels;
         }
-        if ($scope.singleorderData.skuId) {
-            newCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            processCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            holdCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            returnCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            cancelledCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            allCountUrl += "&skuid=" + $scope.singleorderData.skuId;
-            draftCountUrl += "&skuid=" + $scope.singleorderData.skuId;
+        if ($scope.skuId) {
+            newCountUrl += "&skuid=" + $scope.skuId;
+            processCountUrl += "&skuid=" + $scope.skuId;
+            holdCountUrl += "&skuid=" + $scope.skuId;
+            returnCountUrl += "&skuid=" + $scope.skuId;
+            cancelledCountUrl += "&skuid=" + $scope.skuId;
+            allCountUrl += "&skuid=" + $scope.skuId;
+            draftCountUrl += "&skuid=" + $scope.skuId;
             //shippingCountUrl += "&skuid=" + $scope.skuId;
             //deliveredCountUrl += "&skuid=" + $scope.skuId;
         }
@@ -2896,6 +2924,12 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
         $scope.imageInputValue = {};
         $scope.multipleImagesList = [];
 
+        $scope.totalGross = 0.00;
+        $scope.totalDiscount = 0.00;
+        $scope.totalNet = 0.00;
+        $scope.totalTax = 0.00;
+
+
         $('#addPoInvoice').modal('show');
 
     }
@@ -3484,14 +3518,16 @@ function poController($rootScope, $scope, $http, $location, $filter, baseUrl, $m
 			
 		$http.get(baseUrl + '/omsservices/webapi/skus/'+id).success(function(data) {
         console.log(data);
-		 
-		$scope.singleorderData.productObj = data;
-        $scope.skuId = data.idtableSkuId;
-        $scope.singleorderData.skuId = data.idtableSkuId;
+
 		if($scope.genericData.check == true){
+
+            $scope.singleorderData.productObj = data;
+            $scope.singleorderData.skuId = data.idtableSkuId;
 			$scope.$broadcast("angucomplete-alt:changeInput", "products", data);
 		}else{
+            $scope.skuId = data.idtableSkuId;
 			$scope.$broadcast("angucomplete-alt:changeInput", "productsfilter", data);
+
 		}
         }).error(function(error, status) {
             console.log(error);

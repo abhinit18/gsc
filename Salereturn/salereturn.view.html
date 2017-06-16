@@ -325,7 +325,7 @@
                                         Rs {{ totalCostPerProduct(tableSkuData)  | priceOrHyphen}}
                                     </span>
                         <span class="pull-right" style="margin-right: 20px;" ng-if="defaultTab != 'cancelled'">
-                                    <div ng-if="tableSkuData.tableSaleReturnSkuStateType.idtableSaleReturnSkuStateTypeId!=6 && access.editAccess">
+                                    <div ng-if="tableSkuData.tableSaleReturnSkuStateType.idtableSaleReturnSkuStateTypeId == 1 && access.editAccess">
                                         <button
                                                 ng-click="cancelSaleOrderReturnBox($event,orderData.idtableSaleReturnId,tableSkuData.idtableSaleReturnSkuId);"
                                                 class="btn btn-default mybut1">
@@ -688,13 +688,6 @@
                                                     <th style="text-align: right;"><span
                                                             class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Returnable Quantity
                                                     </th>
-
-                                                    <th style="text-align: right;"><span
-                                                            class="fa fa-cart-arrow-down fa-md"></span>&nbsp;&nbsp;Cost/SKU
-                                                    </th>
-                                                    <th style="text-align: right;"><span
-                                                            class="fa fa-cart-arrow-down fa-md"></span>&nbsp;Total Cost
-                                                    </th>
                                                     <th style="text-align: center;"><span class="fa fa-pencil fa-md"></span>&nbsp;&nbsp;Action
                                                     </th>
                                                 </tr>
@@ -712,12 +705,7 @@
                                                                 ng-model = "tableSaleReturnSku.tableSaleReturnSkuQuantity"
                                                         >
                                                     </td>
-                                                    <td><p>
-                                                        {{getTotalForSaleOrder(getSaleOrderSku(tableSaleReturnSku.tableSku))}}</p>
-                                                    </td>
-                                                    <td><p>
-                                                        {{[getTotalForSaleOrder(getSaleOrderSku(tableSaleReturnSku.tableSku))]*singleorderReturnData.tableSaleOrder.tableSaleOrderSkuses[$index].tableSaleOrderSkusSkuQuantity}}</p>
-                                                    </td>
+
                                                     <td style="text-align: center; padding: 0;" >
                                                         <md-button ng-if="singleorderReturnData.tableSaleReturnSkus.length > 1" class="md-icon-button" md-no-ink="true"
                                                                    ng-click="removeProduct($index)" placeholder="Delete"
@@ -910,7 +898,7 @@
                         Cancel
                     </button>
                     <button type="button" class="action-btn"
-                            ng-if="singleOrderReturnMode != 'edit' && singleOrderReturnMode != 'copy'"
+                            ng-if="singleOrderReturnMode != 'edit'"
                             ng-click="saveSingleOrderReturn()">Save
                     </button>
                     <button type="button" class="action-btn"
@@ -1002,10 +990,11 @@
 <div ng-include src="'Salereturn/editRemarksModal.html'"></div>
 <div ng-include src="'Salereturn/infoBoxDialog.html'"></div>
 <div ng-include src="'order/shippingCarriersSelectionDialog.html'"></div>
-<div ng-include src="'order/cancelOrderDialog.html'"></div>
+<div ng-include src="'Salereturn/cancelSaleReturnDialog.html'"></div>
 <div ng-include src="'order/exportFileDialog.html'"></div>
 <div ng-include src="'services/CommonMasterSkuDialog.html'"></div>
 <div ng-include src="'services/CommonMasterCustomerDialog.html'"></div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html'"></div>
 <!-- Add New Customer Dialog -->
 <div ng-include src="'customer/addNewCustomerDialog.html'"></div>
 <!-- Add New Customer Shipping Addresss Dialog -->

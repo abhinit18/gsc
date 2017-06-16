@@ -37,74 +37,76 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
         }
     )
 
-    $scope.onCategoryMasterSelected = function ()
-    {
-        var setCategoryMasterURL = baseUrl + "/omsservices/webapi/clientprofiles/categorymaster?option=" + $scope.genericData.selectedCategoryMaster;
 
-        $http({
-            method: 'PUT',
-            url: setCategoryMasterURL,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).success(function(response)
-        {
-            $('#askCateogryMaster').modal('hide');
-            if($scope.genericData.selectedCategoryMaster == 'Standard') {
-                growl.success('GS1 ' + $scope.genericData.selectedCategoryMaster + ' has been configured as default category master');
-            }
-            if($scope.genericData.selectedCategoryMaster == 'Amazon') {
-                growl.success($scope.genericData.selectedCategoryMaster + ' has been configured as default category master');
-            }
-            $scope.getAllNodes();
-
-
-        }).error(error,status)
-        {
-            if(status == 400)
-            {
-                growl.error(error.errorMessage);
-            }
-            else
-            {
-                growl.error('Failed to set ' + $scope.genericData.selectedCategoryMaster + ' as default category master  ');
-            }
-        }
-    }
-
-    $scope.getCategoryMasterFlag = function () {
-
-        var getCategoryMasterFlagURL = baseUrl + "/omsservices/webapi/clientprofiles/askcategorymaster";
-
-        $http.get(getCategoryMasterFlagURL).success(function(data)
-        {
-
-            if(data == true)
-            {
-                $('#askCateogryMaster').modal('show');
-            }
-            else
-            {
-                $scope.getAllNodes();
-            }
-
-        }).error(function(error, status)
-        {
-            if(status == 400)
-            {
-                growl.error(error.errorMessage);
-            }
-            else
-            {
-                growl.error("Failed to get category master");
-            }
-        });
-    }
-
-    $scope.getCategoryMasterFlag();
 
     $scope.setSelected = function (selected) {
         $scope.genericData.selectedCategory = selected;
+
+        var getAllParentsUrl = baseUrl + "/omsservices/webapi/skunode/" + $scope.genericData.selectedCategory.idskuNodeId  + "/parents";
+        $http.get(getAllParentsUrl).success(function (data)
+        {
+            console.log(data);
+            var level = 0;
+            level+=$scope.genericData.startIndex;
+            var httpArr = [];
+            for(var parentcounter=data.length-1; parentcounter >= 0; parentcounter--)
+            {
+                if($scope.selectedcategory[level] == null)
+                {
+                    $scope.selectedcategory.push({});
+                }
+                $scope.selectedcategory[level].selected = data[parentcounter];
+
+                if($scope.selectedcategory.length > level+1)
+                {
+                    $scope.selectedcategory.splice(level+1, $scope.selectedcategory.length);
+                }
+
+                if($scope.category.length > level+1)
+                {
+                    $scope.category.splice(level+1, $scope.category.length);
+                }
+
+                var getChildNodesUrl = baseUrl +"/omsservices/webapi/skunode/"+ $scope.selectedcategory[level].selected.idskuNodeId +"/childnodes";
+
+                var req = {
+                    method: 'GET',
+                    timeout: 30000,
+                    url: getChildNodesUrl
+                };
+
+                httpArr.push($http(req));
+
+
+                level++;
+            }
+
+            if($scope.selectedcategory[level] == null)
+            {
+                $scope.selectedcategory.push({});
+            }
+            $scope.selectedcategory[level].selected = selected;
+
+            $q.all(httpArr).then(function(response)
+            {
+
+                var respcounter=0;
+                for(respcounter=0; respcounter < data.length; respcounter++)
+                {
+                    $scope.category.push(response[respcounter].data);
+                }
+
+            }).catch(function(response) {
+                //error resonse
+            })
+
+        }).error(function (error, status)
+        {
+            if(status == 400)
+            {
+                growl.error(error.errorMessage);
+            }
+        });
 
         //TODO:
         //Send a backend request to get all parents and set them selected //use {nodeid}/parents
@@ -177,16 +179,136 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
         }
     };
 
+    //Generic Start
 
-    //=========================== list of parent nodes ================== //
+    $scope.genericData.startIndex = 0;
+    $scope.category = [];
+    $scope.selectedcategory = [];
 
-    $scope.getAllNodes = function () {
-        var NodeUrl = baseUrl + "/omsservices/webapi/skunode/parentnodes";
-        $http.get(NodeUrl).success(function (data) {
-            console.log(data);
-            $scope.menuItems = data;
-        }).error(function (error, status) {
-            console.log(error);
+    $scope.onLeftArrowClicked = function () {
+
+        if($scope.genericData.startIndex > 0)
+        {
+            $scope.genericData.startIndex--;
+        }
+    }
+
+    $scope.onRightArrowClicked = function () {
+
+        if($scope.genericData.startIndex + 4 < $scope.category.length)
+        {
+            $scope.genericData.startIndex++;
+        }
+    }
+
+    $scope.onCategorySelected = function(level,category)    {
+        level+=$scope.genericData.startIndex;
+        if($scope.selectedcategory[level] == null)
+        {
+            $scope.selectedcategory.push({});
+        }
+        $scope.selectedcategory[level].selected = category;
+
+        if($scope.selectedcategory.length > level+1)
+        {
+            $scope.selectedcategory.splice(level+1, $scope.selectedcategory.length);
+        }
+
+        if($scope.category.length > level+1)
+        {
+            $scope.category.splice(level+1, $scope.category.length);
+        }
+
+        var getChildNodesUrl = baseUrl +"/omsservices/webapi/skunode/"+ $scope.selectedcategory[level].selected.idskuNodeId +"/childnodes";
+        $http.get(getChildNodesUrl).success(function (data)
+        {
+            $scope.category.push(data);
+        }).error(function (error, status)
+        {
+            if(status == 400)
+            {
+                growl.error(error.errorMessage);
+            }
+            else
+            {
+                growl.error("Failed to get child categories for selected category.");
+            }
+        });
+
+    }
+
+    $scope.onAddCategoryClicked = function(level)    {
+        level+=$scope.genericData.startIndex;
+        $scope.genericData.selectedlevel = level;
+        $('#AddCategoryTemp').modal('show');
+    }
+
+    $scope.onSaveCategoryClicked = function () {
+
+        var addCategoryUrl = "";
+        if($scope.genericData.selectedlevel == 0)
+        {
+            addCategoryUrl = baseUrl + '/omsservices/webapi/skunode';
+        }
+        else
+        {
+            addCategoryUrl = baseUrl + '/omsservices/webapi/skunode/'+$scope.selectedcategory[$scope.genericData.selectedlevel-1].selected.idskuNodeId +'/addchild';
+        }
+        if($scope.categoryName == null || $scope.categoryName == undefined || $scope.categoryName == "")
+        {
+            growl.error('Category name is required.');
+            return;
+        }
+        else
+        {
+            var postcategoryData = {
+                "skuNodeName": $scope.categoryName,
+                "skuNodeHasChild" : false,
+                "skuNodeBrowseNodeId": null,
+                "skuNodePathName": null,
+                "skuNodeIsSelected": false,
+                "skuNodeIsStandard": false,
+                "tableSkuNodeAttributeTypes": []
+            };
+            $http({
+                method: 'POST',
+                url: addCategoryUrl,
+                data: postcategoryData,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).success(function(data)
+            {
+                $('#AddCategoryTemp').modal('hide');
+                $scope.categoryName = "";
+                $scope.selectedcategory[$scope.genericData.selectedlevel-1].selected.skuNodeHasChild = true;
+                if($scope.category[$scope.genericData.selectedlevel] == null)
+                {
+                    $scope.category.push(new Array());
+                }
+                $scope.category[$scope.genericData.selectedlevel].push(data);
+                growl.success('Category added successfully.');
+            }).error(function(error,status)
+            {
+                if(status == 400)
+                {
+                    growl.error(error.errorMessage);
+                }
+                else
+                {
+                    growl.error("Failed to add category.");
+                }
+            });
+        }
+    }
+
+    $scope.getParentNodes = function ()    {
+        var getParentNodesUrl = baseUrl + "/omsservices/webapi/skunode/parentnodes";
+        $http.get(getParentNodesUrl).success(function (data)
+        {
+            $scope.category.push(data);
+        }).error(function (error, status)
+        {
             if(status == 400){
                 growl.error(error.errorMessage);
             }
@@ -195,6 +317,74 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
             }
         });
     };
+
+    //Generic End
+
+    $scope.onCategoryMasterSelected = function ()
+    {
+        var setCategoryMasterURL = baseUrl + "/omsservices/webapi/clientprofiles/categorymaster?option=" + $scope.genericData.selectedCategoryMaster;
+
+        $http({
+            method: 'PUT',
+            url: setCategoryMasterURL,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function(response)
+        {
+            $('#askCateogryMaster').modal('hide');
+            if($scope.genericData.selectedCategoryMaster == 'Standard') {
+                growl.success('GS1 ' + $scope.genericData.selectedCategoryMaster + ' has been configured as default category master');
+            }
+            if($scope.genericData.selectedCategoryMaster == 'Amazon') {
+                growl.success($scope.genericData.selectedCategoryMaster + ' has been configured as default category master');
+            }
+            $scope.getParentNodes();
+
+
+        }).error(error,status)
+        {
+            if(status == 400)
+            {
+                growl.error(error.errorMessage);
+            }
+            else
+            {
+                growl.error('Failed to set ' + $scope.genericData.selectedCategoryMaster + ' as default category master  ');
+            }
+        }
+    }
+
+    $scope.getCategoryMasterFlag = function () {
+
+        var getCategoryMasterFlagURL = baseUrl + "/omsservices/webapi/clientprofiles/askcategorymaster";
+
+        $http.get(getCategoryMasterFlagURL).success(function(data)
+        {
+
+            if(data == true)
+            {
+                $('#askCateogryMaster').modal('show');
+            }
+            else
+            {
+                $scope.getParentNodes();
+            }
+
+        }).error(function(error, status)
+        {
+            if(status == 400)
+            {
+                growl.error(error.errorMessage);
+            }
+            else
+            {
+                growl.error("Failed to get category master");
+            }
+        });
+    }
+
+    $scope.getCategoryMasterFlag();
 
 
     //======================= selected parent Node ====================== //

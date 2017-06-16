@@ -398,13 +398,13 @@ function DiscountController($scope, $http, $location, baseUrl, commonPathUrl, $m
             $scope.angucompleteTitleField = "skuNodePathNameFormatted";
             $scope.discountData.tableDiscountSkuExclusions = [];
             $scope.genericData.searchedCategory = "";
-            $scope.discountData.tableDiscountRuleAllSkuSelected = null;
+            $scope.discountData.tableDiscountRuleAllSkuSelected = false;
         }
         if (data == "SKU") {
             $scope.angucompleteTitleField = "tableSkuName";
             $scope.entitySearchUrl = $scope.skuSearchUrl;
             $scope.discountData.tableDiscountSkuCategoryExclusions = [];
-            $scope.discountData.tableDiscountRuleAllCategorySelected = null;
+            $scope.discountData.tableDiscountRuleAllCategorySelected = false;
         }
     };
 
@@ -653,6 +653,12 @@ function DiscountController($scope, $http, $location, baseUrl, commonPathUrl, $m
             growl.error("Sales channel is required and at least one sales channel is required in list");
             return false;
         }
+        if ($scope.discountData.tableDiscountRuleSelectedEntity == null)
+        {
+            growl.error("Configure SKU/Categories for this rule");
+            return false;
+        }
+
         if ($scope.discountData.tableDiscountRuleAllCategorySelected == false && $scope.discountData.tableDiscountRuleSelectedEntity == 'Category' && $scope.discountData.tableDiscountSkuCategoryExclusions.length == 0) {
             growl.error("Category is required and at least one category is required in list ");
             return false;

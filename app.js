@@ -548,6 +548,21 @@ myApp.config(['growlProvider', function(growlProvider) {
 
 myApp.config(['$httpProvider' , '$locationProvider', 'growlProvider',  function ($httpProvider, $locationProvider , growlProvider) {
     $httpProvider.interceptors.push(function ($q , $location, growl, $cookies,$rootScope) {
+
+        $rootScope.$on( "$routeChangeStart", function(event, next, current)
+        {
+            console.log(event);
+            console.log(current);
+            console.log(next);
+            if(next.$$route.templateUrl.search("signUpSuccess.view.html") != -1)
+            {
+                if(current == null || current == undefined)
+                {
+                    $location.path('/login');
+                }
+            }
+        });
+
         return {
             'response': function (response) {
                 return response;
@@ -555,8 +570,6 @@ myApp.config(['$httpProvider' , '$locationProvider', 'growlProvider',  function 
             'responseError': function (rejection) {
                 if(rejection.status === 401) {
                     $rootScope.$on( "$routeChangeStart", function(event, next, current) {
-                        console.log(current);
-                        console.log(next);
                         $('.modal').modal('hide');
                     });
                     growl.error('Your session is expired. Please login again.');
@@ -1123,6 +1136,24 @@ myApp.directive("preventTypingGreater", function() {
             });
         }
     };
+});
+
+myApp.directive('wrapOwlcarousel', function () {
+
+    return {
+
+        restrict: 'E',
+
+        link: function (scope, element, attrs) {
+
+            var options = scope.$eval($(element).attr('data-options'));
+
+            $(element).owlCarousel(options);
+
+        }
+
+    };
+
 });
 
 myApp.config(function($sceDelegateProvider) {

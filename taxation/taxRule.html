@@ -148,12 +148,12 @@
                                     </td>
                                     <td class="text-center">
                                         <md-button class="md-icon-button" md-no-ink="true"
-                                                   ng-click="access.editAccess && removeTaxClassFromExistingTaxRule(taxruleData)" placeholder="Delete"
-                                                   ng-class="{disableAccess: !access.editAccess || taxruleData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
+                                                   ng-click="access.createAccess && removeTaxClassFromExistingTaxRuleConfirmation(taxruleData)" placeholder="Delete"
+                                                   ng-class="{disableAccess: !access.createAccess || taxruleData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"
                                                    style="padding: 0px !important; margin: 0 !important; height: 0px;">
                                             <md-icon md-svg-src="{{imgsrc1}}" aria-label="Delete Image"
                                                      ng-init="imgsrc1='images/svg/delete.svg'"
-                                                     ng-mouseover="access.editAccess && (imgsrc1='images/svg/delete_hover.svg')"
+                                                     ng-mouseover="access.createAccess && (imgsrc1='images/svg/delete_hover.svg')"
                                                      ng-mouseout="imgsrc1='images/svg/delete.svg'"
                                                      style="width: 20px;"></md-icon>
                                         </md-button>
@@ -171,3 +171,5 @@
                 </div>
            </div>
         </div>
+
+        <div ng-include src="'services/CommonDeleteConfirmationDialog.html'"></div>

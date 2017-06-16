@@ -185,12 +185,12 @@ function inventoryController($rootScope, $scope, $http, $location, $mdDialog, $m
 
     $scope.PT = {};
     $scope.listOfVendors = function(skuID) {
-        $scope.vendorsData = [];
         var vendorsListUrl = baseUrl + "/omsservices/webapi/vendors/vendorsforsku/"+skuID;
         // console.log(channelListUrl);
         $http.get(vendorsListUrl).success(function(data) {
             console.log(data);
             $scope.vendorsLists = data;
+            $scope.vendorsData = [];
             for (var i = 0; i < $scope.vendorsLists.length; i++) {
                 $scope.vendorsData.push($scope.vendorsLists[i]);
             }
@@ -888,6 +888,7 @@ function inventoryController($rootScope, $scope, $http, $location, $mdDialog, $m
     // dialog box to add new inventory
     $scope.showAdvanced = function(ev)
     {
+        $scope.vendorsData = [];
         $scope.selectedSku = null;
         $scope.skuClientCode = null;
         $scope.TableSkuName = null;

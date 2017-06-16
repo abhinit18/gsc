@@ -120,8 +120,8 @@
             </ul>
         </div>
         <div class="col-md-2">
-            <button id="addOrder" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="initAddOrderModal($event);">
-                <img src="images/svg/add.svg" style="height:20px;" ng-if="access.createAccess">
+            <button id="addOrder" type="button" class="btn addsharpbutton font pull-right" style="min-width: 160px;" ng-click="initAddOrderModal($event);" ng-if="access.createAccess">
+                <img src="images/svg/add.svg" style="height:20px;" >
                 &nbsp;&nbsp;Add Stock Order
             </button>
         </div>
@@ -547,6 +547,7 @@
 
     <!-- Add New Customer Shipping Addresss Dialog -->
     <div ng-include src="'customer/addNewShippingAddressDialog.html'"></div>
+    <div ng-include src="'services/CommonDeleteConfirmationDialog.html'"></div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript">

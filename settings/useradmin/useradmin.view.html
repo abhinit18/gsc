@@ -89,17 +89,17 @@
 
                     <span>
                     <ul class="list-inline" ng-if="user.isSelf == false && user.tableOmsUserSuperAdmin == false">
-                        <li style="border-right:1px solid gray;">
+                        <li >
                             <a href="javascript:void(0);"
                                ng-if="user.tableOmsUserStatusType != 'Active'"
-                               ng-click="access.editAccess && activationLink(user,'active');"><img ng-attr-title="{{!access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"  ng-class="{disableAccess: !access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"  ng-src="images/svg/black_list.svg"
+                               ng-click="access.editAccess && activationLink(user,'active');"><img ng-src="images/svg/black_list.svg"
                                                                               title="Activate user" style="width:20px;"></a>
                             <a href="javascript:void(0);"
                                ng-if="user.tableOmsUserStatusType == 'Active'"
-                               ng-click="access.editAccess && activationLink(user,'deactive')"><img ng-attr-title="{{!access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1 ? 'You do not have permission' : 'Edit'}}"  ng-class="{disableAccess: !access.editAccess || user.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableSalesChannelType.idtableSalesChannelTypeId == 1}"  ng-src="images/svg/white_list.svg"
+                               ng-click="access.editAccess && activationLink(user,'deactive')"><img ng-src="images/svg/white_list.svg"
                                                                                title="Block user" style="width:20px;"></a>
                         </li>
-                        <li>
+                        <li style="border-left:1px solid gray;" ng-if="user.tableOmsUserGroup.tableOmsUserGroupName != 'ROLE_VENDOR'">
                             <!--images/svg/edit.svg-->
                             <a href="javascript:void(0);" ng-click="access.editAccess && EditUserAdmin(user)"><img ng-src="images/svg/edit.svg" style="width: 20px;"></a>
                         </li>
@@ -198,7 +198,7 @@
 
 
                                                 <select ng-model="RoleType" id="UserRole" name="URole" required ng-change="checkRole(option.tableOmsUserGroupName)"
-                                                        ng-options="option.tableOmsUserGroupName for option in selectRole track by option.idtableOmsUserGroupId" >
+                                                        ng-options="option.tableOmsUserGroupName disable when option.tableOmsUserGroupName == 'ROLE_VENDOR' && EditUser for option in selectRole track by option.idtableOmsUserGroupId" >
                                                     <!--ng-change="userChange()"-->
 
                                                     <option value="" disabled selected style="display: none;">Select role</option>
@@ -215,9 +215,9 @@
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 text-left"
                                              style="margin-top:-5px;padding: 0px;">
-                                            <a data-toggle="modal" ng-click="EditRole()"
+                                            <a data-toggle="modal" ng-click="EditRole()" ng-if="access.editAccess"
                                                class="btn btn-default btn-sm">Edit Role</a>
-                                            <a href="javascript:void(0);" ng-click="addRole()"
+                                            <a href="javascript:void(0);" ng-click="addRole()" ng-if="access.createAccess"
                                                class="btn btn-danger btn-sm" data-target="#AddUserNewRole" data-toggle="modal" style="background-color: #EA512D;">+ Add
                                                 Role</a>
                                         </div>
@@ -651,7 +651,7 @@
                             <button type="button" class="cancel-btn"  ng-click="cancelAddNewRoleUserModal()">
                                 Cancel
                             </button>
-                            <button type="submit" class="action-btn" ng-if="editPermission && RoleType.idtableOmsUserGroupId != 1" ng-click="createRoles()">
+                            <button type="submit" class="action-btn" ng-if="editPermission && !isSystemDefinedRole()" ng-click="createRoles()">
                                 Update Roles
                             </button>
                             <button type="button" class="action-btn" ng-if="createPermission" ng-click="createRoles()">Submit</button>

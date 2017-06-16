@@ -12,15 +12,15 @@
                 </div>
             </md-toolbar>
             <ul class="nav nav-tabs">
-                <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
+                <li class="active"><a data-target="#vendortab1" data-toggle="tab" class="btn sharp"
                                       ng-click="singleVendorTabMode()">Single Vendor</a></li>
-                <li ng-if="singleVendorMode == 'add' && vendorMode=='add'"><a data-target="#tab2" data-toggle="tab" class="btn sharp"
+                <li ng-if="singleVendorMode == 'add' && vendorMode=='add'"><a data-target="#vendortab2" data-toggle="tab" class="btn sharp"
                                                            ng-click="bulkVendorTabMode()">Bulk Vendor</a></li>
             </ul>
             <md-dialog-content>
                 <div class="md-dialog-content">
                     <div class="tab-content">
-                        <div class="tab-pane active container-fluid vendorTabHeight" id="tab1">
+                        <div class="tab-pane active container-fluid vendorTabHeight" id="vendortab1">
 							<form name="addVendorForm">
 								<div layout="row">
                                     <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 no-padding">
@@ -400,7 +400,7 @@
 
                         <!--===================================== add vendor for bulk upload =======================-->
 
-                        <div class="tab-pane container-fluid vendorTabHeight" id="tab2">
+                        <div class="tab-pane container-fluid vendorTabHeight" id="vendortab2">
                             <div class="row row-margin-top-large row-margin-bottom-large text-center">
                                 <div class="col-md-6 light-grey-right-border">
                                     <div id="uploadFileButton" class="uploadFileBulkOrder"

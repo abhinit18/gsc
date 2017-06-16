@@ -2176,7 +2176,7 @@ function orderController($rootScope ,$scope, $http, $location, $filter, baseUrl,
 
         var exportUrl = baseUrl+'/omsservices/webapi/orders/export?';
 
-        orderListUrl += "&uipagename="+$scope.pagename;
+        exportUrl += "&uipagename="+$scope.pagename;
 
         if (!$scope.filter.saleChannel) {
             exportUrl += "&salesChannel=0";
@@ -2539,21 +2539,6 @@ function orderController($rootScope ,$scope, $http, $location, $filter, baseUrl,
     //=============================== Print invoice slip Lables ================================== //
 
     //== will be view after packed and shipping allocated.. id= 13 , 14 , 15
-    function showInvoiceError(error) {
-        alert = $mdDialog.alert({
-            title: 'Attention',
-            textContent: error +'. Please go to the tax section and add tax rules.',
-            ok: 'Close'
-        });
-
-        $mdDialog
-            .show( alert )
-            .finally(function() {
-                alert = undefined;
-            });
-    }
-
-
     $scope.printinvoiceLabel = function(value){
         console.log(value);
         $scope.previewTemp = baseUrl+'/omsservices/webapi/orders/'+value.idtableSaleOrderId+'/invoiceslip';
@@ -2563,7 +2548,8 @@ function orderController($rootScope ,$scope, $http, $location, $filter, baseUrl,
             console.log(error);
             if(status == 400){
                 //growl.error(error.errorMessage);
-                showInvoiceError(error.errorMessage)
+                $scope.invoiceError = error.errorMessage;
+                $('#InvoiceErrorModal').modal('show');
             }
             else{
                 growl.error("Failed to download invoice");
@@ -3484,7 +3470,16 @@ function orderController($rootScope ,$scope, $http, $location, $filter, baseUrl,
 
     //remove the product
     $scope.removeProduct = function(index) {
-        $scope.products.splice(index, 1);
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
+    };
+    $scope.deleteSelectedItem = function(){
+        $scope.products.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+      $('#masterDeleteDialogue').modal('hide');
     };
     //load the warehouses from backenf for select warehouse in timeline feature.
     $scope.loadWareHouses = function(orderId, tableSaleOrderId) {

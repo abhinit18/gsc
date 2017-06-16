@@ -240,13 +240,13 @@
                             <!-- Footer Rows -->
                             <div class="row add-address-row">
                                 <div class="col-xs-5">
-                                    <span ng-click="addAddress(vendorData.idtableVendorId)" ng-if="access.createAccess">Add Address</span>
+                                    <span ng-click="addAddress(vendorData.idtableVendorId)" ng-if="access.editAccess">Add Address</span>
                                 </div>
                                 <div class="col-xs-3">
-                                    <span data-toggle="modal" data-target="#addVendorSku" ng-if="access.createAccess" ng-click="addVendorSkuGetId(vendorData.idtableVendorId)">Add Vendor SKU</span>
+                                    <span data-toggle="modal" data-target="#addVendorSku" ng-if="access.editAccess" ng-click="addVendorSkuGetId(vendorData.idtableVendorId)">Add Vendor SKU</span>
                                 </div>
 								<div class="col-xs-4">
-                                    <span data-toggle="modal" ng-click="showSkuMapWithVendorDialog($event, vendorData.idtableVendorId, $index)" ng-if="access.createAccess">Map SKUs</span>
+                                    <span data-toggle="modal" ng-click="showSkuMapWithVendorDialog($event, vendorData.idtableVendorId, $index)" ng-if="access.editAccess">Map SKUs</span>
                                 </div>
                                 <hr />
                             </div>

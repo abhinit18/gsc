@@ -892,7 +892,30 @@
             </div>
         </div>
         <div ng-include src="'order/editRemarksModal.html'"></div>
-
+        <div class="modal fade" id="InvoiceErrorModal" role="dialog" data-backdrop="static" data-keyboard="false"
+             aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: #F2F7F8;"
+                         height="100px">
+                        <p class="dialog-heading-p text-center">Message</p>
+                    </div>
+                    <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
+                        <div class="container-fluid">
+                            <div class="row row-margin-top row-margin-bottom text-center">
+                                <div class="col-md-12">
+                                    <span class="font">{{invoiceError}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+                        <button type="button" class="cancel-btn" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 <style>
     .sidebar-btn button{
         margin-bottom:10px;

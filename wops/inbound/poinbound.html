@@ -242,7 +242,7 @@
                         <div class="full-width" style="background:#fff;padding: 10px 10px 5px 10px;" ng-if="access.editAccess">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                  <span class="sidebar-btn full-width" style="margin-right: 20px;" >
-									<button type="button"
+									<button type="button" ng-if="access.editAccess && showinvoice==true"
                                             ng-click="OpenAddInvoiceDialog(poData)"
                                             class="pull-right btn btn-default mybut1 mybutton1">
                                         Add Invoice
@@ -281,8 +281,7 @@
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <span class="pull-right">
 
-                                    <button type="button" class="btn btn-default  mg-btm mybutton1" ng-if="access.editAccess"
-                                            ng-if="(tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6)"
+                                    <button type="button" class="btn btn-default  mg-btm mybutton1" ng-if="access.editAccess && (tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7 || tableSkuData.tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6)"
                                             ng-click ="showGRNoperation($event,tableSkuData,poData)"> <!-- &&(poData.tableWarehouseDetails.tableWarehouseType.idtableWarehouseTypeId == 2) -->
                                         GRN
                                     </button>

@@ -15,7 +15,7 @@
             <div class="modal-body" style="overflow-x: hidden;padding-top: 0px">
                 <div class="container-fluid">
                     <div class="row row-margin-top">
-                        <div class="col-md-3 margin-top-5" ng-if="modalRemarks.length > 0">
+                        <div class="col-md-3 margin-top-5">
                             <span class="semi-bold-text" ng-if="!access.editAccess">Remarks</span>
                             <span class="semi-bold-text" ng-if="access.editAccess">Old Remarks</span>
                         </div>
@@ -42,6 +42,9 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="col-md-8 margin-top-5" ng-if="modalRemarks==null || modalRemarks.length <= 0">
+                            <span>No Remarks</span>
                         </div>
                     </div>
                 </div>

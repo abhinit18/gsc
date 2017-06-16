@@ -91,10 +91,27 @@ function taxationController($scope, $http, $location, baseUrl,commonPathUrl, $md
             )
         }
     };
-    $scope.removeTaxClassFromTaxRule = function (index) {
-        $scope.taxRule.tableTaxRuleClassMaps.splice(index,1);
+    $scope.removeTaxClassFromTaxRule = function(index) {
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
     };
-
+    var removeTaxRuleData;
+    $scope.removeTaxClassFromExistingTaxRuleConfirmation = function(data){
+        $('#masterDeleteDialogue').modal('show');
+        removeTaxRuleData = data;
+    };
+    $scope.deleteSelectedItem = function(){
+        if($scope.deleteDialogBoxforListedRules == false){
+            $scope.taxRule.tableTaxRuleClassMaps.splice($scope.genericData.deleteItemIndex, 1);
+        }else{
+         $scope.removeTaxClassFromExistingTaxRule(removeTaxRuleData);
+        }
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
+    };
 
     $scope.showAddTaxClassModal = function(){
         $scope.taxData = {};
@@ -152,8 +169,10 @@ function taxationController($scope, $http, $location, baseUrl,commonPathUrl, $md
         $scope.ScopeTypeRule = "Service";
     };
 
+    $scope.deleteDialogBoxforListedRules = true;
     $scope.ShowAddNewTaxRule = function(){
         $scope.genericData.disableButton=false;
+        $scope.deleteDialogBoxforListedRules = false;
         $scope.getTaxClasses();
         $scope.taxRule = {};
         $scope.taxRule.tableTaxRuleClassMaps = [];
@@ -170,6 +189,7 @@ function taxationController($scope, $http, $location, baseUrl,commonPathUrl, $md
         $scope.genericData.selectedTaxClass = "";
         $scope.taxRule.tableTaxRuleClassMaps = [];
         $scope.taxRule.tableSkuNode = "";
+        $scope.deleteDialogBoxforListedRules = true;
         $mdDialog.hide();
     };
 

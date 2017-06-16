@@ -1,7 +1,7 @@
 myApp.controller('purchaseReturnController', purchaseReturnController);
-purchaseReturnController.$inject = ['$scope', '$http', '$location', '$filter', 'baseUrl','commonPathUrl', '$mdDialog', '$mdMedia','$sce', 'growl', '$window', 'downloadOrderTemplateUrl', 'Upload', 'PagerService', '$q', '$routeParams', '$cookies','$timeout', 'mastersService'];
+purchaseReturnController.$inject = ['$rootScope','$scope', '$http', '$location', '$filter', 'baseUrl','commonPathUrl', '$mdDialog', '$mdMedia','$sce', 'growl', '$window', 'downloadOrderTemplateUrl', 'Upload', 'PagerService', '$q', '$routeParams', '$cookies','$timeout', 'mastersService'];
 
-function purchaseReturnController($scope, $http, $location, $filter, baseUrl, commonPathUrl, $mdDialog, $mdMedia,$sce, growl, $window, downloadOrderTemplateUrl, Upload, PagerService, $q,  $routeParams, $cookies,$timeout, mastersService)
+function purchaseReturnController($rootScope ,$scope, $http, $location, $filter, baseUrl, commonPathUrl, $mdDialog, $mdMedia,$sce, growl, $window, downloadOrderTemplateUrl, Upload, PagerService, $q,  $routeParams, $cookies,$timeout, mastersService)
 {
 
     //================================= global variables ========================== //
@@ -17,11 +17,11 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
     $scope.directionType = "desc";
 
     $scope.filterObj = {};
-    $scope.filterObj.tableWarehouseDetails = {};
+    $scope.filterObj.tableWarehouseDetails = null;
     $scope.filterObj.tablePurchaseReturnRefNo = null;
     $scope.filterObj.tablePurchaseReturnSystemOrderNo = null;
-    $scope.filterObj.tableSku = {};
-    $scope.filterObj.tableVendor = {};
+    $scope.filterObj.tableSku = null;
+    $scope.filterObj.tableVendor = null;
     $scope.filterObj.start1Date = null;
     $scope.filterObj.end1Date = null;
 
@@ -407,15 +407,19 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             if(response != null && response != undefined && response != "")
             {
                 var grnfound = false;
-                for(var skuindex=0; skuindex < response.tablePurchaseOrderSkuses.length;skuindex++)
+                var purchaseOrderSkuses = response.tablePurchaseOrderSkuses;
+                for(var skuindex=0; skuindex < purchaseOrderSkuses.length;skuindex++)
                 {
-                    if(response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 6
-                        || response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7
+                    if(response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 7
                         || response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 8
                         || response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 9
                         || response.tablePurchaseOrderSkuses[skuindex].tablePurchaseOrderSkuStateType.idtablePurchaseOrderSkuStateTypeId == 10)
                     {
                         grnfound = true;
+                    }
+                    else
+                    {
+                        response.tablePurchaseOrderSkuses.splice(skuindex,1);
                     }
                 }
                 if(grnfound == false)
@@ -430,7 +434,7 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
                 growl.error("Can't find PO with this reference !!");
             }
 
-        }).error(error, status)
+        }).error(function(error, status)
         {
             if(status == 400){
                 growl.error(error.errorMessage);
@@ -438,12 +442,14 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             else{
                 growl.error("Failed to get order");
             }
-        }
+        });
     }
 
     $scope.populateReturnOrderFromPurchaseOrder = function (response)
     {
         $scope.genericData.availableQuantitys = [];
+        $scope.genericData.OrderedQuantitys = [];
+        $scope.genericData.skuInventories = [];
         $scope.getVendorAddress(response.tableVendor);
 
         //populate data here
@@ -452,21 +458,40 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         $scope.singleorderReturnData.tablePurchaseOrder = response ;
         $scope.singleorderReturnData.tableWarehouseDetails = response.tableWarehouseDetails ;
         $scope.singleorderReturnData.tablePurchaseReturnSkus = [];
+        $scope.singleorderReturnData.tablePurchaseReturnQuantityType = $scope.quantityTypes[0];
 
         for(var orderSkuCounter = 0; orderSkuCounter < response.tablePurchaseOrderSkuses.length ; orderSkuCounter++)
         {
-            $scope.singleorderReturnData.tablePurchaseReturnSkus.push(
+            var availableQuantityOfPOurl = baseUrl+'/omsservices/webapi/purchase/order/' + response.idtablePurchaseOrderId +"/orderskus/"+ response.tablePurchaseOrderSkuses[orderSkuCounter].idtablePurchaseOrderSkusId +"/inventory";
+            var tableSku =  response.tablePurchaseOrderSkuses[orderSkuCounter].tableSku;
+            $scope.genericData.OrderedQuantitys.push(
                 {
-                    "tableSku" : response.tablePurchaseOrderSkuses[orderSkuCounter].tableSku,
+                    "tableSku" : tableSku,
                     "tablePurchaseReturnSkuQuantity" : response.tablePurchaseOrderSkuses[orderSkuCounter].tablePurchaseOrderSkusSkuQuantity
                 }
             )
-            $scope.genericData.availableQuantitys.push(
-                {
-                    "tableSku" : response.tablePurchaseOrderSkuses[orderSkuCounter].tableSku,
-                    "tablePurchaseReturnSkuQuantity" : response.tablePurchaseOrderSkuses[orderSkuCounter].tablePurchaseOrderSkusSkuQuantity
-                }
-            )
+
+            $http.get(availableQuantityOfPOurl).success(function(data)
+            {
+                $scope.genericData.skuInventories.push(data);
+                $scope.genericData.availableQuantitys.push(
+                    {
+                        "tableSku" : tableSku,
+                        "tablePurchaseReturnSkuQuantity" : data.tableSkuInventoryAvailableCount
+                    }
+                )
+                $scope.singleorderReturnData.tablePurchaseReturnSkus.push(
+                    {
+                        "tableSku" : tableSku,
+                        "tablePurchaseReturnSkuQuantity" : data.tableSkuInventoryAvailableCount
+                    }
+                )
+
+            }).error(function(error,status)
+            {
+
+            });
+
         }
 
     }
@@ -475,7 +500,23 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
     {
         for(var orderSkuCounter = 0; orderSkuCounter < $scope.genericData.availableQuantitys.length ; orderSkuCounter++)
         {
-            $scope.getAvailableQuantity($scope.genericData.availableQuantitys[orderSkuCounter].tableSku);
+            if($scope.singleorderReturnData.tablePurchaseReturnQuantityType == "Good") {
+                $scope.genericData.availableQuantitys[orderSkuCounter].tablePurchaseReturnSkuQuantity = $scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryAvailableCount;
+                $scope.singleorderReturnData.tablePurchaseReturnSkus[orderSkuCounter].tablePurchaseReturnSkuQuantity = $scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryAvailableCount;
+            }
+            if($scope.singleorderReturnData.tablePurchaseReturnQuantityType == "Bad") {
+                var badcount = 0;
+                if($scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryInwardQcFailedCount)
+                {
+                    badcount += $scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryInwardQcFailedCount;
+                }
+                if($scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryOutwardQcFailedCount)
+                {
+                    badcount += $scope.genericData.skuInventories[orderSkuCounter].tableSkuInventoryOutwardQcFailedCount;
+                }
+                $scope.genericData.availableQuantitys[orderSkuCounter].tablePurchaseReturnSkuQuantity = badcount;
+                $scope.singleorderReturnData.tablePurchaseReturnSkus[orderSkuCounter].tablePurchaseReturnSkuQuantity = badcount;
+            }
         }
     }
 
@@ -1109,8 +1150,58 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         if (selected != null)
         {
             $scope.searchedSku = selected.originalObject;
+            $scope.getInventoryByVendorAndSKUAndWarehouse(selected);
         }
     };
+
+
+    $scope.getInventoryByVendorAndSKUAndWarehouse = function(selected) {
+
+        if(selected)
+        {
+            if(!$scope.singleorderReturnData.tableWarehouseDetails.idtableWarehouseDetailsId)
+            {
+                growl.error("Select Warehouse");
+                return;
+            }
+            if(!$scope.singleorderReturnData.tableVendor.idtableVendorId)
+            {
+                growl.error("Select Vendor");
+                return;
+            }
+
+            var wareHousesListUrl = baseUrl + "/omsservices/webapi/inventory/warehouseinventory?skuid="+selected.originalObject.idtableSkuId
+                +"&warehouseid="+$scope.singleorderReturnData.tableWarehouseDetails.idtableWarehouseDetailsId+"&vendorid="+$scope.singleorderReturnData.tableVendor.idtableVendorId;
+            $http.get(wareHousesListUrl).success(function(data) {
+                if(data.length > 0)
+                {
+                    if($scope.singleorderReturnData.tablePurchaseReturnQuantityType =="Bad")
+                    {
+                        $scope.availableQuantityOfSkuAndVendor = data[0].bad;
+                    }
+                    else
+                    {
+                        $scope.availableQuantityOfSkuAndVendor = data[0].available;
+                    }
+                }
+                else
+                {
+                    $scope.availableQuantityOfSkuAndVendor = 0;
+                }
+            }).error(function(error, status)
+            {
+                console.log(error);
+                console.log(status);
+
+            });
+        }
+    }
+
+    $scope.clearProductList = function()
+    {
+        $scope.availableQuantityOfSkuAndVendor = null;
+        $scope.$broadcast('angucomplete-alt:clearInput', 'products');
+    }
 
     //============================ vendor result object ==================================== //
 
@@ -1334,14 +1425,23 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             $scope.$broadcast('angucomplete-alt:clearInput', 'products');
             $scope.genericData.returnQuantity = "";
             $scope.searchedSku = null;
+            $scope.availableQuantityOfSkuAndVendor = null;
         }
     };
 
     //remove the product
     $scope.removeProduct = function(index) {
-        $scope.singleorderReturnData.tablePurchaseReturnSkus.splice(index, 1);
+        $scope.genericData.deleteItemIndex = index;
+        $('#masterDeleteDialogue').modal('show');
     };
-
+    $scope.deleteSelectedItem = function(){
+        $scope.singleorderReturnData.tablePurchaseReturnSkus.splice($scope.genericData.deleteItemIndex, 1);
+        $scope.cancelmasterDeleteDialog();
+        growl.success('Item deleted successfully.');
+    };
+    $scope.cancelmasterDeleteDialog = function(){
+        $('#masterDeleteDialogue').modal('hide');
+    };
     $scope.totalQuantity = function(allSkus){
         var total = 0;
         for (var i = 0; i < allSkus.length; i++) {
@@ -1393,7 +1493,7 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         var shippedCountUrl = baseUrl + "/omsservices/webapi/purchasereturn/filtercount?state=shipped&uipagename="+$scope.pagename;
         var cancelledCountUrl = baseUrl + "/omsservices/webapi/purchasereturn/filtercount?state=cancelled&uipagename="+$scope.pagename;
 
-        if( $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId)
+        if( $scope.filterObj.tableWarehouseDetails!=null)
         {
             allCountUrl += "&warehouseid=" + $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId;
             newCountUrl += "&warehouseid=" + $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId;
@@ -1401,7 +1501,7 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             shippedCountUrl += "&warehouseid=" + $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId;
             cancelledCountUrl += "&warehouseid=" + $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId;
         }
-        if ($scope.filterObj.tableSku.idtableSkuId)
+        if ($scope.filterObj.tableSku != null)
         {
             allCountUrl += "&skuid=" + $scope.filterObj.tableSku.idtableSkuId;
             newCountUrl += "&skuid=" + $scope.filterObj.tableSku.idtableSkuId;
@@ -1409,7 +1509,7 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             shippedCountUrl += "&skuid=" + $scope.filterObj.tableSku.idtableSkuId;
             cancelledCountUrl += "&skuid=" + $scope.filterObj.tableSku.idtableSkuId;
         }
-        if ($scope.filterObj.tableVendor.idtableVendorId)
+        if ($scope.filterObj.tableVendor != null)
         {
             allCountUrl += "&vendorid=" + $scope.filterObj.tableVendor.idtableVendorId;
             newCountUrl += "&vendorid=" + $scope.filterObj.tableVendor.idtableVendorId;
@@ -1438,20 +1538,20 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         }
         if ($scope.filterObj.startDate)
         {
-            allCountUrl += "&startdate=" + $scope.filterObj.startDate;
-            newCountUrl += "&startdate=" + $scope.filterObj.startDate;
-            inProcessCountUrl += "&startdate=" + $scope.filterObj.startDate;
-            shippedCountUrl += "&startdate=" + $scope.filterObj.startDate;
-            cancelledCountUrl += "&startdate=" + $scope.filterObj.startDate;
+            allCountUrl += "&startDate=" + $scope.filterObj.startDate;
+            newCountUrl += "&startDate=" + $scope.filterObj.startDate;
+            inProcessCountUrl += "&startDate=" + $scope.filterObj.startDate;
+            shippedCountUrl += "&startDate=" + $scope.filterObj.startDate;
+            cancelledCountUrl += "&startDate=" + $scope.filterObj.startDate;
 
         }
         if ($scope.filterObj.endDate)
         {
-            allCountUrl += "&enddate=" + $scope.filterObj.endDate;
-            newCountUrl += "&enddate=" + $scope.filterObj.endDate;
-            inProcessCountUrl += "&enddate=" + $scope.filterObj.endDate;
-            shippedCountUrl += "&enddate=" + $scope.filterObj.endDate;
-            cancelledCountUrl += "&enddate=" + $scope.filterObj.endDate;
+            allCountUrl += "&endDate=" + $scope.filterObj.endDate;
+            newCountUrl += "&endDate=" + $scope.filterObj.endDate;
+            inProcessCountUrl += "&endDate=" + $scope.filterObj.endDate;
+            shippedCountUrl += "&endDate=" + $scope.filterObj.endDate;
+            cancelledCountUrl += "&endDate=" + $scope.filterObj.endDate;
 
         }
 
@@ -1896,11 +1996,11 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         $scope.sortReverse = false;
 
         $scope.filterObj = {};
-        $scope.filterObj.tableWarehouseDetails = {};
+        $scope.filterObj.tableWarehouseDetails = null;
         $scope.filterObj.tablePurchaseReturnRefNo = null;
         $scope.filterObj.tablePurchaseReturnSystemOrderNo = null;
-        $scope.filterObj.tableSku = {};
-        $scope.filterObj.tableVendor = {};
+        $scope.filterObj.tableSku = null;
+        $scope.filterObj.tableVendor = null;
         $scope.filterObj.start1Date = null;
         $scope.filterObj.end1Date = null;
 
@@ -2176,14 +2276,14 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
 
         PurchaseOrderReturnListUrl += "&uipagename="+$scope.pagename;
 
-        if ($scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId) {
+        if ($scope.filterObj.tableWarehouseDetails != null) {
             PurchaseOrderReturnListUrl += "&warehouseid=" + $scope.filterObj.tableWarehouseDetails.idtableWarehouseDetailsId;
         }
-        if ($scope.filterObj.tableSku.idtableSkuId)
+        if ($scope.filterObj.tableSku != null)
         {
             PurchaseOrderReturnListUrl += "&skuid=" + $scope.filterObj.tableSku.idtableSkuId;
         }
-        if ($scope.filterObj.tableVendor.idtableVendorId) {
+        if ($scope.filterObj.tableVendor != null) {
             PurchaseOrderReturnListUrl += "&vendorid=" + $scope.filterObj.tableVendor.idtableVendorId;
         }
         if ($scope.filterObj.tablePurchaseReturnRefNo) {
@@ -2191,10 +2291,10 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         }
 
         if ($scope.filterObj.startDate) {
-            PurchaseOrderReturnListUrl += "&startdate=" + $scope.filterObj.startDate;
+            PurchaseOrderReturnListUrl += "&startDate=" + $scope.filterObj.startDate;
         }
         if ($scope.filterObj.endDate) {
-            PurchaseOrderReturnListUrl += "&enddate=" + $scope.filterObj.endDate;
+            PurchaseOrderReturnListUrl += "&endDate=" + $scope.filterObj.endDate;
         }
         if ($scope.filterObj.tablePurchaseReturnSystemOrderNo) {
             PurchaseOrderReturnListUrl += "&systemorderno=" + $scope.filterObj.tablePurchaseReturnSystemOrderNo;
@@ -2215,12 +2315,36 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
         });
     }
 	
-	$scope.showCommonMasterSkuDialog = function (check) {
+	$scope.showCommonMasterSkuDialog = function (check)
+    {
+        var selectedVendor = null;
+        if(check == true)
+        {
+            if ($scope.singleorderReturnData.tableVendor == null)
+            {
+                growl.error("Please select vendor first.");
+                return;
+            }
+            else
+            {
+                selectedVendor = $scope.singleorderReturnData.tableVendor;
+            }
+        }
 
-        if($scope.singleorderReturnData.tableVendor == null){
-            growl.error("Please select vendor first.");
-        }else{
-            mastersService.fetchVendorSkus(baseUrl, $scope.singleorderReturnData.tableVendor.idtableVendorId).then(function(data){
+        if(check == false)
+        {
+            if($scope.filterObj.tableVendor == null)
+            {
+
+            }
+            else
+            {
+                selectedVendor = $scope.filterObj.tableVendor;
+            }
+        }
+
+        if(selectedVendor!=null) {
+            mastersService.fetchVendorSkus(baseUrl, selectedVendor.idtableVendorId).then(function (data) {
                 $scope.genericData.skusListFiltered = data;
 
                 $timeout(function () {
@@ -2228,9 +2352,23 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
                 }, 500);
 
             });
-
-            $scope.genericData.check = check;
         }
+        else
+        {
+            mastersService.fetchSkus(baseUrl).then(function (data)
+            {
+                $scope.genericData.skusListFiltered = data;
+
+                $timeout(function ()
+                {
+                    $("#dialogmastersku").modal('show');
+                }, 500);
+
+            });
+        }
+
+        $scope.genericData.check = check;
+
 
     }
 
@@ -2465,24 +2603,29 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
             });
         }
     };
+    $scope.cancelBulkUpload = function(){
+        $scope.fileName = null;
+        $scope.progressOfUpload = null;
+        $('#addPurchaseOrderReturnModalRefUnknown').modal('hide');
+        $('#addPurchaseOrderReturnModal').modal('hide');
 
+    }
     $scope.uploadBulkPurchaseReturnFile = function(bulkOrderUploadfile, bulkOrderSettingData) {
         console.log(bulkOrderUploadfile);
         var file = bulkOrderUploadfile;
-        console.log(file);
-        console.log(file.name);
-        $scope.fileName = file.name;
-
+        if(file){
+            $scope.fileName = file.name;
+        }
     };
 
     $scope.uploadPurchaseReturnBulkUpload = function () {
         var uploadUrl;
-        if($scope.genericData.saleRefKnown == true)
+        if($scope.genericData.saleRefKnown)
         {
             uploadUrl = baseUrl + '/omsservices/webapi/purchasereturn/uploadpurchasereturnwithsaleorder';
 
         }
-        if($scope.genericData.saleRefKnown == false) {
+        else{
             uploadUrl = baseUrl + '/omsservices/webapi/purchasereturn/uploadpurchasereturnwithoutpurchaseorder';
         }
         console.log($scope.genericData.bulkOrderUploadfile);
@@ -2493,9 +2636,6 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
 
                 var fd = new FormData();
                 fd.append('uploadFile', file);
-                console.log(uploadUrl);
-                console.log('uploadFile' + file);
-                console.log('fd' + fd);
                 var upload = Upload.http({
                     url: uploadUrl,
                     method: 'POST',
@@ -2508,12 +2648,12 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
                     // file is uploaded successfully
                     console.log(resp);
                     console.log('file ' + file.name + 'is uploaded successfully. Response: ' + resp.data);
-                    $cookies.put('BulkUploadData','purchasereturn');
-                    $cookies.put('ActiveTab','PurchaseReturn');
+                    $cookies.put('BulkUploadData','purchasereturnwithid');
+                    $cookies.put('ActiveTab','Purchase Return With ID');
                     $rootScope.growlmessage = growl.success("File has been uploaded successfully.It may take a few minutes to reflect the changes.<br><a href='#/bulkuploads' style='color: #00ACE4; font-weight: 600;cursor: pointer;'>View bulk upload reports.</a>",{ttl: -1});
-                    $scope.listOfStatesCount($scope.defaultTab, $scope.vmPager.currentPage);
+                    $scope.listOfPurchaseReturnStatesCount($scope.defaultTab, $scope.vmPager.currentPage);
                     $scope.cancelBulkUpload();
-                    $('#addOrderModal').modal('hide');
+                    //$('#addOrderModal').modal('hide');
 
                 }, function(resp) {
                     $scope.cancelBulkUpload();
@@ -2521,9 +2661,13 @@ function purchaseReturnController($scope, $http, $location, $filter, baseUrl, co
                     growl.error(resp.data.errorMessage);
                 }, function(evt) {
                     // progress notify
+                    $scope.progressOfUpload = parseInt(100.0 * evt.loaded / evt.total) + '%';
                     console.log('progress: ' + parseInt(100.0 * evt.loaded / evt.total) + '% file :' + file.name);
                 });
             }
+        }
+        else{
+            growl.error('Please upload the file');
         }
     }
 
