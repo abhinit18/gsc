@@ -1216,7 +1216,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
     //add vendor data to database OMS Api
     $scope.savevendorData = function(vendorsData) {
         if (!vendorsData) {
-            growl.error("Please enter a Vendor Code!");
+            growl.error("Please enter Vendor Details!");
         } else {
             $scope.checkVendorCode(vendorsData.tableVendorClientVendorCode).then(
                 function(v) {
@@ -1266,7 +1266,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
                                             //$scope.isvendorAddressPinValid = true;
                                         } else if (!$scope.vendorAddress.tinNo && $scope.vendorMode != 'edit') {
                                             $scope.tinnoEntered = true;
-                                            growl.error("Please enter valid Tin No!");
+                                            growl.error("Please enter valid GSTIN");
                                             //$scope.isvendorAddressTinValid = true;
                                         }
                                         //else if (!vendorsData.tableVendorDefaultLeadTimeDays) {
@@ -1640,7 +1640,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
             growl.error("Please enter Pin Code!");
             $scope.isvendorAddressPinValid = true;            
         } else if (!$scope.vendorAddress.tinNo) {
-            growl.error("Please enter valid Tin No!");
+            growl.error("Please enter valid GSTIN!");
             $scope.isvendorAddressTinValid = true;            
         }
         else 
@@ -1695,7 +1695,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
                         }).success(function(res) {
                             if (res) {
                                 console.log(res);
-                                growl.success("TIN NO Added Successfully");
+                                growl.success("GSTIN Added Successfully");
                             }
                         }).error(function(error,status) {
                             console.log(error);
@@ -1807,7 +1807,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
             growl.error("Please enter valid 6 digit Pin Code!");
             $scope.isvendorAddressPinValid = true;            
         } else if (!$scope.vendorAddress.tinNo) {
-            growl.error("Please enter valid Tin No!");
+            growl.error("Please enter valid GSTIN !");
             $scope.isvendorAddressTinValid = true;            
         }
         else {
@@ -1861,7 +1861,7 @@ function vendorController($rootScope, $scope, $http, $location, fileUpload, $mdD
                         }).success(function(res) {
                             if (res) {
                                 console.log(res);
-                                growl.success("TIN NO Added Successfully");
+                                growl.success("GSTIN Number Added Successfully");
                             }
                         }).error(function(error,status) {
                             console.log(error);

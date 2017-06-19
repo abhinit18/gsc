@@ -91,12 +91,12 @@
                                     <input type="text" min="0"  ng-pattern-restrict="^[0-9]*$" class="form-control darkgrey-bottom-border font input-less-padding" ng-blur="callGetLatLong(showResult)" placeholder="Postal code" ng-model="shippingAddress.tableAddressPin">
                                 </div>
                             </div>
-                            <div class="row padding-top-15" ng-if="customersData.tableSalesChannelValueInfo.tableCustomerType.tableCustomerTypeString == 'B2B' || customersData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableCustomerType.tableCustomerTypeString == 'B2B'">
-                                <div class="col-md-6 font">VAT/TIN No. </div>
+                            <div class="row padding-top-15" ng-if="customersData.tableGstType.idtableGstTypeId != 1">
+                                <div class="col-md-6 font" >GSTIN <span style="color:red">*</span></div>
                                 <div class="col-md-6">
                                     <input type="text"
-                                           class="form-control darkgrey-bottom-border font input-less-padding"  placeholder="VAT / TIN"
-                                           ng-model="genericData.customerVatTin">
+                                           class="form-control darkgrey-bottom-border font input-less-padding"  placeholder="GSTIN"
+                                           ng-model="customerVatTin.tableCustomerStateWiseVatNo">
                                 </div>
                             </div>
                         </div>

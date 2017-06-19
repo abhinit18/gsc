@@ -512,7 +512,7 @@
                         <li class="active"><a data-target="#tab1" data-toggle="tab" class="btn sharp"
                                               ng-click="singlePurchaseOrderReturnTabMode()" style="width:auto;">Single Purchase
                             Return</a></li>
-                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'" ><a data-target="#tab2" data-toggle="tab"
+                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'" ng-hide="true"><a data-target="#tab2" data-toggle="tab"
                                                                       class="btn sharp"
                                                                       ng-click="bulkPurchaseOrderReturnTabMode()" style="width:auto;">Bulk
                             Purchase Return</a></li>
@@ -940,7 +940,7 @@
                         <li class="active"><a data-target="#tab3" data-toggle="tab" class="btn sharp"
                                               ng-click="singlePurchaseOrderReturnTabMode()" style="width:auto;">Single Purchase
                             Return</a></li>
-                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'"><a data-target="#tab4" data-toggle="tab"
+                        <li ng-if="genericData.singlePurchaseOrderReturnMode == 'add'" ng-hide="true"><a data-target="#tab4" data-toggle="tab"
                                                                               class="btn sharp"
                                                                               ng-click="bulkPurchaseOrderReturnTabMode()" style="width:auto;">Bulk
                             Purchase Return</a></li>
@@ -1361,7 +1361,7 @@
         </div>
     </div>
 
-    <div ng-include src="'purchaseReturn/editRemarksModal.html'"></div>
+    <div ng-include src="'purchaseReturn/editRemarksModal.html?version=1.0.0'"></div>
 
     <style>
         .md-datepicker-calendar-pane {
@@ -1370,14 +1370,14 @@
     </style>
 </div>
 
-<div ng-include src="'purchaseReturn/infoBoxDialog.html'"></div>
-<div ng-include src="'purchaseReturn/cancelOrderDialog.html'"></div>
-<div ng-include src="'purchaseReturn/cancelOrderItemDialog.html'"></div>
-<div ng-include src="'services/masterSkuDialog.html'"></div>
-<div ng-include src="'services/masterVendorDialog.html'"></div>
-<div ng-include src="'services/CommonMasterSkuDialog.html'"></div>
-<div ng-include src="'services/CommonMasterVendorDialog.html'"></div>
-<div ng-include src="'services/CommonDeleteConfirmationDialog.html'"></div>
+<div ng-include src="'purchaseReturn/infoBoxDialog.html?version=1.0.0'"></div>
+<div ng-include src="'purchaseReturn/cancelOrderDialog.html?version=1.0.0'"></div>
+<div ng-include src="'purchaseReturn/cancelOrderItemDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/masterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/masterVendorDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterVendorDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonDeleteConfirmationDialog.html?version=1.0.0'"></div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
 <style>

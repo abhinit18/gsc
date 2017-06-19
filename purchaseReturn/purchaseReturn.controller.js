@@ -2620,7 +2620,7 @@ function purchaseReturnController($rootScope ,$scope, $http, $location, $filter,
 
     $scope.uploadPurchaseReturnBulkUpload = function () {
         var uploadUrl;
-        if($scope.genericData.saleRefKnown)
+        if($scope.genericData.poRefKnown == true)
         {
             uploadUrl = baseUrl + '/omsservices/webapi/purchasereturn/uploadpurchasereturnwithsaleorder';
 

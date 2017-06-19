@@ -125,7 +125,8 @@
                             <a ng-if = "!genericData.enableSorting" href="">
                                 Type
                             </a>
-                        </td>                        
+                        </td>
+                        <td>HSN</td>
                         <td>Dimensions (LxBxH/W)</td>
                         <td>
                             <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingAll('tableSkuStatusType.tableSkuStatusTypeString',sortReverseAll)">
@@ -153,7 +154,8 @@
                         <td>{{skuData.tableSkuNode.skuNodeName}}</td>
                         <td>{{skuData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
                         <td>{{skuData.tableSkuType.tableSkuTypeString}}</td>
-                        <td>
+                        <td>{{skuData.tableSkuHsn}}</td>
+                       <td>
                             <span ng-if="skuData.tableSkuUodmType.tableSkuUodmTypeString">{{skuData.tableSkuLength}}</span>
                             <strong ng-if="skuData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
                             <span ng-if="skuData.tableSkuUodmType.tableSkuUodmTypeString">{{skuData.tableSkuWidth}}</span>
@@ -259,5 +261,5 @@
 
 <!-- Add New SKU Dialog -->
 
-<div ng-include src="'sku/deactivateSku.html'"></div>
-<div ng-include src="'sku/activateSku.html'"></div>
+<div ng-include src="'sku/deactivateSku.html?version=1.0.0'"></div>
+<div ng-include src="'sku/activateSku.html?version=1.0.0'"></div>

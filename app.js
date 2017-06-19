@@ -738,7 +738,7 @@ myApp.filter('utcToLocalOrHyphen' , function utcToLocal($filter,$cookies) {
 
         return $filter('date')(utcDateString, "dd/MM/yyyy", timezone );
     };
-})
+});
 
 myApp.filter('utcToLocalTimeOrHyphen' , function utcToLocal($filter,$cookies) {
     return function (utcDateString, format) {

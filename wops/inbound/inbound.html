@@ -78,33 +78,33 @@
     <div class="row " style="margin-left: auto; margin-right: auto;">
         <div class="tab-content">
             <div class="tab-pane  active container-fluid" id="table1">
-                <div ng-if="activeTab == 'tab1'"  ng-include src="'wops/inbound/poinbound.html'" ng-controller="poController" >
-                    <div ng-include src="'po/infoBoxDialog.html'"></div>
-                    <div ng-include src="'wops/OperationDialogBox/GRNdata.html'"></div>
-                    <div ng-include src="'services/masterVendorDialog.html'"></div>
+                <div ng-if="activeTab == 'tab1'"  ng-include src="'wops/inbound/poinbound.html?version=1.0.0'" ng-controller="poController" >
+                    <div ng-include src="'po/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/GRNdata.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/masterVendorDialog.html?version=1.0.0'"></div>
 
                 </div>
             </div>
             <div  class="tab-pane  container-fluid" id="table2">
-                <div ng-if="activeTab == 'tab2'" ng-include src="'wops/inbound/stockxferinbound.html'" ng-controller="stockTransfer" >
-                    <div ng-include src="'stockTransfer/infoBoxDialog.html'"></div>
-                    <div ng-include src="'wops/OperationDialogBox/STinGRNDialog.html'"></div>
-                    <div ng-include src="'services/masterSkuDialog.html'"></div>
+                <div ng-if="activeTab == 'tab2'" ng-include src="'wops/inbound/stockxferinbound.html?version=1.0.0'" ng-controller="stockTransfer" >
+                    <div ng-include src="'stockTransfer/infoBoxDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/STinGRNDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/masterSkuDialog.html?version=1.0.0'"></div>
                 </div>
             </div>
             <div  class="tab-pane  container-fluid" id="table3">
-                <div ng-if="activeTab == 'tab3'"  ng-include src="'wops/inbound/saleorderreturninbound.html'" ng-controller="salereturnController" >
-                    <div ng-include src="'wops/OperationDialogBox/SaleReturnGRNdialogBox.html'"></div>
-                    <div ng-include src="'wops/OperationDialogBox/ClaimGrnDataDialog.html'"></div>
-                    <div ng-include src="'services/masterCustomerDialog.html'"></div>
-                    <div ng-include src="'services/masterSkuDialog.html'"></div>
+                <div ng-if="activeTab == 'tab3'"  ng-include src="'wops/inbound/saleorderreturninbound.html?version=1.0.0'" ng-controller="salereturnController" >
+                    <div ng-include src="'wops/OperationDialogBox/SaleReturnGRNdialogBox.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/ClaimGrnDataDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/masterCustomerDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/masterSkuDialog.html?version=1.0.0'"></div>
                 </div>
             </div>
             <div  class="tab-pane  container-fluid" id="table4">
-                <div ng-if="activeTab == 'tab4'"  ng-include src="'wops/inbound/returnableGoodsOrderInbound.html'" ng-controller="returnableGoodsOrderController">
-                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderGrnDialog.html'"></div>
-                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderClaimDialog.html'"></div>
-                    <div ng-include src="'services/masterSkuDialog.html'"></div>
+                <div ng-if="activeTab == 'tab4'"  ng-include src="'wops/inbound/returnableGoodsOrderInbound.html?version=1.0.0'" ng-controller="returnableGoodsOrderController">
+                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderGrnDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'wops/OperationDialogBox/returnableGoodsOrderClaimDialog.html?version=1.0.0'"></div>
+                    <div ng-include src="'services/masterSkuDialog.html?version=1.0.0'"></div>
                 </div>
             </div>
         </div>

@@ -35,23 +35,28 @@
                                        type="text" class="customerfieldsvalue" placeholder="Customer Ref. No.">
                             </div>
                             <br>
-                            <div layout="row" style="padding-bottom: 10px">
-                                <b class="customerfieldskey">Sales Channel <span style="color:red">*</span></b>
-                                <select ng-model="customersData.tableSalesChannelValueInfo" class="form-control selectClass"
-                                        ng-options="option as option.tableSalesChannelValueInfoName for option in creationSourceArray track by option.idtableSalesChannelValueInfoId">
-                                    <option value="" disabled selected style="display: none;">Select Sales Channel
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div ng-if="customersData.tableSalesChannelValueInfo.tableCustomerType.tableCustomerTypeString == 'B2B' || customersData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableCustomerType.tableCustomerTypeString == 'B2B'">
+                            <div>
                                 <br>
                                 <div layout="row">
-                                    <b class="customerfieldskey">Company Name <span style="color:red">*</span></b>
+                                    <b class="customerfieldskey">Company Name</b>
                                     <input type="text"
                                            class="customerfieldsvalue" placeholder="Company name"
                                            ng-model="customersData.tableCustomerCompany">
                                 </div>
+                            </div>
+                            <br>
+                            <div layout="row">
+                                    <b class="customerfieldskey">Nature Of Customer<span style="color:red">*</span></b>
+                                <div >
+                                    <span class="add-new-sp-row">
+                                        <md-radio-group ng-model="customersData.tableGstType" style="display: inline-flex;"
+                                        >
+                                          <md-radio-button ng-value="gst" ng-repeat="gst in gstTypes" ng-class="{'md-checked':gst.idtableGstTypeId == customersData.tableGstType.idtableGstTypeId}" class="md-primary">{{gst.tableGstTypeName}}</md-radio-button>
+                                        </md-radio-group>
+                            </span>
+
+                                </div>
+
                             </div>
                             <br>
                             <div layout="row">
@@ -174,13 +179,13 @@
                                                            ng-model="shippingAddress.tableAddressPin">
                                                 </div>
                                             </div>
-                                            <div ng-if="customersData.tableSalesChannelValueInfo.tableCustomerType.tableCustomerTypeString == 'B2B' || customersData.tableSalesChannelValueInfo.tableSalesChannelMetaInfo.tableCustomerType.tableCustomerTypeString == 'B2B'">
-                                                <br>
-                                                <div layout="row">
-                                                    <b class="customerfieldskey">VAT/TIN No. </b>
+                                            <div class="row padding-top-15" ng-if="customersData.tableGstType.idtableGstTypeId != 1">
+                                                <div class="col-md-6 font">GSTIN <span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-6">
                                                     <input type="text"
-                                                           class="customerfieldsvalue" placeholder="VAT / TIN"
-                                                           ng-model="genericData.customerVatTin">
+                                                           class="form-control darkgrey-bottom-border font input-less-padding" placeholder="GSTIN"
+                                                           ng-model="customerVatTin.tableCustomerStateWiseVatNo">
                                                 </div>
                                             </div>
                                         </div>
@@ -298,6 +303,15 @@
                                                            class="form-control darkgrey-bottom-border font input-less-padding"
                                                            placeholder="Enter pin"
                                                            ng-model="billingAddress.tableAddressPin">
+                                                </div>
+                                            </div>
+                                            <div class="row padding-top-15" ng-if="customersData.tableGstType.idtableGstTypeId != 1">
+                                                <div class="col-md-6 font">GSTIN <span style="color:red">*</span>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="text"
+                                                           class="form-control darkgrey-bottom-border font input-less-padding" placeholder="GSTIN"
+                                                           ng-model="billingAddressGstin.tableCustomerStateWiseVatNo">
                                                 </div>
                                             </div>
                                         </div>
@@ -499,4 +513,5 @@
     .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
         background-color: #E9EEEF;
     }
+    md-radio-button .md-label{margin-left:23px;margin-right:10px;}
 </style>

@@ -266,18 +266,6 @@
                                                 </md-radio-button>
                                             </md-radio-group>
                                         </div>
-                                        <div class="full-width" style="padding-top: 10px"
-                                             ng-if="channelData.tableCustomerType == null">
-                                            <b class="customerfieldskey">Type Of Customer</b>
-                                            <md-radio-group ng-model="subChannelData.tableCustomerType.tableCustomerTypeString">
-                                                <md-radio-button id="customertypeid1" required
-                                                                 ng-repeat="customerType in customerTypes"
-                                                                 ng-value="customerType.tableCustomerTypeString" class="md-primary"
-                                                                 ng-style="{'display':'inline'}">
-                                                    {{customerType.tableCustomerTypeString}}&nbsp;&nbsp;
-                                                </md-radio-button>
-                                            </md-radio-group>
-                                        </div>
 
                                     </div>
                                     <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12" style="padding: 0px;">

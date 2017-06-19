@@ -48,10 +48,16 @@
                                         <div ngf-drop="changeSkuImgUrl1($file)" ngf-select="changeSkuImgUrl1($file)" ngf-select-disabled="isFile1SelectDisabled()" ng-model="skuImgFile1" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
                                             <div ng-class="{'img-holder': isImg1Present()}">
                                                 <img ng-src="{{skuImgUrl1}}" ng-mouseover="skuImageHover1()" ng-mouseleave="skuImageHover1()" ng-class="{darken: isImg1Present()}">
+                                                <div class="skuOverlay"></div>
                                             </div>
                                             <div class="del-img-btn text-center" ng-if="isImg1Present()">
                                                 <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('1')" placeholder="Delete">
                                                     <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg1Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl1)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
                                                 </md-button>
                                             </div>
                                         </div>
@@ -60,10 +66,16 @@
                                         <div ngf-drop="changeSkuImgUrl2($file)" ngf-select="changeSkuImgUrl2($file)" ngf-select-disabled="isFile2SelectDisabled()" ng-model="skuImgFile2" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
                                             <div ng-class="{'img-holder': isImg2Present()}">
                                                 <img ng-src="{{skuImgUrl2}}" ng-mouseover="skuImageHover2()" ng-mouseleave="skuImageHover2()" ng-class="{darken: isImg2Present()}">
+                                                <div class="skuOverlay"></div>
                                             </div>
                                             <div class="del-img-btn text-center" ng-if="isImg2Present()">
                                                 <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('2')">
                                                     <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg2Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl2)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
                                                 </md-button>
                                             </div>
                                         </div>
@@ -72,10 +84,16 @@
                                         <div ngf-drop="changeSkuImgUrl3($file)" ngf-select="changeSkuImgUrl3($file)" ngf-select-disabled="isFile3SelectDisabled()" ng-model="skuImgFile3" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
                                             <div ng-class="{'img-holder': isImg3Present()}">
                                                 <img ng-src="{{skuImgUrl3}}" ng-mouseover="skuImageHover3()" ng-mouseleave="skuImageHover3()" ng-class="{darken: isImg3Present()}">
+                                                <div class="skuOverlay"></div>
                                             </div>
                                             <div class="del-img-btn text-center" ng-if="isImg3Present()">
                                                 <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('3')">
                                                     <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg3Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl3)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
                                                 </md-button>
                                             </div>
                                         </div>
@@ -84,10 +102,16 @@
                                         <div ngf-drop="changeSkuImgUrl4($file)" ngf-select="changeSkuImgUrl4($file)" ngf-select-disabled="isFile4SelectDisabled()" ng-model="skuImgFile4" class="sku-drop-box cursorPointer" accept=".jpeg,.png,.jpg" ngf-pattern="'.jpeg,.png,.jpg'">
                                             <div ng-class="{'img-holder': isImg4Present()}">
                                                 <img ng-src="{{skuImgUrl4}}" ng-mouseover="skuImageHover4()" ng-mouseleave="skuImageHover4()" ng-class="{darken: isImg4Present()}">
+                                                <div class="skuOverlay"></div>
                                             </div>
                                             <div class="del-img-btn text-center" ng-if="isImg4Present()">
                                                 <md-button class="md-icon-button" md-no-ink="true" ng-click="deleteSkuImage('4')">
                                                     <md-icon md-svg-src="images/svg/delete_white.svg" aria-label="Delete Image"></md-icon>
+                                                </md-button>
+                                            </div>
+                                            <div class="view-img-btn text-center" ng-if="isImg4Present()">
+                                                <md-button class="md-icon-button" md-no-ink="true" ng-click="viewSkuImage(skuImgUrl4)" placeholder="Delete">
+                                                    <md-icon md-svg-src="images/svg/view.svg" aria-label="Delete Image"></md-icon>
                                                 </md-button>
                                             </div>
                                         </div>
@@ -175,6 +199,18 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="row row-margin-top-small">
+                                    <div class="col-md-4">
+                                        <span class="font">HSN <span style="color:red">*</span></span>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <input ng-class="{submitted:isSellerHSNEntered}" ng-change="skuHSNChanged(virtualkitData.tableSkuHsn)" only-integer placeholder="Enter HSN number" type="text" id="hsnnumber" ng-model="virtualkitData.tableSkuHsn" class="form-control darkgrey-bottom-border font input-less-padding">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="row row-margin-top-small">
                             <div class="col-md-2 margin-top-9">

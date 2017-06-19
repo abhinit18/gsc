@@ -231,19 +231,6 @@ function saleschannelsController($scope, $http, $location, baseUrl, growl,$cooki
             }else if($scope.genericData.returnType == 'valuebased'){
                 subChannelData.tableSalesChannelValueInfoReturnQuantity = null;
             }
-            if(subChannelData.tableCustomerType != null && subChannelData.tableCustomerType !='undefined'){
-                if(subChannelData.tableCustomerType.tableCustomerTypeString == 'B2C'){
-                    subChannelData.tableCustomerType= {
-                        "idtableCustomerTypeId": 1,
-                        "tableCustomerTypeString" : "B2C"
-                    };
-                }else if(subChannelData.tableCustomerType.tableCustomerTypeString == 'B2B'){
-                    subChannelData.tableCustomerType= {
-                        "idtableCustomerTypeId": 2,
-                        "tableCustomerTypeString" : "B2B"
-                    };
-                }
-            }
             if (channelData.tableSalesChannelType.idtableSalesChannelTypeId == 2) {
                 if ($scope.saleChannelMode == "add") {
                     $scope.saveSubChannelData(subChannelData, channelData, metaChannelData);

@@ -493,6 +493,35 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
     $scope.cancelDeleteCategoryModal = function(){
         $('#DeleteCategoryModal').modal('hide');
     };
+
+    $scope.hsn = {};
+    $scope.askHSNNumber = function(data,index)
+    {
+        $scope.CategoryDeleteObj.categoryItemData = data;
+        $scope.CategoryDeleteObj.categoryItemDataIndex = index;
+        $scope.hsn.mode = 'create';
+        $('#askHSNNumberModal').modal('show');
+    }
+
+    $scope.editHSNNumber = function(data,index)
+    {
+        $scope.CategoryDeleteObj.categoryItemData = data;
+        $scope.hsn.oldnumber = data.tableSkuNodeHsn;
+        $scope.CategoryDeleteObj.categoryItemDataIndex = index;
+        $scope.hsn.mode = 'edit';
+        $('#askHSNNumberModal').modal('show');
+    }
+
+    $scope.cancelAskHSNNumberModal = function()
+    {
+        if($scope.hsn.mode == 'edit')
+        {
+            $scope.CategoryDeleteObj.categoryItemData.tableSkuNodeHsn = $scope.hsn.oldnumber ;
+        }
+        $scope.CategoryDeleteObj = {};
+        $('#askHSNNumberModal').modal('hide');
+    }
+
     $scope.SelectThirdChildNode = function (data,buttonAction,index) {
 
         if(data == null || data == undefined)
@@ -528,7 +557,7 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
         }
         else
         {
-            childSelectionUrl = baseUrl + '/omsservices/webapi/skunode/'+$scope.SkuCategoryData.idskuNodeId+"/select?selected="+true;
+            childSelectionUrl = baseUrl + '/omsservices/webapi/skunode/'+$scope.SkuCategoryData.idskuNodeId+"/select?selected="+true+"&hsnnumber="+data.tableSkuNodeHsn;
         }
         $http({
             method: 'PUT',
@@ -547,6 +576,11 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
                 $scope.$broadcast('angucomplete-alt-long:clearInput', 'category');
                 growl.success('Category added successfully');
                 console.log($scope.FinalList);
+                $('#askHSNNumberModal').modal('hide');
+            }
+            else if($scope.hsn.mode == 'edit'){
+                $('#askHSNNumberModal').modal('hide');
+                growl.success('Successfully updated HSN Number');
             }
             else
             {
@@ -554,6 +588,7 @@ function categoryController($scope, $http, $location, $mdDialog, $mdMedia, baseU
                 $('#DeleteCategoryModal').modal('hide');
                 growl.success('Category removed successfully');
             }
+            $scope.hsn = {};
 
         }).error(function(error,status)
         {

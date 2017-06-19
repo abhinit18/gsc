@@ -90,16 +90,16 @@
             <div class="full-width">
                 <div class="tab-content">
                     <div class="tab-pane  active container-fluid" id="table1">
-                        <div ng-include src="'sku/allSkuTabs.html'"></div>
+                        <div ng-include src="'sku/allSkuTabs.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table2">
-                        <div ng-include src="'sku/normalSkuTabs.html'"></div>
+                        <div ng-include src="'sku/normalSkuTabs.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table3">
-                        <div ng-include src="'sku/kitSkuTabs.html'"></div>
+                        <div ng-include src="'sku/kitSkuTabs.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table4">
-                        <div ng-include src="'sku/virtualKitTabs.html'"></div>
+                        <div ng-include src="'sku/virtualKitTabs.html?version=1.0.0'"></div>
                     </div>
                 </div>
             </div>
@@ -223,10 +223,36 @@
             </div>
         </div>
     </div>
-<div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html'"></div>
-<div ng-include src="'sku/skuInventoryDialog.html'"></div>
-<div ng-include src="'sku/skuSalesChannelMapUploadDialog.html'"></div>
-<div ng-include src="'sku/addNewVirtualKitDialog.html'"></div>
-<div ng-include src="'sku/addNewKitDialog.html'"></div>
-<div ng-include src="'sku/addNewSkuDialog.html'"></div>
-<div ng-include src="'services/CommonMasterSkuDialog.html'"></div>
+<div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/skuInventoryDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/skuSalesChannelMapUploadDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewVirtualKitDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewKitDialog.html?version=1.0.0'"></div>
+<div ng-include src="'sku/addNewSkuDialog.html?version=1.0.0'"></div>
+<div ng-include src="'services/CommonMasterSkuDialog.html?version=1.0.0'"></div>
+<div ng-show="showSkuImageContainer" class="view-sku-container">
+    <a class="skuGalleryClose" ng-click="closeSkuImageContainer()">x</a>
+    <a ng-class="{'disabled':viewedSkuImage && disableBackSku()}" class="skuGalleryNavs back" ng-click="backSkuImage()">
+        <img src="images/svg/back.svg">
+    </a>
+    <a ng-class="{'disabled':viewedSkuImage && disableNextSku()}" class="skuGalleryNavs next" ng-click="nextSkuImage()">
+        <img src="images/svg/next.svg">
+    </a>
+    <div class="imagePane">
+        <img ng-src="{{viewedSkuImage}}" alt="">
+    </div>
+    <div class="imageGallery">
+        <div ng-click="changeSkuImage(skuImgUrl1)" ng-class="{'selected': viewedSkuImage == skuImgUrl1}" ng-if="isImg1Present()" class="imageGalleryItem">
+            <img ng-src="{{skuImgUrl1}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl2)" ng-class="{'selected': viewedSkuImage == skuImgUrl2}" ng-if="isImg2Present()" class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl2}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl3)" ng-class="{'selected': viewedSkuImage == skuImgUrl3}" ng-if="isImg3Present()"class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl3}}" alt="">
+        </div>
+        <div ng-click="changeSkuImage(skuImgUrl4)" ng-class="{'selected': viewedSkuImage == skuImgUrl4}" ng-if="isImg4Present()" class="imageGalleryItem">
+            <img  ng-src="{{skuImgUrl4}}" alt="">
+        </div>
+    </div>
+</div>

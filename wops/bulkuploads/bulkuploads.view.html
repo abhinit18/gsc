@@ -82,12 +82,12 @@
                                 <span>Vendor SKU Maps</span>
                             </button>
                         </li>
-                        <li ng-show="purchaseReturnAccess.readAccess">
+                        <li ng-show="purchaseReturnAccess.readAccess" ng-if="false">
                             <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return With ID')}" ng-click="activeTab='Purchase Return With ID';loadBulkReporting('purchasereturnwithid');selectedTab=0;">
                                 <span>Purchase Return With PO</span>
                             </button>
                         </li>
-                        <li ng-show="purchaseReturnAccess.readAccess">
+                        <li ng-show="purchaseReturnAccess.readAccess" ng-if="false">
                             <button  type="button" class="btn sharp row-margin-bottom-small" ng-class="{active: isActive('Purchase Return Without ID')}" ng-click="activeTab='Purchase Return Without ID';loadBulkReporting('purchasereturnwitoutid');selectedTab=0;">
                                 <span>Purchase Return Without PO</span>
                             </button>
@@ -157,20 +157,20 @@
             <div class="full-width">
                 <div class="tab-content">
                     <div class="tab-pane  active container-fluid" id="table1">
-                        <div ng-include src="'wops/bulkuploads/tabs/success.html'"></div>
+                        <div ng-include src="'wops/bulkuploads/tabs/success.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table2">
-                        <div ng-include src="'wops/bulkuploads/tabs/error.html'"></div>
+                        <div ng-include src="'wops/bulkuploads/tabs/error.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table3">
-                        <div  ng-if="state!='cancel'" ng-include src="'wops/bulkuploads/tabs/existing.html'"></div>
+                        <div  ng-if="state!='cancel'" ng-include src="'wops/bulkuploads/tabs/existing.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table4">
-                        <div ng-include src="'wops/bulkuploads/tabs/inprogress.html'"></div>
+                        <div ng-include src="'wops/bulkuploads/tabs/inprogress.html?version=1.0.0'"></div>
                     </div>
                     <div class="tab-pane  container-fluid" id="table5">
-                        <div ng-if="state=='orders' || state == 'stocktransfer'" ng-include src="'wops/bulkuploads/tabs/duplicate.html'"></div>
-                        <div ng-if="state=='po'" ng-include src="'wops/bulkuploads/tabs/duplicate.html'"></div>
+                        <div ng-if="state=='orders' || state == 'stocktransfer'" ng-include src="'wops/bulkuploads/tabs/duplicate.html?version=1.0.0'"></div>
+                        <div ng-if="state=='po'" ng-include src="'wops/bulkuploads/tabs/duplicate.html?version=1.0.0'"></div>
                     </div>
                 </div>
             </div>
@@ -420,5 +420,5 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript">
     </script>
-    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html'"></div>
+    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
 

@@ -104,6 +104,7 @@
                                 Brand
                             </a>
                         </td>
+                        <td>HSN</td>
                         <td>Dimensions (LxBxH/W)</td>
                         <td>
                             <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingNormal('tableSkuStatusType.tableSkuStatusTypeString',sortReverseNormal)">
@@ -130,6 +131,7 @@
                         <td>{{normalskuData.tableSkuPrimaryUpcEan}}</td>
                         <td>{{normalskuData.tableSkuNode.skuNodeName}}</td>
                         <td>{{normalskuData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
+                        <td>{{normalskuData.tableSkuHsn}}</td>
                         <td>
                             <span ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">{{normalskuData.tableSkuLength}}</span>
                             <strong ng-if="normalskuData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
@@ -234,5 +236,5 @@
             </div>
         </div>
 
-<div ng-include src="'sku/deactivateSku.html'"></div>
-<div ng-include src="'sku/activateSku.html'"></div>
+<div ng-include src="'sku/deactivateSku.html?version=1.0.0'"></div>
+<div ng-include src="'sku/activateSku.html?version=1.0.0'"></div>

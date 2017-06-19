@@ -109,7 +109,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
     $scope.downloadSkuTemplateUrl = downloadSkuTemplateUrl;
     
     $scope.genericData.downloadSkuSalesChannelMapTemplateUrl = downloadSkuSalesChannelMapTemplateUrl;
-    $scope.skuImageArray = [];
+    $scope.skuImageArray = [null,null,null,null];
     $scope.skuImgUrl1 = "images/svg/add_image_active.svg";
     $scope.skuImgUrl2 = "images/svg/add_image_active.svg";
     $scope.skuImgUrl3 = "images/svg/add_image_active.svg";
@@ -213,6 +213,9 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         if (catg) {
             $scope.isSkuCategorySelected = false;
             $scope.attributeArray();
+            $scope.kitData.tableSkuHsn = catg.tableSkuNodeHsn;
+            $scope.skuData.tableSkuHsn = catg.tableSkuNodeHsn;
+            $scope.virtualkitData.tableSkuHsn = catg.tableSkuNodeHsn;
         } else {
             $scope.isSkuCategorySelected = true;
 
@@ -264,6 +267,14 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             $scope.isSkuDescEntered = true;
         }
     };
+
+    $scope.skuHSNChanged = function(hsn){
+        if (hsn) {
+            $scope.isSellerHSNEntered = false;
+        } else {
+            $scope.isSellerHSNEntered = true;
+        }
+    }
 
     $scope.skuLengthChanged = function(len) {
         if (len) {
@@ -384,6 +395,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.isUpcCodeEntered = false;
         $scope.isSkuCategorySelected = false;
         $scope.isSkuBrandSelected = false;
+        $scope.isSellerHSNEntered = false;
         $scope.isSkuDescEntered = false;
         $scope.isSkuLengthEntered = false;
         $scope.isSkuWidthEntered = false;
@@ -1264,7 +1276,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                     }
                                 );
 
-                                for(var possibleValueCounter = 0 ; $scope.attributeListArray[superCount].tableSkuNodeAttributePossibleValueses.length ; possibleValueCounter++)
+                                for(var possibleValueCounter = 0 ; possibleValueCounter < $scope.attributeListArray[superCount].tableSkuNodeAttributePossibleValueses.length ; possibleValueCounter++)
                                 {
                                     if($scope.attributeListArray[superCount].tableSkuNodeAttributePossibleValueses[possibleValueCounter].idnodeAttributePossibleValuesId == response.tableSkuAttributeses[i].tableSkuNodeAttributePossibleValues.idnodeAttributePossibleValuesId)
                                     {
@@ -1363,20 +1375,24 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $http.get(baseUrl + "/omsservices/webapi/skus/" + id + "/images").success(function(responseImages) {
             if (responseImages != null) {
                 if (responseImages[0] != null) {
-                    $scope.skuImgUrl1 = responseImages[0].tableSkuImageIconUrl;
+                    $scope.skuImgUrl1 = responseImages[0].tableSkuImageUrl;
                     $scope.img1PresentId = responseImages[0].idtableSkuImageImageId;
+                    $scope.skuImageArray[0] = $scope.skuImgUrl1;
                 }
                 if (responseImages[1] != null) {
-                    $scope.skuImgUrl2 = responseImages[1].tableSkuImageIconUrl;
+                    $scope.skuImgUrl2 = responseImages[1].tableSkuImageUrl;
                     $scope.img2PresentId = responseImages[1].idtableSkuImageImageId;
+                    $scope.skuImageArray[1] = $scope.skuImgUrl2;
                 }
                 if (responseImages[2] != null) {
-                    $scope.skuImgUrl3 = responseImages[2].tableSkuImageIconUrl;
+                    $scope.skuImgUrl3 = responseImages[2].tableSkuImageUrl;
                     $scope.img3PresentId = responseImages[2].idtableSkuImageImageId;
+                    $scope.skuImageArray[2] = $scope.skuImgUrl3;
                 }
                 if (responseImages[3] != null) {
-                    $scope.skuImgUrl4 = responseImages[3].tableSkuImageIconUrl;
+                    $scope.skuImgUrl4 = responseImages[3].tableSkuImageUrl;
                     $scope.img4PresentId = responseImages[3].idtableSkuImageImageId;
+                    $scope.skuImageArray[3] = $scope.skuImgUrl4;
                 }
                 q.resolve(true);
             }
@@ -2175,7 +2191,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.dialogBoxVirtualKitMode = "add";
         $scope.selected = [];
         $scope.skuvirtualKitList = [];
-        $scope.skuImageArray = [];
+        $scope.skuImageArray = [null,null,null,null];
         $scope.selectedCategory = {};
 
         $scope.img1PresentId = 0;
@@ -2192,6 +2208,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
         $scope.isSkuNameEntered = false;
         $scope.isUpcCodeEntered = false;
         $scope.isSkuCategorySelected = false;
+        $scope.isSellerHSNEntered = false;
         $scope.isSkuBrandSelected = false;
         $scope.isSkuDescEntered = false;
         $scope.isSkuLengthEntered = false;
@@ -2236,6 +2253,12 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                                 growl.error("Please select a Category");
                                                 $scope.isSkuCategorySelected = true;
                                             } else {
+					                            if(!kitData.tableSkuHsn)
+                                                    {
+                                                        $scope.isSellerHSNEntered = true;
+                                                        growl.error("Enter HSN Number");
+                                                        return;
+                                                    }
                                                 if (kitData.tableSkuUodmType) {
                                                     if (!kitData.tableSkuLength) {
                                                         $scope.productDimClicked = true;
@@ -2543,7 +2566,13 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                 $scope.checkUpcCode(virtualkitData.tableSkuPrimaryUpcEan, "virtual").then(
                                     function(v) {
                                         if (v) {
-                                            if (virtualkitData.tableSkuUodmType) {
+                                            if(!virtualkitData.tableSkuHsn)
+                                            {
+                                                $scope.isSellerHSNEntered = true;
+                                                growl.error("Enter HSN Number");
+                                                return;
+                                            }
+                                             if (virtualkitData.tableSkuUodmType) {
                                                 if (!virtualkitData.tableSkuLength) {
                                                     $scope.productDimClicked = true;
                                                     $scope.shelfLifeClicked = false;
@@ -2751,6 +2780,12 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
                                 $scope.checkUpcCode(skuData.tableSkuPrimaryUpcEan, "normal").then(
                                     function(v) {
                                         if (v) {
+ 					if(!skuData.tableSkuHsn)
+                                                    {
+                                                        $scope.isSellerHSNEntered = true;
+                                                        growl.error("Enter HSN Number");
+                                                        return;
+                                                    }
 
                                             if (skuData.tableSkuUodmType) {
                                                 if (!skuData.tableSkuLength) {
@@ -3352,7 +3387,7 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             return  !disableNext;
         }
         for(var i =currentIndex;i<$scope.skuImageArray.length;i++){
-            if($scope.skuImageArray[i] == null){
+            if($scope.skuImageArray[i] == null || (currentIndex == $scope.skuImageArray.length -1)){
                 disableNext = true;
             }
             else{
@@ -3370,13 +3405,15 @@ function skuController($rootScope, $scope, $http, $location, $mdDialog, $mdMedia
             return  !disableBack;
         }
         for(var i =$scope.skuImageArray.length - 1;i>=0;i--){
-            if($scope.skuImageArray[i] == null){
-                disableBack = true;
-            }
-            else{
-                if(disableBack){
-                    disableBack = false;
-                    break;
+            if(currentIndex >= i){
+                if($scope.skuImageArray[i] == null){
+                    disableBack = true;
+                }
+                else{
+                    if(disableBack){
+                        disableBack = false;
+                        break;
+                    }
                 }
             }
         }

@@ -236,6 +236,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="row row-margin-top-small">
+                                <div class="col-md-4">
+                                    <span class="font">HSN <span style="color:red">*</span></span>
+                                </div>
+                                <div class="col-md-6 ">
+                                    <input ng-class="{submitted:isSellerHSNEntered}" ng-change="skuHSNChanged(skuData.tableSkuHsn)" only-integer placeholder="Enter HSN number" type="text" id="hsnnumber" ng-model="skuData.tableSkuHsn" class="form-control darkgrey-bottom-border font input-less-padding">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row row-margin-top-small">
                         <div class="col-md-2 margin-top-9">
@@ -476,29 +486,4 @@
         </div>
     </div>
 </div>
-<div ng-show="showSkuImageContainer" class="view-sku-container">
-    <a class="skuGalleryClose" ng-click="closeSkuImageContainer()">x</a>
-    <a ng-class="{'disabled': disableBackSku()}" class="skuGalleryNavs back" ng-click="backSkuImage()">
-        <img src="images/svg/back.svg">
-    </a>
-    <a ng-class="{'disabled':disableNextSku()}" class="skuGalleryNavs next" ng-click="nextSkuImage()">
-        <img src="images/svg/next.svg">
-    </a>
-    <div class="imagePane">
-        <img ng-src="{{viewedSkuImage}}" alt="">
-    </div>
-    <div class="imageGallery">
-        <div ng-click="changeSkuImage(skuImgUrl1)" ng-class="{'selected': viewedSkuImage == skuImgUrl1}" ng-if="isImg1Present()" class="imageGalleryItem">
-            <img ng-src="{{skuImgUrl1}}" alt="">
-        </div>
-        <div ng-click="changeSkuImage(skuImgUrl2)" ng-class="{'selected': viewedSkuImage == skuImgUrl2}" ng-if="isImg2Present()" class="imageGalleryItem">
-            <img  ng-src="{{skuImgUrl2}}" alt="">
-        </div>
-        <div ng-click="changeSkuImage(skuImgUrl3)" ng-class="{'selected': viewedSkuImage == skuImgUrl3}" ng-if="isImg3Present()"class="imageGalleryItem">
-            <img  ng-src="{{skuImgUrl3}}" alt="">
-        </div>
-        <div ng-click="changeSkuImage(skuImgUrl4)" ng-class="{'selected': viewedSkuImage == skuImgUrl4}" ng-if="isImg4Present()" class="imageGalleryItem">
-            <img  ng-src="{{skuImgUrl4}}" alt="">
-        </div>
-    </div>
-</div>
+

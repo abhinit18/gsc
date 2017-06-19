@@ -2228,7 +2228,9 @@ function stockTransfer($rootScope, $scope, $http,  $location,$filter, fileUpload
             }
 
             deferred.resolve(data);
-
+            $mdDialog.hide({
+                templateUrl: 'STinGRNdata.tmpl.html'
+            });
         }).error(function (data)
         {
             $scope.disableSubmitGrn = false;
@@ -2239,6 +2241,9 @@ function stockTransfer($rootScope, $scope, $http,  $location,$filter, fileUpload
             }
 
             growl.error('Quick GRN failed');
+            $mdDialog.hide({
+                templateUrl: 'STinGRNdata.tmpl.html'
+            });
 
         });
 

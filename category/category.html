@@ -16,7 +16,7 @@
             </div>
             <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12" style="margin-left: 39px;">
                 <button  id="addtolist" type="button" class="btn btn-default mybut" ng-if="access.editAccess"
-                         ng-click="SelectThirdChildNode(searchedCategory.originalObject, 'select')"
+                         ng-click="askHSNNumber(searchedCategory.originalObject, 'select')"
                          style="margin-left: 0px !important;">Add to list
                 </button>
             </div>
@@ -54,7 +54,7 @@
                                 <span class="col-lg-3 col-md-3 col-sm-12 col-xs-12 text-right"  ng-if="skunode.skuNodeHasChild == false"
                                       style="padding-top: 5px;padding-bottom: 5px;">
                                     <a title = "Click to add to your category list" href="javascript:void(0);" class="btn btn-default btn-sm" ng-if="access.editAccess"
-                                       ng-click="SelectThirdChildNode(skunode,'select')">Select</a>
+                                       ng-click="askHSNNumber(skunode,'select')">Select</a>
                                 </span>
                             </span>
                         </li>
@@ -89,9 +89,10 @@
                 <table class="table classified-table">
                     <thead>
                     <tr>
-                        <td id="hselectedcateogory" style="width:90%;text-align: left;">Selected Categories</td>
+                        <td id="hselectedcateogory" style="width:70%;text-align: left;">Selected Categories</td>
+                        <td id="hhsnnumber" style="width:15%;"><span style="color:#333;">HSN Number</span></td>
                         <td id="heditattrib" style="width:10%;"><span style="color:#333;">Edit Attributes</span></td>
-                        <td id="hremove"  style="width:10%;"><span style="color:#333;">Remove</span></td>
+                        <td id="hremove"  style="width:5%;"><span style="color:#333;">Remove</span></td>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,6 +103,11 @@
                                 <li id="selected{{$index}}" ng-click="setSelected(selected)"  ng-repeat="pathName in selected.skuNodePathName track by $index">{{pathName}}</li>
                             </ul>
                         </td>
+                        <td><span ng-if="selected.tableSkuNodeHsn" style="width:100px;word-wrap: break-word;float: left">{{selected.tableSkuNodeHsn}}</span>
+                            <span ng-if="!selected.tableSkuNodeHsn" style="width:100px;word-wrap: break-word;float: left">NA</span>
+                            <a id="managehsn{{$index}}" href="javascript:void(0);" ng-if="access.editAccess"
+                                                           ng-click="editHSNNumber(selected)"><span
+                                class="fa fa-edit fa-lg"></span></a></td>
                         <td><a id="manageattr{{$index}}" href="javascript:void(0);" ng-if="access.editAccess"
                                ng-click="manageAttr(selected)"><span
                                 class="fa fa-edit fa-lg"></span></a></td>
@@ -127,7 +133,7 @@
 
 <div class="container-fluid">
 
-    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html'"></div>
+    <div ng-include src="'generateCategoryTemplate/generateTemplateDialog.html?version=1.0.0'"></div>
 
 
     <!--============================================= Add Attribute =========================================-->
@@ -349,6 +355,58 @@
     </div>
 
     <!--====================== delete category modal ends here only========================-->
+
+    <!--=================== ask HSN Number modal starts here============ --->
+    <div class="modal fade" id="askHSNNumberModal" role="dialog" aria-labelledby="myModalLabelled" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="max-width:500px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header" style="background-color: #F2F7F8; padding-bottom: 0px !important;"
+                     height="100px">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="cancelAskHSNNumberModal()">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <p class="dialog-heading-p" id="myAskHSNNumberModalLabelling">HSN Number</p>
+
+                </div>
+                <div class="modal-body" style="overflow-x: hidden;">
+                    <div class="full-width">
+                        <div class="row row-margin-top" style="margin-top:15px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <h5 style="padding-left:15px;padding-right:15px;margin-top:0px;color:#F0592B;">{{CategoryDeleteObj.categoryItemData.skuNodeName}}</h5>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <input id="hsnNumber" type="text" only-integer class="form-control main-bottom-border padding-top-3"
+                                           ng-model = "CategoryDeleteObj.categoryItemData.tableSkuNodeHsn"
+                                           placeholder="HSN Number"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #30373B; min-height: 60px;">
+
+                    <button type="button" class="cancel-btn" ng-click="cancelAskHSNNumberModal()">
+                        Cancel
+                    </button>
+                    <button type="button" class="action-btn" ng-if="hsn.mode == 'create'"
+                            ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'select',CategoryDeleteObj.categoryItemDataIndex)">
+                        Submit
+                    </button>
+                    <button type="button" class="action-btn" ng-if="hsn.mode == 'edit'"
+                            ng-click="SelectThirdChildNode(CategoryDeleteObj.categoryItemData,'edit',CategoryDeleteObj.categoryItemDataIndex)">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---==================ask HSN Number modals end here==============-->
+
+
 
 
 </div>

@@ -102,6 +102,7 @@
                                 Brand
                             </a>
                         </td>
+                        <td>HSN</td>
                         <td>Dimensions (LxBxH/W)</td>
                         <td>
                             <a ng-if = "genericData.enableSorting" href="" ng-click="tableSortingKit('tableSkuStatusType.tableSkuStatusTypeString',sortReverseKit)">
@@ -125,6 +126,7 @@
                         <td>{{kitData.tableSkuPrimaryUpcEan}}</td>
                         <td>{{kitData.tableSkuNode.skuNodeName}}</td>
                         <td>{{kitData.tableSkuBrandCode.tableSkuBrandCodeString}}</td>
+                        <td>{{kitData.tableSkuHsn}}</td>
                         <td>
                             <span ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">{{kitData.tableSkuLength}}</span>
                             <strong ng-if="kitData.tableSkuUodmType.tableSkuUodmTypeString">x</strong>
@@ -226,5 +228,5 @@
 
 <!-- Add New Kit Dialog -->
 
-<div ng-include src="'sku/deactivateSku.html'"></div>
-<div ng-include src="'sku/activateSku.html'"></div>
+<div ng-include src="'sku/deactivateSku.html?version=1.0.0'"></div>
+<div ng-include src="'sku/activateSku.html?version=1.0.0'"></div>
